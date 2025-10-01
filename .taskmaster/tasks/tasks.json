@@ -1,0 +1,314 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 2,
+        "title": "Initialize Node.js Project Structure",
+        "description": "Set up the basic Node.js project structure with TypeScript configuration, package.json, and essential dependencies",
+        "details": "Create package.json with Node.js 18+ requirement, install TypeScript, @types/node, and MCP SDK dependencies. Set up tsconfig.json with strict mode and ES2022 target. Create src/ directory structure with handlers/, mcp/, services/, types/, utils/ subdirectories. Initialize .gitignore with node_modules, dist/, .env, plans/, prompt_logs/.",
+        "testStrategy": "Verify project builds successfully with 'npm run build', TypeScript compilation passes without errors, and all required directories exist",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 3,
+        "title": "Implement Environment Configuration System",
+        "description": "Create configuration management for Autotask API credentials and server settings using environment variables",
+        "details": "Create config.ts in utils/ to load and validate environment variables: AUTOTASK_USERNAME, AUTOTASK_SECRET, AUTOTASK_INTEGRATION_CODE (required), AUTOTASK_API_URL, MCP_SERVER_NAME, MCP_SERVER_VERSION, LOG_LEVEL, LOG_FORMAT, NODE_ENV (optional). Use dotenv for .env file support. Implement validation with descriptive error messages for missing required variables.",
+        "testStrategy": "Unit tests for config validation with missing/present environment variables, verify default values are applied correctly",
+        "priority": "high",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 4,
+        "title": "Set up Structured Logging System",
+        "description": "Implement configurable logging with support for different levels and formats (simple/JSON)",
+        "details": "Create logger.ts in utils/ using winston or similar library. Support LOG_LEVEL (error, warn, info, debug) and LOG_FORMAT (simple, json). Simple format for development console output, JSON format for production structured logging. Include timestamp, level, message, and optional metadata fields.",
+        "testStrategy": "Test different log levels are filtered correctly, JSON format produces valid JSON, simple format is human-readable",
+        "priority": "medium",
+        "dependencies": [
+          3
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 5,
+        "title": "Create Autotask API Service Layer",
+        "description": "Implement the core Autotask API client with authentication and basic CRUD operations",
+        "details": "Create autotask-service.ts in services/ directory. Implement AutotaskService class with methods for authentication using username/secret/integration code. Add methods for companies, contacts, tickets, time entries with GET, POST, PUT operations. Use axios for HTTP requests with proper error handling and timeout configuration. Include retry logic for transient failures.",
+        "testStrategy": "Unit tests with mocked HTTP responses, integration tests with test Autotask instance if available, test authentication flow and error handling",
+        "priority": "high",
+        "dependencies": [
+          4
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 6,
+        "title": "Implement ID-to-Name Mapping System",
+        "description": "Create intelligent caching system for resolving company and resource IDs to human-readable names",
+        "details": "Create mapping-service.ts with MappingService class. Implement in-memory cache with 30-minute TTL for company and resource name lookups. Add methods: getCompanyName(id), getResourceName(id), clearCache(), preloadCache(), getCacheStats(). Use Map for storage with automatic cleanup. Support bulk operations for efficient batch lookups with parallel processing.",
+        "testStrategy": "Test cache hit/miss scenarios, TTL expiration, bulk lookup performance, graceful fallback for unknown IDs",
+        "priority": "medium",
+        "dependencies": [
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 7,
+        "title": "Define TypeScript Types and Interfaces",
+        "description": "Create comprehensive type definitions for Autotask entities and MCP protocol structures",
+        "details": "Create types/ directory with interfaces for Company, Contact, Ticket, TimeEntry, Resource entities matching Autotask API schema. Add MCP-specific types for tools, resources, and responses. Include enhanced entity types with _enhanced field for ID-to-name mappings. Use strict typing with required/optional field annotations.",
+        "testStrategy": "TypeScript compilation validates all types, test type compatibility with actual API responses",
+        "priority": "medium",
+        "dependencies": [
+          2
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 8,
+        "title": "Implement MCP Server Core",
+        "description": "Create the main MCP server implementation with protocol compliance and request routing",
+        "details": "Create mcp-server.ts in mcp/ directory implementing MCP protocol. Handle initialize, list_resources, list_tools, call_tool, read_resource requests. Set up proper JSON-RPC 2.0 message handling with error responses. Include server capabilities declaration and version negotiation. Use @modelcontextprotocol/sdk if available or implement protocol manually.",
+        "testStrategy": "Test MCP protocol compliance, message parsing/serialization, error handling for malformed requests",
+        "priority": "high",
+        "dependencies": [
+          7
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 9,
+        "title": "Create MCP Resource Handlers",
+        "description": "Implement MCP resource handlers for read-only access to Autotask data",
+        "details": "Create resource-handlers.ts in handlers/ directory. Implement handlers for autotask://companies, autotask://companies/{id}, autotask://contacts, autotask://contacts/{id}, autotask://tickets, autotask://tickets/{id}, autotask://time-entries resources. Each handler should return properly formatted MCP resource responses with content and metadata.",
+        "testStrategy": "Test resource URI parsing, data retrieval and formatting, error handling for invalid IDs",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          5
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 10,
+        "title": "Implement Company Management Tools",
+        "description": "Create MCP tools for company search, creation, and update operations",
+        "details": "Create company-tools.ts in handlers/ with search_companies, create_company, update_company tools. search_companies supports searchTerm, isActive, pageSize parameters with filtering. create_company accepts company data and returns created entity. update_company modifies existing company. All tools include ID-to-name enhancement in responses.",
+        "testStrategy": "Test search filtering, company creation with required fields, update operations, enhanced response format",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 11,
+        "title": "Implement Contact Management Tools",
+        "description": "Create MCP tools for contact search and creation operations",
+        "details": "Create contact-tools.ts in handlers/ with search_contacts and create_contact tools. search_contacts supports filtering by email, company, name with pagination. create_contact accepts contact data including companyID association. Include automatic company name resolution in responses using mapping service.",
+        "testStrategy": "Test contact search with various filters, contact creation with company association, enhanced response with company names",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 12,
+        "title": "Implement Ticket Management Tools",
+        "description": "Create MCP tools for ticket search and creation operations",
+        "details": "Create ticket-tools.ts in handlers/ with search_tickets and create_ticket tools. search_tickets supports filtering by status, priority, assignee, company with pagination. create_ticket accepts companyID, title, description, priority, status parameters. Include automatic resolution of companyID and assignedResourceID to names in responses.",
+        "testStrategy": "Test ticket search with complex filters, ticket creation with required fields, enhanced responses with resolved names",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "Implement Time Entry Management Tools",
+        "description": "Create MCP tools for time entry creation and management",
+        "details": "Create time-entry-tools.ts in handlers/ with create_time_entry tool. Accept parameters for ticketID, resourceID, hours, description, date. Validate time entry data and create entries in Autotask. Include enhanced responses with ticket and resource name resolution.",
+        "testStrategy": "Test time entry creation with valid/invalid data, ticket and resource ID validation, enhanced response format",
+        "priority": "medium",
+        "dependencies": [
+          8,
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "Implement Utility and Mapping Tools",
+        "description": "Create utility tools for connection testing and mapping cache management",
+        "details": "Create utility-tools.ts in handlers/ with test_connection, get_company_name, get_resource_name, get_mapping_cache_stats, clear_mapping_cache, preload_mapping_cache tools. test_connection verifies API connectivity. Mapping tools provide direct access to ID-to-name resolution and cache management.",
+        "testStrategy": "Test connection validation, individual name lookups, cache statistics accuracy, cache clearing functionality",
+        "priority": "low",
+        "dependencies": [
+          8,
+          5,
+          6
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "Create Main Application Entry Point",
+        "description": "Implement the main index.ts file that initializes and starts the MCP server",
+        "details": "Create index.ts in src/ root that imports configuration, initializes logging, creates AutotaskService and MappingService instances, sets up MCP server with all handlers and tools, and starts the server. Include graceful shutdown handling and error recovery. Export main function for CLI usage.",
+        "testStrategy": "Test server startup/shutdown, configuration loading, service initialization, error handling during startup",
+        "priority": "high",
+        "dependencies": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "Create Docker Configuration",
+        "description": "Set up Docker containerization with Dockerfile and docker-compose.yml",
+        "details": "Create Dockerfile with Node.js 18+ base image, multi-stage build for production optimization. Copy package files, install dependencies, build TypeScript, and set up runtime. Create docker-compose.yml with autotask-mcp service and autotask-mcp-dev profile for development with volume mounts. Include .dockerignore for build optimization.",
+        "testStrategy": "Test Docker build process, container startup with environment variables, development mode with hot reload",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Implement Comprehensive Test Suite",
+        "description": "Create unit tests, integration tests, and API tests with 80%+ coverage requirement",
+        "details": "Set up Jest testing framework with TypeScript support. Create tests/ directory with unit tests for services, handlers, and utilities. Add integration tests for MCP protocol compliance. Include API tests for Autotask integration (with mocked responses). Set up coverage reporting with 80% minimum threshold for all metrics.",
+        "testStrategy": "Run test suite with 'npm test', verify coverage meets requirements, test both success and error scenarios",
+        "priority": "medium",
+        "dependencies": [
+          15
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Set up Development Scripts and Tooling",
+        "description": "Configure npm scripts, ESLint, and development workflow tools",
+        "details": "Add npm scripts in package.json: dev (development with hot reload), build (TypeScript compilation), test (run tests), test:watch, test:coverage, lint, lint:fix. Configure ESLint with TypeScript rules and Prettier integration. Set up nodemon for development hot reload.",
+        "testStrategy": "Test all npm scripts execute successfully, linting catches common issues, development mode restarts on file changes",
+        "priority": "low",
+        "dependencies": [
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Create CLI Interface and NPM Package Configuration",
+        "description": "Set up command-line interface and prepare package for NPM publication",
+        "details": "Add CLI entry point with shebang for global installation. Configure package.json with bin field pointing to built CLI script. Add keywords, repository, author, license fields. Create .npmignore to exclude development files. Set up package for global installation with 'npm install -g autotask-mcp'.",
+        "testStrategy": "Test global installation, CLI command execution, package metadata is correct",
+        "priority": "medium",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Create Documentation and Examples",
+        "description": "Generate comprehensive documentation including Claude Desktop integration guide",
+        "details": "Create QUICK_START_CLAUDE.md with step-by-step Claude Desktop setup. Add API documentation with example tool usage. Create .env.example template. Document Docker deployment options. Add troubleshooting guide with common issues and solutions. Include example MCP client configurations for different deployment methods.",
+        "testStrategy": "Verify all documentation examples work correctly, configuration templates are valid, troubleshooting steps resolve common issues",
+        "priority": "low",
+        "dependencies": [
+          19
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Set up CI/CD Pipeline and GitHub Container Registry",
+        "description": "Configure GitHub Actions for automated testing, building, and publishing to GitHub Container Registry",
+        "details": "Create .github/workflows/ci.yml for automated testing on pull requests. Add build-and-publish.yml workflow for creating Docker images and publishing to ghcr.io/asachs01/autotask-mcp. Include automated NPM package publishing on releases. Set up semantic versioning and changelog generation.",
+        "testStrategy": "Test CI pipeline runs on commits, Docker images build and publish correctly, NPM package publishes on release",
+        "priority": "low",
+        "dependencies": [
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Design and Document Intelligent Workflow Tools Architecture",
+        "description": "Create comprehensive architecture design and documentation for intelligent workflow tools including Analytics, Workflows, Contextual Search, and Smart Actions with MCP elicitation support.",
+        "details": "Design a modular architecture with four core components: 1) Analytics Module - Create profitability analysis engine with trend detection algorithms, high-touch customer identification using interaction frequency and value metrics, revenue attribution models, and dashboard visualization specs. 2) Workflows Module - Design onboarding automation with step-by-step customer journey mapping, escalation routing based on priority matrices and SLA requirements, intelligent ticket routing using machine learning classification. 3) Contextual Search Module - Architect customer 360-degree view aggregating data from multiple sources (tickets, interactions, billing), technician workload balancing with capacity planning and skill matching algorithms. 4) Smart Actions Module - Design MCP elicitation framework for interactive decision-making with conversation flows, decision trees, and action recommendation engine. Create detailed system diagrams showing data flow, API interfaces, database schemas, and integration points. Document microservices architecture with clear separation of concerns, event-driven communication patterns, and scalability considerations. Include security architecture with authentication, authorization, and data privacy controls.",
+        "testStrategy": "Create architecture review checklist covering scalability, security, and maintainability requirements. Validate system diagrams against functional requirements. Review API specifications for completeness and consistency. Conduct stakeholder review sessions to ensure business requirements alignment. Create proof-of-concept implementations for critical components to validate architectural decisions.",
+        "status": "pending",
+        "dependencies": [
+          6,
+          20
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Implement Analytics Service Layer",
+        "description": "Create AnalyticsService class with methods for customer profitability analysis, ticket trend detection, high-touch customer identification, and resource capacity forecasting.",
+        "details": "Create analytics-service.ts in services/ directory implementing AnalyticsService class. Implement customerProfitabilityAnalysis() method that calculates revenue per customer using time entries, ticket costs, and contract values with configurable date ranges. Add ticketTrendDetection() method using moving averages and statistical analysis to identify patterns in ticket volume, resolution times, and priority distributions. Implement identifyHighTouchCustomers() method that analyzes interaction frequency, ticket volume, and support hours to score customers using weighted metrics. Create resourceCapacityForecasting() method that analyzes historical workload data, current assignments, and utilization rates to predict capacity needs. Include data aggregation utilities for time-series analysis, statistical calculations for trend detection, and caching mechanisms for expensive computations. Use the existing AutotaskService for data retrieval and MappingService for ID-to-name resolution. Implement proper error handling and logging throughout all analytics methods.",
+        "testStrategy": "Create unit tests for each analytics method with mocked data scenarios covering various customer profiles, ticket patterns, and resource utilization levels. Test profitability calculations with different time ranges and revenue models. Verify trend detection algorithms identify upward/downward patterns and seasonal variations. Test high-touch customer scoring with edge cases like new customers and inactive accounts. Validate capacity forecasting accuracy using historical data splits. Include performance tests for large datasets and verify caching mechanisms reduce computation time. Test error handling for missing data and invalid parameters.",
+        "status": "pending",
+        "dependencies": [
+          5,
+          6
+        ],
+        "priority": "high",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-10-01T17:30:16.490Z",
+      "updated": "2025-10-01T17:33:01.033Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
