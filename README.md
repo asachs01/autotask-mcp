@@ -50,7 +50,7 @@ npm install -g autotask-mcp
 ### From Source
 
 ```bash
-git clone https://github.com/your-org/autotask-mcp.git
+git clone https://github.com/asachs01/autotask-mcp.git
 cd autotask-mcp
 npm install
 npm run build
@@ -236,11 +236,27 @@ For detailed mapping documentation, see [docs/mapping.md](docs/mapping.md).
 
 ## Docker Deployment
 
-### Quick Start
+### Using Pre-built Image from GitHub Container Registry
+
+```bash
+# Pull the latest image
+docker pull ghcr.io/asachs01/autotask-mcp:latest
+
+# Run container with your credentials
+docker run -d \
+  --name autotask-mcp \
+  -e AUTOTASK_USERNAME="your-api-user@example.com" \
+  -e AUTOTASK_SECRET="your-secret-key" \
+  -e AUTOTASK_INTEGRATION_CODE="your-integration-code" \
+  --restart unless-stopped \
+  ghcr.io/asachs01/autotask-mcp:latest
+```
+
+### Quick Start (From Source)
 
 ```bash
 # Clone repository
-git clone https://github.com/your-org/autotask-mcp.git
+git clone https://github.com/asachs01/autotask-mcp.git
 cd autotask-mcp
 
 # Create environment file
@@ -254,7 +270,7 @@ docker compose up -d
 ### Production Deployment
 
 ```bash
-# Build production image
+# Build production image locally
 docker build -t autotask-mcp:latest .
 
 # Run container
@@ -313,7 +329,7 @@ Add the Autotask MCP server to your Claude Desktop configuration:
 }
 ```
 
-**For Docker Deployment:**
+**For Docker Deployment (GitHub Container Registry):**
 ```json
 {
   "mcpServers": {
@@ -321,8 +337,10 @@ Add the Autotask MCP server to your Claude Desktop configuration:
       "command": "docker",
       "args": [
         "run", "--rm", "-i",
-        "--env-file", "/path/to/your/.env",
-        "autotask-mcp:latest"
+        "-e", "AUTOTASK_USERNAME=your-api-username@company.com",
+        "-e", "AUTOTASK_SECRET=your-api-secret",
+        "-e", "AUTOTASK_INTEGRATION_CODE=your-integration-code",
+        "ghcr.io/asachs01/autotask-mcp:latest"
       ]
     }
   }
@@ -672,9 +690,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- 📚 [Documentation](https://github.com/your-org/autotask-mcp/wiki)
-- 🐛 [Issue Tracker](https://github.com/your-org/autotask-mcp/issues)
-- 💬 [Discussions](https://github.com/your-org/autotask-mcp/discussions)
+- 📚 [Documentation](https://github.com/asachs01/autotask-mcp/wiki)
+- 🐛 [Issue Tracker](https://github.com/asachs01/autotask-mcp/issues)
+- 💬 [Discussions](https://github.com/asachs01/autotask-mcp/discussions)
 
 ## Acknowledgments
 
