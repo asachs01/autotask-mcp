@@ -28,3 +28,22 @@ coverage/
 # Summary documents for internal reference
 DATA_OPTIMIZATION_SUMMARY.md
 NEW_ENTITIES_SUMMARY.md
+
+# Logs
+logs
+dev-debug.log
+# Dependency directories
+# Environment variables
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# OS specific
+
+# Task files
+# tasks.json
+# tasks/ 
