@@ -1,9 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: false
----
-To debug issues, refer to the logs at:
-
-- /Users/asachs/Library/Logs/Claude/mcp-server-Autotask MCP.log
-- /Users/asachs/Library/Logs/Claude/mcp.log
