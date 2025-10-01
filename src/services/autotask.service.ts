@@ -141,7 +141,7 @@ export class AutotaskService {
         
       } else {
         // DEFAULT: Get ALL matching companies via pagination for complete accuracy
-        let allCompanies: AutotaskCompany[] = [];
+        const allCompanies: AutotaskCompany[] = [];
         const pageSize = 500; // Use max safe page size for efficiency
         let currentPage = 1;
         let hasMorePages = true;
@@ -254,7 +254,7 @@ export class AutotaskService {
         
       } else {
         // DEFAULT: Get ALL matching contacts via pagination for complete accuracy
-        let allContacts: AutotaskContact[] = [];
+        const allContacts: AutotaskContact[] = [];
         const pageSize = 500; // Use max safe page size for efficiency
         let currentPage = 1;
         let hasMorePages = true;
@@ -435,7 +435,7 @@ export class AutotaskService {
         
       } else {
         // DEFAULT: Get ALL matching tickets via pagination for complete accuracy
-        let allTickets: AutotaskTicket[] = [];
+        const allTickets: AutotaskTicket[] = [];
         const pageSize = 500; // Use max safe page size for efficiency
         let currentPage = 1;
         let hasMorePages = true;
@@ -826,7 +826,7 @@ export class AutotaskService {
         
       } else {
         // DEFAULT: Get ALL matching resources via pagination for complete accuracy
-        let allResources: AutotaskResource[] = [];
+        const allResources: AutotaskResource[] = [];
         const pageSize = 500; // Use max safe page size for efficiency
         let currentPage = 1;
         let hasMorePages = true;
