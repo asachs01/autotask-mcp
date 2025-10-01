@@ -32,7 +32,7 @@
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.12.1",
+    "@modelcontextprotocol/sdk": "^1.18.2",
     "autotask-node": "^1.0.0",
     "winston": "^3.11.0",
     "zod": "^3.22.4"
