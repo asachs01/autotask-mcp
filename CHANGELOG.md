@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **Issue #9: Inaccurate Endpoints, Excessive Calls**: Upgraded to `autotask-node` v2.0.0 which fixes Resources endpoint to use POST `/query` instead of GET (405 error fix)
+- **Issue #8: Claude Desktop and Docker unable to return results**: Added `searchTerm` → filter transformation for Companies, Contacts, and Resources
+  - Company searches now filter on `companyName` field instead of fetching all companies
+  - Contact searches now filter across `firstName`, `lastName`, and `emailAddress` fields
+  - Resource searches now filter across `email`, `firstName`, and `lastName` fields
+  - When searching with `searchTerm`, limits pagination to 100 results for efficiency
+- **Issue #3: Autotask MCP out of sync with REST schema**: Fixed by upgrading to `autotask-node` v2.0.0 and proper filter construction
+
+### Changed
+- **Dependency Upgrade**: Updated `autotask-node` from v1.0.0 to v2.0.0 (local path for now until npm publish)
+- **Search Efficiency**: When `searchTerm` is provided, searches return filtered results directly from API instead of paginating through all records
+
+### Fixed (Previous)
 - **🚨 CRITICAL DATA ACCURACY FIX**: Implemented pagination-by-default to eliminate massive ticket undercounts
   - **Root Cause**: Default page size was limited to 25-50 tickets, causing severe data accuracy issues
   - **Solution**: All search tools now paginate through ALL results by default for complete datasets

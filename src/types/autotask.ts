@@ -293,6 +293,10 @@ export interface AutotaskQueryOptions {
   sort?: string;
   page?: number;
   pageSize?: number;
+  // Common search filters (Issue #8 fix)
+  searchTerm?: string;
+  companyID?: number;
+  isActive?: boolean | number;
 }
 
 // Extended query options for more advanced queries

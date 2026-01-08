@@ -118,51 +118,97 @@ export class AutotaskService {
 
   async searchCompanies(options: AutotaskQueryOptions = {}): Promise<AutotaskCompany[]> {
     const client = await this.ensureClient();
-    
+
     try {
       this.logger.debug('Searching companies with options:', options);
-      
-      // PAGINATION BY DEFAULT for data accuracy
+
+      // Build filter array from search options
+      const filters: any[] = [];
+
+      // Convert searchTerm to companyName filter (Issue #8 fix)
+      if (options.searchTerm) {
+        filters.push({
+          op: 'contains',
+          field: 'companyName',
+          value: options.searchTerm
+        });
+        this.logger.debug(`Added searchTerm filter: companyName contains "${options.searchTerm}"`);
+      }
+
+      // Add isActive filter if provided
+      if (options.isActive !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'isActive',
+          value: options.isActive
+        });
+      }
+
+      // Create query options with constructed filter
+      const baseQueryOptions: any = {};
+      if (filters.length > 0) {
+        baseQueryOptions.filter = filters;
+      }
+
+      // When searchTerm is provided, limit pagination for efficiency
+      // No need to fetch all 25,000 companies when searching for a specific name
+      if (options.searchTerm && !options.pageSize) {
+        // Limit to reasonable result set when searching
+        const queryOptions = {
+          ...baseQueryOptions,
+          pageSize: 100
+        };
+
+        this.logger.debug('Searching companies with filter:', queryOptions);
+
+        const result = await client.accounts.list(queryOptions as any);
+        const companies = (result.data as AutotaskCompany[]) || [];
+
+        this.logger.info(`Retrieved ${companies.length} companies matching "${options.searchTerm}"`);
+        return companies;
+      }
+
+      // PAGINATION BY DEFAULT for data accuracy when no searchTerm
       // Only limit results when user explicitly provides pageSize
       if (options.pageSize !== undefined && options.pageSize > 0) {
         // User wants limited results
         const queryOptions = {
-          ...options,
+          ...baseQueryOptions,
           pageSize: Math.min(options.pageSize, 500) // Respect user limit, max 500 per request
         };
 
         this.logger.debug('Single page request with user-specified limit:', queryOptions);
-        
+
         const result = await client.accounts.list(queryOptions as any);
         const companies = (result.data as AutotaskCompany[]) || [];
-        
+
         this.logger.info(`Retrieved ${companies.length} companies (limited by user to ${options.pageSize})`);
         return companies;
-        
+
       } else {
         // DEFAULT: Get ALL matching companies via pagination for complete accuracy
         const allCompanies: AutotaskCompany[] = [];
         const pageSize = 500; // Use max safe page size for efficiency
         let currentPage = 1;
         let hasMorePages = true;
-        
+
         while (hasMorePages) {
           const queryOptions = {
-            ...options,
+            ...baseQueryOptions,
             pageSize: pageSize,
             page: currentPage
           };
 
           this.logger.debug(`Fetching companies page ${currentPage}...`);
-          
+
           const result = await client.accounts.list(queryOptions as any);
           const companies = (result.data as AutotaskCompany[]) || [];
-          
+
           if (companies.length === 0) {
             hasMorePages = false;
           } else {
             allCompanies.push(...companies);
-            
+
             // Check if we got a full page - if not, we're done
             if (companies.length < pageSize) {
               hasMorePages = false;
@@ -170,14 +216,14 @@ export class AutotaskService {
               currentPage++;
             }
           }
-          
+
           // Safety check to prevent infinite loops
           if (currentPage > 50) {
             this.logger.warn('Company pagination safety limit reached at 50 pages (25,000 companies)');
             hasMorePages = false;
           }
         }
-        
+
         this.logger.info(`Retrieved ${allCompanies.length} companies across ${currentPage} pages (COMPLETE dataset for accuracy)`);
         return allCompanies;
       }
@@ -231,51 +277,109 @@ export class AutotaskService {
 
   async searchContacts(options: AutotaskQueryOptions = {}): Promise<AutotaskContact[]> {
     const client = await this.ensureClient();
-    
+
     try {
       this.logger.debug('Searching contacts with options:', options);
-      
-      // PAGINATION BY DEFAULT for data accuracy
+
+      // Build filter array from search options
+      const filters: any[] = [];
+
+      // Convert searchTerm to name/email filter (Issue #8 fix)
+      // Search across firstName, lastName, and emailAddress fields
+      if (options.searchTerm) {
+        filters.push({
+          op: 'or',
+          items: [
+            { op: 'contains', field: 'firstName', value: options.searchTerm },
+            { op: 'contains', field: 'lastName', value: options.searchTerm },
+            { op: 'contains', field: 'emailAddress', value: options.searchTerm }
+          ]
+        });
+        this.logger.debug(`Added searchTerm filter: name/email contains "${options.searchTerm}"`);
+      }
+
+      // Add companyID filter if provided
+      if (options.companyID !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'companyID',
+          value: options.companyID
+        });
+      }
+
+      // Add isActive filter if provided
+      if (options.isActive !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'isActive',
+          value: options.isActive
+        });
+      }
+
+      // Create query options with constructed filter
+      const baseQueryOptions: any = {};
+      if (filters.length > 0) {
+        baseQueryOptions.filter = filters;
+      }
+
+      // When searchTerm is provided, limit pagination for efficiency
+      if (options.searchTerm && !options.pageSize) {
+        // Limit to reasonable result set when searching
+        const queryOptions = {
+          ...baseQueryOptions,
+          pageSize: 100
+        };
+
+        this.logger.debug('Searching contacts with filter:', queryOptions);
+
+        const result = await client.contacts.list(queryOptions as any);
+        const contacts = (result.data as AutotaskContact[]) || [];
+
+        this.logger.info(`Retrieved ${contacts.length} contacts matching "${options.searchTerm}"`);
+        return contacts;
+      }
+
+      // PAGINATION BY DEFAULT for data accuracy when no searchTerm
       // Only limit results when user explicitly provides pageSize
       if (options.pageSize !== undefined && options.pageSize > 0) {
         // User wants limited results
         const queryOptions = {
-          ...options,
+          ...baseQueryOptions,
           pageSize: Math.min(options.pageSize, 500) // Respect user limit, max 500 per request
         };
 
         this.logger.debug('Single page request with user-specified limit:', queryOptions);
-        
+
         const result = await client.contacts.list(queryOptions as any);
         const contacts = (result.data as AutotaskContact[]) || [];
-        
+
         this.logger.info(`Retrieved ${contacts.length} contacts (limited by user to ${options.pageSize})`);
         return contacts;
-        
+
       } else {
         // DEFAULT: Get ALL matching contacts via pagination for complete accuracy
         const allContacts: AutotaskContact[] = [];
         const pageSize = 500; // Use max safe page size for efficiency
         let currentPage = 1;
         let hasMorePages = true;
-        
+
         while (hasMorePages) {
           const queryOptions = {
-            ...options,
+            ...baseQueryOptions,
             pageSize: pageSize,
             page: currentPage
           };
 
           this.logger.debug(`Fetching contacts page ${currentPage}...`);
-          
+
           const result = await client.contacts.list(queryOptions as any);
           const contacts = (result.data as AutotaskContact[]) || [];
-          
+
           if (contacts.length === 0) {
             hasMorePages = false;
           } else {
             allContacts.push(...contacts);
-            
+
             // Check if we got a full page - if not, we're done
             if (contacts.length < pageSize) {
               hasMorePages = false;
@@ -283,14 +387,14 @@ export class AutotaskService {
               currentPage++;
             }
           }
-          
+
           // Safety check to prevent infinite loops
           if (currentPage > 30) {
             this.logger.warn('Contact pagination safety limit reached at 30 pages (15,000 contacts)');
             hasMorePages = false;
           }
         }
-        
+
         this.logger.info(`Retrieved ${allContacts.length} contacts across ${currentPage} pages (COMPLETE dataset for accuracy)`);
         return allContacts;
       }
@@ -803,51 +907,91 @@ export class AutotaskService {
 
   async searchResources(options: AutotaskQueryOptions = {}): Promise<AutotaskResource[]> {
     const client = await this.ensureClient();
-    
+
     try {
       this.logger.debug('Searching resources with options:', options);
-      
-      // PAGINATION BY DEFAULT for data accuracy
+
+      // Build filter array from search options
+      const filters: any[] = [];
+
+      // Convert searchTerm to name/email filter (Issue #9 fix)
+      // Search across email, firstName, and lastName fields
+      if (options.searchTerm) {
+        filters.push({
+          op: 'or',
+          items: [
+            { op: 'contains', field: 'email', value: options.searchTerm },
+            { op: 'contains', field: 'firstName', value: options.searchTerm },
+            { op: 'contains', field: 'lastName', value: options.searchTerm }
+          ]
+        });
+        this.logger.debug(`Added searchTerm filter: email/name contains "${options.searchTerm}"`);
+      }
+
+      // Create query options with constructed filter
+      const baseQueryOptions: any = {};
+      if (filters.length > 0) {
+        baseQueryOptions.filter = filters;
+      }
+
+      // When searchTerm is provided, limit pagination for efficiency
+      if (options.searchTerm && !options.pageSize) {
+        // Limit to reasonable result set when searching
+        const queryOptions = {
+          ...baseQueryOptions,
+          pageSize: 100
+        };
+
+        this.logger.debug('Searching resources with filter:', queryOptions);
+
+        const result = await client.resources.list(queryOptions as any);
+        const resources = (result.data as AutotaskResource[]) || [];
+
+        this.logger.info(`Retrieved ${resources.length} resources matching "${options.searchTerm}"`);
+        return resources;
+      }
+
+      // PAGINATION BY DEFAULT for data accuracy when no searchTerm
       // Only limit results when user explicitly provides pageSize
       if (options.pageSize !== undefined && options.pageSize > 0) {
         // User wants limited results
         const queryOptions = {
-          ...options,
+          ...baseQueryOptions,
           pageSize: Math.min(options.pageSize, 500) // Respect user limit, max 500 per request
         };
 
         this.logger.debug('Single page request with user-specified limit:', queryOptions);
-        
+
         const result = await client.resources.list(queryOptions as any);
         const resources = (result.data as AutotaskResource[]) || [];
-        
+
         this.logger.info(`Retrieved ${resources.length} resources (limited by user to ${options.pageSize})`);
         return resources;
-        
+
       } else {
         // DEFAULT: Get ALL matching resources via pagination for complete accuracy
         const allResources: AutotaskResource[] = [];
         const pageSize = 500; // Use max safe page size for efficiency
         let currentPage = 1;
         let hasMorePages = true;
-        
+
         while (hasMorePages) {
           const queryOptions = {
-            ...options,
+            ...baseQueryOptions,
             pageSize: pageSize,
             page: currentPage
           };
 
           this.logger.debug(`Fetching resources page ${currentPage}...`);
-          
+
           const result = await client.resources.list(queryOptions as any);
           const resources = (result.data as AutotaskResource[]) || [];
-          
+
           if (resources.length === 0) {
             hasMorePages = false;
           } else {
             allResources.push(...resources);
-            
+
             // Check if we got a full page - if not, we're done
             if (resources.length < pageSize) {
               hasMorePages = false;
@@ -855,14 +999,14 @@ export class AutotaskService {
               currentPage++;
             }
           }
-          
+
           // Safety check to prevent infinite loops
           if (currentPage > 20) {
             this.logger.warn('Resource pagination safety limit reached at 20 pages (10,000 resources)');
             hasMorePages = false;
           }
         }
-        
+
         this.logger.info(`Retrieved ${allResources.length} resources across ${currentPage} pages (COMPLETE dataset for accuracy)`);
         return allResources;
       }
