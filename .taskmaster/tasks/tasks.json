@@ -20,7 +20,7 @@
         "testStrategy": "Unit tests for config validation with missing/present environment variables, verify default values are applied correctly",
         "priority": "high",
         "dependencies": [
-          2
+          "2"
         ],
         "status": "pending",
         "subtasks": []
@@ -33,7 +33,7 @@
         "testStrategy": "Test different log levels are filtered correctly, JSON format produces valid JSON, simple format is human-readable",
         "priority": "medium",
         "dependencies": [
-          3
+          "3"
         ],
         "status": "pending",
         "subtasks": []
@@ -46,7 +46,7 @@
         "testStrategy": "Unit tests with mocked HTTP responses, integration tests with test Autotask instance if available, test authentication flow and error handling",
         "priority": "high",
         "dependencies": [
-          4
+          "4"
         ],
         "status": "pending",
         "subtasks": []
@@ -59,7 +59,7 @@
         "testStrategy": "Test cache hit/miss scenarios, TTL expiration, bulk lookup performance, graceful fallback for unknown IDs",
         "priority": "medium",
         "dependencies": [
-          5
+          "5"
         ],
         "status": "pending",
         "subtasks": []
@@ -72,7 +72,7 @@
         "testStrategy": "TypeScript compilation validates all types, test type compatibility with actual API responses",
         "priority": "medium",
         "dependencies": [
-          2
+          "2"
         ],
         "status": "pending",
         "subtasks": []
@@ -85,7 +85,7 @@
         "testStrategy": "Test MCP protocol compliance, message parsing/serialization, error handling for malformed requests",
         "priority": "high",
         "dependencies": [
-          7
+          "7"
         ],
         "status": "pending",
         "subtasks": []
@@ -98,8 +98,8 @@
         "testStrategy": "Test resource URI parsing, data retrieval and formatting, error handling for invalid IDs",
         "priority": "medium",
         "dependencies": [
-          8,
-          5
+          "8",
+          "5"
         ],
         "status": "pending",
         "subtasks": []
@@ -112,9 +112,9 @@
         "testStrategy": "Test search filtering, company creation with required fields, update operations, enhanced response format",
         "priority": "medium",
         "dependencies": [
-          8,
-          5,
-          6
+          "8",
+          "5",
+          "6"
         ],
         "status": "pending",
         "subtasks": []
@@ -127,9 +127,9 @@
         "testStrategy": "Test contact search with various filters, contact creation with company association, enhanced response with company names",
         "priority": "medium",
         "dependencies": [
-          8,
-          5,
-          6
+          "8",
+          "5",
+          "6"
         ],
         "status": "pending",
         "subtasks": []
@@ -142,9 +142,9 @@
         "testStrategy": "Test ticket search with complex filters, ticket creation with required fields, enhanced responses with resolved names",
         "priority": "medium",
         "dependencies": [
-          8,
-          5,
-          6
+          "8",
+          "5",
+          "6"
         ],
         "status": "pending",
         "subtasks": []
@@ -157,9 +157,9 @@
         "testStrategy": "Test time entry creation with valid/invalid data, ticket and resource ID validation, enhanced response format",
         "priority": "medium",
         "dependencies": [
-          8,
-          5,
-          6
+          "8",
+          "5",
+          "6"
         ],
         "status": "pending",
         "subtasks": []
@@ -172,9 +172,9 @@
         "testStrategy": "Test connection validation, individual name lookups, cache statistics accuracy, cache clearing functionality",
         "priority": "low",
         "dependencies": [
-          8,
-          5,
-          6
+          "8",
+          "5",
+          "6"
         ],
         "status": "pending",
         "subtasks": []
@@ -187,13 +187,13 @@
         "testStrategy": "Test server startup/shutdown, configuration loading, service initialization, error handling during startup",
         "priority": "high",
         "dependencies": [
-          8,
-          9,
-          10,
-          11,
-          12,
-          13,
-          14
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14"
         ],
         "status": "pending",
         "subtasks": []
@@ -206,7 +206,7 @@
         "testStrategy": "Test Docker build process, container startup with environment variables, development mode with hot reload",
         "priority": "medium",
         "dependencies": [
-          15
+          "15"
         ],
         "status": "pending",
         "subtasks": []
@@ -219,7 +219,7 @@
         "testStrategy": "Run test suite with 'npm test', verify coverage meets requirements, test both success and error scenarios",
         "priority": "medium",
         "dependencies": [
-          15
+          "15"
         ],
         "status": "pending",
         "subtasks": []
@@ -232,7 +232,7 @@
         "testStrategy": "Test all npm scripts execute successfully, linting catches common issues, development mode restarts on file changes",
         "priority": "low",
         "dependencies": [
-          17
+          "17"
         ],
         "status": "pending",
         "subtasks": []
@@ -245,7 +245,7 @@
         "testStrategy": "Test global installation, CLI command execution, package metadata is correct",
         "priority": "medium",
         "dependencies": [
-          18
+          "18"
         ],
         "status": "pending",
         "subtasks": []
@@ -258,7 +258,7 @@
         "testStrategy": "Verify all documentation examples work correctly, configuration templates are valid, troubleshooting steps resolve common issues",
         "priority": "low",
         "dependencies": [
-          19
+          "19"
         ],
         "status": "pending",
         "subtasks": []
@@ -271,7 +271,7 @@
         "testStrategy": "Test CI pipeline runs on commits, Docker images build and publish correctly, NPM package publishes on release",
         "priority": "low",
         "dependencies": [
-          20
+          "20"
         ],
         "status": "pending",
         "subtasks": []
@@ -284,8 +284,8 @@
         "testStrategy": "Create architecture review checklist covering scalability, security, and maintainability requirements. Validate system diagrams against functional requirements. Review API specifications for completeness and consistency. Conduct stakeholder review sessions to ensure business requirements alignment. Create proof-of-concept implementations for critical components to validate architectural decisions.",
         "status": "pending",
         "dependencies": [
-          6,
-          20
+          "6",
+          "20"
         ],
         "priority": "high",
         "subtasks": []
@@ -298,17 +298,75 @@
         "testStrategy": "Create unit tests for each analytics method with mocked data scenarios covering various customer profiles, ticket patterns, and resource utilization levels. Test profitability calculations with different time ranges and revenue models. Verify trend detection algorithms identify upward/downward patterns and seasonal variations. Test high-touch customer scoring with edge cases like new customers and inactive accounts. Validate capacity forecasting accuracy using historical data splits. Include performance tests for large datasets and verify caching mechanisms reduce computation time. Test error handling for missing data and invalid parameters.",
         "status": "pending",
         "dependencies": [
-          5,
-          6
+          "5",
+          "6"
+        ],
+        "priority": "high",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Fix MaxRecords casing bug in autotask-node library",
+        "description": "Update all list() methods in autotask-node entity files to use 'maxRecords' (lowercase m) instead of 'MaxRecords' to match Autotask REST API expectations and fix pagination issues.",
+        "details": "Review and update the following confirmed files: src/entities/accounts.ts line 187, src/entities/contacts.ts line 197, src/entities/resources.ts line 183. Search entire src/entities/ directory for all other .ts files containing 'MaxRecords' in list() methods and replace with 'maxRecords'. Ensure the parameter is passed correctly in query parameters for pagination (e.g., { maxRecords: 500 }). Verify no other casing-sensitive parameters are affected by cross-referencing Autotask REST API documentation. Update any related type definitions or interfaces if 'MaxRecords' appears there. Commit changes with reference to GitHub Issues #3, #8, #9. Run full project build and linting after changes.",
+        "testStrategy": "Manually test list() methods on affected entities (Accounts, Contacts, Resources) with pagination by setting maxRecords to 10 and verifying API returns exactly 10 records without excessive calls. Test with larger values (500) to confirm pagination works end-to-end. Run integration tests against live Autotask API if available, monitoring API call counts. Verify no regressions in other entity list() methods by testing at least 5 unaffected entities. Confirm build succeeds and no TypeScript errors. Check GitHub Issues #3, #8, #9 are resolvable post-fix.",
+        "status": "done",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-01-20T21:15:11.654Z"
+      },
+      {
+        "id": 25,
+        "title": "Implement HTTP Streamable Transport for MCP Server",
+        "description": "Add HTTP Streamable transport option to the MCP server for remote access without mcp-proxy (GitHub Issue #7)",
+        "details": "Currently the autotask-mcp server only supports stdio transport which requires running on the same machine or using mcp-proxy. Users want HTTP Streamable transport to access the server remotely without additional proxy software. This is a feature request from GitHub Issue #7. Implementation should add an HTTP server mode using the MCP SDK's SSE transport capabilities. Add CLI flag (--http or --transport http) to enable HTTP mode with configurable host and port. Ensure environment variables work correctly in HTTP mode (Docker users report env vars being ignored).",
+        "testStrategy": "Test HTTP transport can be started with CLI flags. Verify MCP clients can connect over HTTP. Test environment variables are correctly loaded in HTTP mode. Test Docker deployment with HTTP transport enabled.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "medium",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "Fix Search Filter Application in autotask-mcp Service",
+        "description": "Ensure search filters (searchTerm) are correctly converted to API filters and applied to queries (GitHub Issues #8, #9)",
+        "details": "The autotask.service.ts has partial fixes for converting searchTerm to API filters, but there are still issues where filters aren't being applied correctly. Logs show 'filter:[{field:id,op:gte,value:0}]' when a searchTerm should be filtering. Issues: 1) Resources endpoint was using incorrect GET with query params instead of POST query - may need verification this is fixed. 2) The 'items' vs 'value' syntax for OR filters may not match Autotask Swagger spec. 3) Filter construction in searchResources, searchContacts, searchCompanies needs review to ensure filters are passed through correctly to autotask-node. Verify the fixes added for Issue #8/#9 are working correctly end-to-end.",
+        "testStrategy": "Test search_contacts with searchTerm 'John Smith' returns only matching contacts, not all contacts. Test search_resources with email filter returns matching resource. Monitor API logs to verify correct filter syntax is being sent. Create integration tests with real or mocked API.",
+        "status": "done",
+        "dependencies": [
+          "24"
+        ],
+        "priority": "high",
+        "subtasks": [],
+        "updatedAt": "2026-01-20T21:22:00.787Z"
+      },
+      {
+        "id": 27,
+        "title": "Comprehensive Verification and Hardening of GitHub Issues #3, #8, #9 Fixes",
+        "description": "Review and verify fixes for GitHub Issues #3, #8, #9 including maxRecords casing in autotask-node, search filter implementation in autotask-mcp, and create integration tests for pagination, search filters, and POST /query endpoint usage.",
+        "details": "1. **Review maxRecords casing fix (Task 24)**: Confirm all 214 entity files in autotask-node/src/entities/ use 'maxRecords' (lowercase 'm') in list() methods by running grep -r 'MaxRecords' src/entities/ and verifying zero matches. Cross-reference Autotask REST API documentation to ensure parameter casing matches exactly. 2. **Verify search filter implementation in autotask-mcp service**: Review autotask-mcp service code handling search queries for contacts/companies/resources, confirm filters are applied server-side before Autotask API calls using proper query builders. Check that search uses POST /query endpoint exclusively (no GET /query or list endpoints for filtered results). 3. **Create integration test suite in tests/integration/**: Write end-to-end tests using Jest + Supertest or Playwright that: a) Test pagination with maxRecords=10, verify exactly 10 records returned and next page token works; b) Test search filters on contacts (e.g., name='John'), companies (e.g., industry='Tech'), resources (e.g., active=true) return correct filtered results; c) Verify all search/filter API calls use POST /query endpoint via network inspection or request logging; d) Create regression test cases that would have caught original Issues #3, #8, #9 (e.g., maxRecords casing mismatch returns zero results, search filters ignored, incorrect HTTP method). 4. **Documentation and commit hygiene**: Ensure all fixes have proper GitHub PRs with linked issues, comprehensive commit messages following conventional commits, and updated CHANGELOG.md. Add test README with reproduction steps for original bugs. 5. **Edge case coverage**: Test empty results, maxRecords=1, invalid filters, rate limiting scenarios.",
+        "testStrategy": "1. Run grep -r 'MaxRecords' autotask-node/src/entities/ -- expect 0 matches. 2. Execute integration tests: npm run test:integration -- expect 100% pass rate covering pagination (verify record counts match maxRecords), search filters (verify filtered vs unfiltered counts differ), endpoint verification (intercept requests confirm POST /query usage). 3. Run original bug reproduction tests -- expect all to FAIL on main branch but PASS on fixed branch. 4. Verify CI/CD runs successfully with full test suite + coverage >90%. 5. Manual end-to-end test: Deploy autotask-mcp, execute CLI search/paginate commands, confirm correct behavior and API traces show proper casing/endpoint/filtering. 6. Review Git history confirms all changes properly committed with semantic messages and issue references.",
+        "status": "pending",
+        "dependencies": [
+          24,
+          17
         ],
         "priority": "high",
         "subtasks": []
       }
     ],
     "metadata": {
-      "created": "2025-10-01T17:30:16.490Z",
-      "updated": "2025-10-01T17:33:01.033Z",
-      "description": "Tasks for master context"
+      "version": "1.0.0",
+      "lastModified": "2026-01-20T21:22:00.788Z",
+      "taskCount": 25,
+      "completedCount": 2,
+      "tags": [
+        "master"
+      ],
+      "created": "2026-01-20T21:22:52.076Z",
+      "description": "Tasks for master context",
+      "updated": "2026-01-20T21:29:14.544Z"
     }
   }
 }
