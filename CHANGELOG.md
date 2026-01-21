@@ -7,17 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-01-21
+
 ### Fixed
-- **Issue #9: Inaccurate Endpoints, Excessive Calls**: Upgraded to `autotask-node` v2.0.0 which fixes Resources endpoint to use POST `/query` instead of GET (405 error fix)
+- **Issue #9: Inaccurate Endpoints, Excessive Calls**: Upgraded to `autotask-node` v2.0.2 which fixes the critical `maxRecords` casing bug. The Autotask REST API is case-sensitive and was silently ignoring `MaxRecords` (uppercase M), causing all records to be returned instead of paginated results.
 - **Issue #8: Claude Desktop and Docker unable to return results**: Added `searchTerm` → filter transformation for Companies, Contacts, and Resources
   - Company searches now filter on `companyName` field instead of fetching all companies
   - Contact searches now filter across `firstName`, `lastName`, and `emailAddress` fields
   - Resource searches now filter across `email`, `firstName`, and `lastName` fields
   - When searching with `searchTerm`, limits pagination to 100 results for efficiency
-- **Issue #3: Autotask MCP out of sync with REST schema**: Fixed by upgrading to `autotask-node` v2.0.0 and proper filter construction
+- **Issue #3: Autotask MCP out of sync with REST schema**: Fixed by upgrading to `autotask-node` v2.0.2 which corrects:
+  - `MaxRecords` → `maxRecords` (lowercase m) across all 214 entity files
+  - Proper POST `/query` endpoint usage for all list operations
 
 ### Changed
-- **Dependency Upgrade**: Updated `autotask-node` from v1.0.0 to v2.0.0 (local path for now until npm publish)
+- **Dependency Upgrade**: Updated `autotask-node` to v2.0.2 with critical pagination fix
 - **Search Efficiency**: When `searchTerm` is provided, searches return filtered results directly from API instead of paginating through all records
 
 ### Fixed (Previous)
