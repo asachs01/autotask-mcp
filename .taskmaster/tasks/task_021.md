@@ -2,9 +2,9 @@
 
 **Title:** Set up CI/CD Pipeline and GitHub Container Registry
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 20
+**Dependencies:** 20 ✓
 
 **Priority:** low
 

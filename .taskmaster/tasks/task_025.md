@@ -2,7 +2,7 @@
 
 **Title:** Implement HTTP Streamable Transport for MCP Server
 
-**Status:** pending
+**Status:** done
 
 **Dependencies:** None
 

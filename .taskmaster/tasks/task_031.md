@@ -2,7 +2,7 @@
 
 **Title:** Namespace All MCP Tools with 'autotask_' Prefix
 
-**Status:** pending
+**Status:** done
 
 **Dependencies:** None
 

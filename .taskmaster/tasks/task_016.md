@@ -2,9 +2,9 @@
 
 **Title:** Create Docker Configuration
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 15
+**Dependencies:** 15 ✓
 
 **Priority:** medium
 

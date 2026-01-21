@@ -2,9 +2,9 @@
 
 **Title:** Create MCP Resource Handlers
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 8, 5
+**Dependencies:** 8 ✓, 5 ✓
 
 **Priority:** medium
 

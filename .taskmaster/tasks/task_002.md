@@ -2,7 +2,7 @@
 
 **Title:** Initialize Node.js Project Structure
 
-**Status:** pending
+**Status:** done
 
 **Dependencies:** None
 

@@ -2,9 +2,9 @@
 
 **Title:** Implement MCP Server Core
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 7
+**Dependencies:** 7 ✓
 
 **Priority:** high
 

@@ -2,9 +2,9 @@
 
 **Title:** Set up Development Scripts and Tooling
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 17
+**Dependencies:** 17 ✓
 
 **Priority:** low
 

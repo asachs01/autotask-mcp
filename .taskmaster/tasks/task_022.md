@@ -2,9 +2,9 @@
 
 **Title:** Design and Document Intelligent Workflow Tools Architecture
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 6, 20
+**Dependencies:** 6 ✓, 20 ✓
 
 **Priority:** high
 

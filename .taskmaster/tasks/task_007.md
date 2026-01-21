@@ -2,9 +2,9 @@
 
 **Title:** Define TypeScript Types and Interfaces
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 2
+**Dependencies:** 2 ✓
 
 **Priority:** medium
 

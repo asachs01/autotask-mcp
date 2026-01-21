@@ -9,8 +9,9 @@
         "testStrategy": "Verify project builds successfully with 'npm run build', TypeScript compilation passes without errors, and all required directories exist",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:05:53.574Z"
       },
       {
         "id": 3,
@@ -22,8 +23,9 @@
         "dependencies": [
           "2"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:05:55.434Z"
       },
       {
         "id": 4,
@@ -35,8 +37,9 @@
         "dependencies": [
           "3"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:05:57.023Z"
       },
       {
         "id": 5,
@@ -48,8 +51,9 @@
         "dependencies": [
           "4"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:05:58.728Z"
       },
       {
         "id": 6,
@@ -61,8 +65,9 @@
         "dependencies": [
           "5"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:00.376Z"
       },
       {
         "id": 7,
@@ -74,8 +79,9 @@
         "dependencies": [
           "2"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:03.165Z"
       },
       {
         "id": 8,
@@ -87,8 +93,9 @@
         "dependencies": [
           "7"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:05.105Z"
       },
       {
         "id": 9,
@@ -101,8 +108,9 @@
           "8",
           "5"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:06.801Z"
       },
       {
         "id": 10,
@@ -116,8 +124,9 @@
           "5",
           "6"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:08.494Z"
       },
       {
         "id": 11,
@@ -131,8 +140,9 @@
           "5",
           "6"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:10.078Z"
       },
       {
         "id": 12,
@@ -146,8 +156,9 @@
           "5",
           "6"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:12.669Z"
       },
       {
         "id": 13,
@@ -161,8 +172,9 @@
           "5",
           "6"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:14.263Z"
       },
       {
         "id": 14,
@@ -176,8 +188,9 @@
           "5",
           "6"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:15.929Z"
       },
       {
         "id": 15,
@@ -195,8 +208,9 @@
           "13",
           "14"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:17.522Z"
       },
       {
         "id": 16,
@@ -208,8 +222,9 @@
         "dependencies": [
           "15"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:19.093Z"
       },
       {
         "id": 17,
@@ -221,8 +236,9 @@
         "dependencies": [
           "15"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:22.042Z"
       },
       {
         "id": 18,
@@ -234,8 +250,9 @@
         "dependencies": [
           "17"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:23.763Z"
       },
       {
         "id": 19,
@@ -247,8 +264,9 @@
         "dependencies": [
           "18"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:26.868Z"
       },
       {
         "id": 20,
@@ -260,8 +278,9 @@
         "dependencies": [
           "19"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:29.614Z"
       },
       {
         "id": 21,
@@ -273,8 +292,9 @@
         "dependencies": [
           "20"
         ],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:31.544Z"
       },
       {
         "id": 22,
@@ -282,13 +302,14 @@
         "description": "Create comprehensive architecture design and documentation for intelligent workflow tools including Analytics, Workflows, Contextual Search, and Smart Actions with MCP elicitation support.",
         "details": "Design a modular architecture with four core components: 1) Analytics Module - Create profitability analysis engine with trend detection algorithms, high-touch customer identification using interaction frequency and value metrics, revenue attribution models, and dashboard visualization specs. 2) Workflows Module - Design onboarding automation with step-by-step customer journey mapping, escalation routing based on priority matrices and SLA requirements, intelligent ticket routing using machine learning classification. 3) Contextual Search Module - Architect customer 360-degree view aggregating data from multiple sources (tickets, interactions, billing), technician workload balancing with capacity planning and skill matching algorithms. 4) Smart Actions Module - Design MCP elicitation framework for interactive decision-making with conversation flows, decision trees, and action recommendation engine. Create detailed system diagrams showing data flow, API interfaces, database schemas, and integration points. Document microservices architecture with clear separation of concerns, event-driven communication patterns, and scalability considerations. Include security architecture with authentication, authorization, and data privacy controls.",
         "testStrategy": "Create architecture review checklist covering scalability, security, and maintainability requirements. Validate system diagrams against functional requirements. Review API specifications for completeness and consistency. Conduct stakeholder review sessions to ensure business requirements alignment. Create proof-of-concept implementations for critical components to validate architectural decisions.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "6",
           "20"
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:34.290Z"
       },
       {
         "id": 23,
@@ -296,13 +317,14 @@
         "description": "Create AnalyticsService class with methods for customer profitability analysis, ticket trend detection, high-touch customer identification, and resource capacity forecasting.",
         "details": "Create analytics-service.ts in services/ directory implementing AnalyticsService class. Implement customerProfitabilityAnalysis() method that calculates revenue per customer using time entries, ticket costs, and contract values with configurable date ranges. Add ticketTrendDetection() method using moving averages and statistical analysis to identify patterns in ticket volume, resolution times, and priority distributions. Implement identifyHighTouchCustomers() method that analyzes interaction frequency, ticket volume, and support hours to score customers using weighted metrics. Create resourceCapacityForecasting() method that analyzes historical workload data, current assignments, and utilization rates to predict capacity needs. Include data aggregation utilities for time-series analysis, statistical calculations for trend detection, and caching mechanisms for expensive computations. Use the existing AutotaskService for data retrieval and MappingService for ID-to-name resolution. Implement proper error handling and logging throughout all analytics methods.",
         "testStrategy": "Create unit tests for each analytics method with mocked data scenarios covering various customer profiles, ticket patterns, and resource utilization levels. Test profitability calculations with different time ranges and revenue models. Verify trend detection algorithms identify upward/downward patterns and seasonal variations. Test high-touch customer scoring with edge cases like new customers and inactive accounts. Validate capacity forecasting accuracy using historical data splits. Include performance tests for large datasets and verify caching mechanisms reduce computation time. Test error handling for missing data and invalid parameters.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
           "5",
           "6"
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:36.156Z"
       },
       {
         "id": 24,
@@ -322,10 +344,11 @@
         "description": "Add HTTP Streamable transport option to the MCP server for remote access without mcp-proxy (GitHub Issue #7)",
         "details": "Currently the autotask-mcp server only supports stdio transport which requires running on the same machine or using mcp-proxy. Users want HTTP Streamable transport to access the server remotely without additional proxy software. This is a feature request from GitHub Issue #7. Implementation should add an HTTP server mode using the MCP SDK's SSE transport capabilities. Add CLI flag (--http or --transport http) to enable HTTP mode with configurable host and port. Ensure environment variables work correctly in HTTP mode (Docker users report env vars being ignored).",
         "testStrategy": "Test HTTP transport can be started with CLI flags. Verify MCP clients can connect over HTTP. Test environment variables are correctly loaded in HTTP mode. Test Docker deployment with HTTP transport enabled.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [],
         "priority": "medium",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:47.959Z"
       },
       {
         "id": 26,
@@ -347,25 +370,32 @@
         "description": "Review and verify fixes for GitHub Issues #3, #8, #9 including maxRecords casing in autotask-node, search filter implementation in autotask-mcp, and create integration tests for pagination, search filters, and POST /query endpoint usage.",
         "details": "1. **Review maxRecords casing fix (Task 24)**: Confirm all 214 entity files in autotask-node/src/entities/ use 'maxRecords' (lowercase 'm') in list() methods by running grep -r 'MaxRecords' src/entities/ and verifying zero matches. Cross-reference Autotask REST API documentation to ensure parameter casing matches exactly. 2. **Verify search filter implementation in autotask-mcp service**: Review autotask-mcp service code handling search queries for contacts/companies/resources, confirm filters are applied server-side before Autotask API calls using proper query builders. Check that search uses POST /query endpoint exclusively (no GET /query or list endpoints for filtered results). 3. **Create integration test suite in tests/integration/**: Write end-to-end tests using Jest + Supertest or Playwright that: a) Test pagination with maxRecords=10, verify exactly 10 records returned and next page token works; b) Test search filters on contacts (e.g., name='John'), companies (e.g., industry='Tech'), resources (e.g., active=true) return correct filtered results; c) Verify all search/filter API calls use POST /query endpoint via network inspection or request logging; d) Create regression test cases that would have caught original Issues #3, #8, #9 (e.g., maxRecords casing mismatch returns zero results, search filters ignored, incorrect HTTP method). 4. **Documentation and commit hygiene**: Ensure all fixes have proper GitHub PRs with linked issues, comprehensive commit messages following conventional commits, and updated CHANGELOG.md. Add test README with reproduction steps for original bugs. 5. **Edge case coverage**: Test empty results, maxRecords=1, invalid filters, rate limiting scenarios.",
         "testStrategy": "1. Run grep -r 'MaxRecords' autotask-node/src/entities/ -- expect 0 matches. 2. Execute integration tests: npm run test:integration -- expect 100% pass rate covering pagination (verify record counts match maxRecords), search filters (verify filtered vs unfiltered counts differ), endpoint verification (intercept requests confirm POST /query usage). 3. Run original bug reproduction tests -- expect all to FAIL on main branch but PASS on fixed branch. 4. Verify CI/CD runs successfully with full test suite + coverage >90%. 5. Manual end-to-end test: Deploy autotask-mcp, execute CLI search/paginate commands, confirm correct behavior and API traces show proper casing/endpoint/filtering. 6. Review Git history confirms all changes properly committed with semantic messages and issue references.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [
-          24,
-          17
+          "24",
+          "17"
         ],
         "priority": "high",
-        "subtasks": []
+        "subtasks": [],
+        "updatedAt": "2026-01-21T17:06:49.544Z"
       },
       {
-        "id": 28,
+        "id": "28",
         "title": "Implement MCP Lazy Loading / Progressive Tool Discovery",
         "description": "Add lazy loading support for MCP tools to reduce context overhead. Currently 35 tools are loaded upfront which consumes significant context tokens. Implement progressive discovery pattern.",
-        "details": "The autotask-mcp server exposes 35 tools which creates context overhead when all tool schemas are loaded upfront. Implement lazy loading using one of two approaches:\n\n**Option A: Server-Side Progressive Discovery (Recommended)**\nImplement a three-tool meta-interface inspired by mcp-dynamic-proxy:\n1. `autotask_list_categories` - Returns tool categories (Companies, Contacts, Tickets, TimeEntries, Resources, Utility) without full schemas\n2. `autotask_list_tools` - Returns tools for a specific category with full JSON schemas\n3. `autotask_execute_tool` - Proxies execution to the actual tool\n\nThis reduces initial context from 35 tools to 3 tools (97% reduction).\n\n**Option B: Client-Side Compatibility**\nEnsure compatibility with Claude Code's built-in MCP Tool Search feature which auto-detects when tools exceed 10% context and switches to on-demand discovery.\n\n**Implementation Steps:**\n1. Add tool categorization metadata to existing tools\n2. Create meta-tools for progressive discovery\n3. Add CLI flag `--lazy-loading` to enable/disable\n4. Update tool handler to support both modes\n5. Add documentation for lazy loading configuration\n6. Benchmark token usage before/after",
-        "testStrategy": "1. Measure baseline token usage with all 35 tools loaded. 2. Implement lazy loading and measure reduced token usage. 3. Test tool discovery flow: list_categories -> list_tools -> execute_tool. 4. Verify backward compatibility - existing direct tool calls still work. 5. Test with Claude Code MCP Tool Search enabled. 6. Performance benchmark: response time for tool discovery vs direct call.",
         "status": "pending",
-        "dependencies": [25],
+        "dependencies": [
+          "25"
+        ],
         "priority": "medium",
+        "details": "The autotask-mcp server exposes 35 tools which creates context overhead when all tool schemas are loaded upfront. Implement lazy loading using one of two approaches:\n\n**Option A: Server-Side Progressive Discovery (Recommended)**\nImplement a three-tool meta-interface inspired by mcp-dynamic-proxy and modern MCP patterns like MCP-Zero and progressive disclosure:\n1. `autotask_list_categories` - Returns tool categories (Companies, Contacts, Tickets, TimeEntries, Resources, Utility) without full schemas\n2. `autotask_list_tools` - Returns tools for a specific category with full JSON schemas\n3. `autotask_execute_tool` - Proxies execution to the actual tool\n\nThis reduces initial context from 35 tools to 3 tools (97% reduction).\n\n**Option B: Client-Side Compatibility**\nEnsure compatibility with Claude Code's built-in MCP Tool Search feature which auto-detects when tools exceed 10% context and switches to on-demand discovery.\n\n**Implementation Steps:**\n1. Add tool categorization metadata to existing tools (leverage completed company/contact tools from Tasks 10/11)\n2. Create meta-tools for progressive discovery\n3. Add CLI flag `--lazy-loading` to enable/disable\n4. Update tool handler to support both modes\n5. Add documentation for lazy loading configuration\n6. Benchmark token usage before/after[1][2][3][4]",
+        "testStrategy": "1. Measure baseline token usage with all 35 tools loaded. 2. Implement lazy loading and measure reduced token usage. 3. Test tool discovery flow: list_categories -> list_tools -> execute_tool. 4. Verify backward compatibility - existing direct tool calls still work (test with completed Tasks 10/11 tools). 5. Test with Claude Code MCP Tool Search enabled. 6. Performance benchmark: response time for tool discovery vs direct call.",
         "subtasks": [],
-        "tags": ["v1.2.0", "feature", "performance"]
+        "tags": [
+          "v2.1.0",
+          "feature",
+          "performance"
+        ]
       },
       {
         "id": 29,
@@ -374,10 +404,17 @@
         "details": "Create a decision tree system that routes user requests to appropriate tools based on intent classification:\n\n**Decision Tree Structure:**\n```\nUser Intent\n├── Customer Lookup\n│   ├── By Name → search_companies / search_contacts\n│   ├── By ID → get_company / get_contact\n│   └── Create New → create_company / create_contact\n├── Ticket Management\n│   ├── Find Tickets → search_tickets\n│   ├── Create Ticket → create_ticket (requires: companyId, title)\n│   └── Update Ticket → update_ticket\n├── Time Tracking\n│   ├── Log Time → create_time_entry (requires: ticketId, hours)\n│   └── View Time → get_time_entries\n└── Resource Management\n    ├── Find Resource → search_resources\n    └── Resource Details → get_resource\n```\n\n**Implementation:**\n1. Create `autotask_router` meta-tool that accepts natural language intent\n2. Implement intent classifier (can use simple keyword matching or embeddings)\n3. Build decision tree with required/optional parameter mapping\n4. Add MCP elicitation support for missing required parameters\n5. Return suggested tool + pre-filled parameters\n6. Support multi-step workflows (e.g., 'create ticket for Acme Corp' → search_companies → create_ticket)\n\n**Example Flow:**\nUser: 'Log 2 hours on ticket 12345'\n→ Router identifies: Time Tracking → Log Time\n→ Extracts: ticketId=12345, hours=2\n→ Returns: {tool: 'create_time_entry', params: {ticketId: 12345, hours: 2}}",
         "testStrategy": "1. Test intent classification accuracy with sample queries. 2. Verify decision tree correctly routes to expected tools. 3. Test parameter extraction from natural language. 4. Test MCP elicitation for missing parameters. 5. Test multi-step workflow execution. 6. Benchmark routing latency vs direct tool call.",
         "status": "pending",
-        "dependencies": [28],
+        "dependencies": [
+          "28"
+        ],
         "priority": "medium",
         "subtasks": [],
-        "tags": ["v1.3.0", "feature", "ai", "ux"]
+        "tags": [
+          "v2.2.0",
+          "feature",
+          "ai",
+          "ux"
+        ]
       },
       {
         "id": 30,
@@ -386,10 +423,16 @@
         "details": "MCP elicitation allows servers to request additional information from users during tool execution. This is essential for:\n\n1. **Missing Required Parameters**: When a tool is called without required params (e.g., create_ticket without companyId)\n2. **Disambiguation**: When search results return multiple matches\n3. **Confirmation**: For destructive operations (delete, update)\n4. **Multi-Step Workflows**: Collecting parameters across multiple steps\n\n**Implementation:**\n1. Add elicitation support to tool handler\n2. Define elicitation schemas for each tool's required parameters\n3. Implement confirmation prompts for create/update/delete operations\n4. Add disambiguation UI for multiple search results\n5. Support conversation context for multi-turn interactions\n\n**Example Elicitation Flow:**\n```\nUser: 'Create a ticket'\nServer: [elicit] 'Which company is this ticket for?'\nUser: 'Acme Corp'\nServer: [elicit] 'Found 2 companies: Acme Corp Inc, Acme Corporation. Which one?'\nUser: 'Acme Corp Inc'\nServer: [elicit] 'What is the ticket title?'\nUser: 'Network issue'\nServer: [execute] create_ticket(companyId=123, title='Network issue')\n```",
         "testStrategy": "1. Test elicitation triggers for missing required params. 2. Test disambiguation with multiple search results. 3. Test confirmation prompts for destructive operations. 4. Test multi-turn conversation context preservation. 5. Test graceful fallback when elicitation unsupported by client.",
         "status": "pending",
-        "dependencies": [29],
+        "dependencies": [
+          "29"
+        ],
         "priority": "low",
         "subtasks": [],
-        "tags": ["v1.3.0", "feature", "ux"]
+        "tags": [
+          "v2.3.0",
+          "feature",
+          "ux"
+        ]
       },
       {
         "id": 31,
@@ -397,24 +440,28 @@
         "description": "Refactor all 35 MCP tools to use 'autotask_' namespace prefix to prevent tool name collisions when multiple MCP servers are connected.",
         "details": "**Problem:**\nCurrent tool names like `search_companies`, `create_ticket` are generic and will collide with other MCP servers that have similar tools (e.g., Salesforce MCP, Jira MCP).\n\n**Solution:**\nAdd `autotask_` namespace prefix to all tools:\n- `search_companies` → `autotask_search_companies`\n- `create_ticket` → `autotask_create_ticket`\n- `test_connection` → `autotask_test_connection`\n- etc.\n\n**Implementation:**\n1. Update tool definitions in `src/handlers/tool.handler.ts`\n2. Update tool call handler to use new names\n3. **Backwards Compatibility Option A (v1.4.0)**: Keep old names as aliases, emit deprecation warning\n4. **Backwards Compatibility Option B (v2.0.0)**: Remove old names, document breaking change\n5. Update all documentation and examples\n6. Update tests to use new tool names\n\n**Files to Modify:**\n- `src/handlers/tool.handler.ts` - Tool definitions (35 tools)\n- `src/mcp/server.ts` - Tool call routing\n- `tests/*.test.ts` - All test files\n- `README.md`, `QUICK_START_CLAUDE.md` - Documentation\n- `CHANGELOG.md` - Document change\n\n**Naming Convention:**\n```\nautotask_<entity>_<action>\nautotask_company_search\nautotask_company_create\nautotask_ticket_search\nautotask_ticket_create\nautotask_time_entry_create\nautotask_resource_search\nautotask_connection_test\n```\n\nAlternatively, simpler flat namespace:\n```\nautotask_search_companies\nautotask_create_company\nautotask_search_tickets\n```",
         "testStrategy": "1. Verify all 35 tools have autotask_ prefix. 2. Test tool calls work with new names. 3. If backwards compat: test old names still work with deprecation warning. 4. Test Claude Desktop integration with namespaced tools. 5. Grep for old tool names in codebase - should be zero (except aliases). 6. Update and run full test suite.",
-        "status": "pending",
+        "status": "done",
         "dependencies": [],
         "priority": "high",
         "subtasks": [],
-        "tags": ["v2.0.0", "refactor", "breaking-change"]
+        "tags": [
+          "v2.0.0",
+          "refactor",
+          "breaking-change"
+        ],
+        "updatedAt": "2026-01-21T21:29:59.214Z"
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-01-20T23:00:00.000Z",
+      "lastModified": "2026-01-21T21:29:59.214Z",
       "taskCount": 30,
-      "completedCount": 2,
+      "completedCount": 27,
       "tags": [
         "master"
       ],
-      "created": "2026-01-20T21:22:52.076Z",
-      "description": "Tasks for master context",
-      "updated": "2026-01-20T21:29:14.544Z"
+      "created": "2026-01-21T22:40:31.455Z",
+      "description": "Tasks for master context"
     }
   }
 }

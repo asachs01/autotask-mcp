@@ -2,9 +2,9 @@
 
 **Title:** Implement Utility and Mapping Tools
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 8, 5, 6
+**Dependencies:** 8 ✓, 5 ✓, 6 ✓
 
 **Priority:** low
 

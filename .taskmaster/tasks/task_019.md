@@ -2,9 +2,9 @@
 
 **Title:** Create CLI Interface and NPM Package Configuration
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 18
+**Dependencies:** 18 ✓
 
 **Priority:** medium
 

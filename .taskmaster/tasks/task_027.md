@@ -2,9 +2,9 @@
 
 **Title:** Comprehensive Verification and Hardening of GitHub Issues #3, #8, #9 Fixes
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 24 ✓, 17
+**Dependencies:** 24 ✓, 17 ✓
 
 **Priority:** high
 

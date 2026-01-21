@@ -2,9 +2,9 @@
 
 **Title:** Create Documentation and Examples
 
-**Status:** pending
+**Status:** done
 
-**Dependencies:** 19
+**Dependencies:** 19 ✓
 
 **Priority:** low
 
