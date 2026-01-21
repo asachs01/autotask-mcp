@@ -354,12 +354,60 @@
         ],
         "priority": "high",
         "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "Implement MCP Lazy Loading / Progressive Tool Discovery",
+        "description": "Add lazy loading support for MCP tools to reduce context overhead. Currently 35 tools are loaded upfront which consumes significant context tokens. Implement progressive discovery pattern.",
+        "details": "The autotask-mcp server exposes 35 tools which creates context overhead when all tool schemas are loaded upfront. Implement lazy loading using one of two approaches:\n\n**Option A: Server-Side Progressive Discovery (Recommended)**\nImplement a three-tool meta-interface inspired by mcp-dynamic-proxy:\n1. `autotask_list_categories` - Returns tool categories (Companies, Contacts, Tickets, TimeEntries, Resources, Utility) without full schemas\n2. `autotask_list_tools` - Returns tools for a specific category with full JSON schemas\n3. `autotask_execute_tool` - Proxies execution to the actual tool\n\nThis reduces initial context from 35 tools to 3 tools (97% reduction).\n\n**Option B: Client-Side Compatibility**\nEnsure compatibility with Claude Code's built-in MCP Tool Search feature which auto-detects when tools exceed 10% context and switches to on-demand discovery.\n\n**Implementation Steps:**\n1. Add tool categorization metadata to existing tools\n2. Create meta-tools for progressive discovery\n3. Add CLI flag `--lazy-loading` to enable/disable\n4. Update tool handler to support both modes\n5. Add documentation for lazy loading configuration\n6. Benchmark token usage before/after",
+        "testStrategy": "1. Measure baseline token usage with all 35 tools loaded. 2. Implement lazy loading and measure reduced token usage. 3. Test tool discovery flow: list_categories -> list_tools -> execute_tool. 4. Verify backward compatibility - existing direct tool calls still work. 5. Test with Claude Code MCP Tool Search enabled. 6. Performance benchmark: response time for tool discovery vs direct call.",
+        "status": "pending",
+        "dependencies": [25],
+        "priority": "medium",
+        "subtasks": [],
+        "tags": ["v1.2.0", "feature", "performance"]
+      },
+      {
+        "id": 29,
+        "title": "Implement Decision Tree Based Tool Routing",
+        "description": "Add intelligent tool routing using decision trees to automatically select appropriate tools based on user intent, reducing cognitive load and improving accuracy.",
+        "details": "Create a decision tree system that routes user requests to appropriate tools based on intent classification:\n\n**Decision Tree Structure:**\n```\nUser Intent\n├── Customer Lookup\n│   ├── By Name → search_companies / search_contacts\n│   ├── By ID → get_company / get_contact\n│   └── Create New → create_company / create_contact\n├── Ticket Management\n│   ├── Find Tickets → search_tickets\n│   ├── Create Ticket → create_ticket (requires: companyId, title)\n│   └── Update Ticket → update_ticket\n├── Time Tracking\n│   ├── Log Time → create_time_entry (requires: ticketId, hours)\n│   └── View Time → get_time_entries\n└── Resource Management\n    ├── Find Resource → search_resources\n    └── Resource Details → get_resource\n```\n\n**Implementation:**\n1. Create `autotask_router` meta-tool that accepts natural language intent\n2. Implement intent classifier (can use simple keyword matching or embeddings)\n3. Build decision tree with required/optional parameter mapping\n4. Add MCP elicitation support for missing required parameters\n5. Return suggested tool + pre-filled parameters\n6. Support multi-step workflows (e.g., 'create ticket for Acme Corp' → search_companies → create_ticket)\n\n**Example Flow:**\nUser: 'Log 2 hours on ticket 12345'\n→ Router identifies: Time Tracking → Log Time\n→ Extracts: ticketId=12345, hours=2\n→ Returns: {tool: 'create_time_entry', params: {ticketId: 12345, hours: 2}}",
+        "testStrategy": "1. Test intent classification accuracy with sample queries. 2. Verify decision tree correctly routes to expected tools. 3. Test parameter extraction from natural language. 4. Test MCP elicitation for missing parameters. 5. Test multi-step workflow execution. 6. Benchmark routing latency vs direct tool call.",
+        "status": "pending",
+        "dependencies": [28],
+        "priority": "medium",
+        "subtasks": [],
+        "tags": ["v1.3.0", "feature", "ai", "ux"]
+      },
+      {
+        "id": 30,
+        "title": "Add MCP Elicitation Support for Interactive Workflows",
+        "description": "Implement MCP elicitation protocol to enable interactive parameter collection when required tool parameters are missing.",
+        "details": "MCP elicitation allows servers to request additional information from users during tool execution. This is essential for:\n\n1. **Missing Required Parameters**: When a tool is called without required params (e.g., create_ticket without companyId)\n2. **Disambiguation**: When search results return multiple matches\n3. **Confirmation**: For destructive operations (delete, update)\n4. **Multi-Step Workflows**: Collecting parameters across multiple steps\n\n**Implementation:**\n1. Add elicitation support to tool handler\n2. Define elicitation schemas for each tool's required parameters\n3. Implement confirmation prompts for create/update/delete operations\n4. Add disambiguation UI for multiple search results\n5. Support conversation context for multi-turn interactions\n\n**Example Elicitation Flow:**\n```\nUser: 'Create a ticket'\nServer: [elicit] 'Which company is this ticket for?'\nUser: 'Acme Corp'\nServer: [elicit] 'Found 2 companies: Acme Corp Inc, Acme Corporation. Which one?'\nUser: 'Acme Corp Inc'\nServer: [elicit] 'What is the ticket title?'\nUser: 'Network issue'\nServer: [execute] create_ticket(companyId=123, title='Network issue')\n```",
+        "testStrategy": "1. Test elicitation triggers for missing required params. 2. Test disambiguation with multiple search results. 3. Test confirmation prompts for destructive operations. 4. Test multi-turn conversation context preservation. 5. Test graceful fallback when elicitation unsupported by client.",
+        "status": "pending",
+        "dependencies": [29],
+        "priority": "low",
+        "subtasks": [],
+        "tags": ["v1.3.0", "feature", "ux"]
+      },
+      {
+        "id": 31,
+        "title": "Namespace All MCP Tools with 'autotask_' Prefix",
+        "description": "Refactor all 35 MCP tools to use 'autotask_' namespace prefix to prevent tool name collisions when multiple MCP servers are connected.",
+        "details": "**Problem:**\nCurrent tool names like `search_companies`, `create_ticket` are generic and will collide with other MCP servers that have similar tools (e.g., Salesforce MCP, Jira MCP).\n\n**Solution:**\nAdd `autotask_` namespace prefix to all tools:\n- `search_companies` → `autotask_search_companies`\n- `create_ticket` → `autotask_create_ticket`\n- `test_connection` → `autotask_test_connection`\n- etc.\n\n**Implementation:**\n1. Update tool definitions in `src/handlers/tool.handler.ts`\n2. Update tool call handler to use new names\n3. **Backwards Compatibility Option A (v1.4.0)**: Keep old names as aliases, emit deprecation warning\n4. **Backwards Compatibility Option B (v2.0.0)**: Remove old names, document breaking change\n5. Update all documentation and examples\n6. Update tests to use new tool names\n\n**Files to Modify:**\n- `src/handlers/tool.handler.ts` - Tool definitions (35 tools)\n- `src/mcp/server.ts` - Tool call routing\n- `tests/*.test.ts` - All test files\n- `README.md`, `QUICK_START_CLAUDE.md` - Documentation\n- `CHANGELOG.md` - Document change\n\n**Naming Convention:**\n```\nautotask_<entity>_<action>\nautotask_company_search\nautotask_company_create\nautotask_ticket_search\nautotask_ticket_create\nautotask_time_entry_create\nautotask_resource_search\nautotask_connection_test\n```\n\nAlternatively, simpler flat namespace:\n```\nautotask_search_companies\nautotask_create_company\nautotask_search_tickets\n```",
+        "testStrategy": "1. Verify all 35 tools have autotask_ prefix. 2. Test tool calls work with new names. 3. If backwards compat: test old names still work with deprecation warning. 4. Test Claude Desktop integration with namespaced tools. 5. Grep for old tool names in codebase - should be zero (except aliases). 6. Update and run full test suite.",
+        "status": "pending",
+        "dependencies": [],
+        "priority": "high",
+        "subtasks": [],
+        "tags": ["v2.0.0", "refactor", "breaking-change"]
       }
     ],
     "metadata": {
       "version": "1.0.0",
-      "lastModified": "2026-01-20T21:22:00.788Z",
-      "taskCount": 25,
+      "lastModified": "2026-01-20T23:00:00.000Z",
+      "taskCount": 30,
       "completedCount": 2,
       "tags": [
         "master"
