@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/asachs01/autotask-mcp/compare/v2.0.0...v2.0.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* **ci:** Add proper permissions for release and security scan jobs ([d60e138](https://github.com/asachs01/autotask-mcp/commit/d60e138684c214dcab6196cffe977fb581bc20eb))
+* **ci:** Disable npm publishing in semantic-release ([ae11880](https://github.com/asachs01/autotask-mcp/commit/ae118800add292aaf5aa626aef29cc61e9d8cff9))
+* **ci:** Replace local file dependency with git dependency for autotask-node ([828bf1a](https://github.com/asachs01/autotask-mcp/commit/828bf1abb4872ecc40c0b64ea080c6126ecee2ed)), closes [asachs01/autotask-node#v2](https://github.com/asachs01/autotask-node/issues/v2)
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -290,4 +299,4 @@ Each release includes:
 - Advanced filtering and sorting options
 - Bulk operations for data manipulation
 - Performance optimizations and caching
-- GraphQL interface for advanced queries 
+- GraphQL interface for advanced queries
