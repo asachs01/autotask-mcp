@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-01-21
+
+### Breaking Changes
+- **Tool Namespacing**: All 35 MCP tools now use `autotask_` prefix to prevent naming collisions when multiple MCP servers are connected
+  - `search_companies` → `autotask_search_companies`
+  - `create_ticket` → `autotask_create_ticket`
+  - `test_connection` → `autotask_test_connection`
+  - All other tools follow the same pattern: `autotask_<original_name>`
+- **Migration Required**: Update all tool calls in your MCP client configuration to use the new namespaced names
+
+### Changed
+- All tool definitions in `tool.handler.ts` updated with `autotask_` prefix
+- Documentation updated to reflect new tool names
+
 ## [1.0.2] - 2026-01-21
 
 ### Fixed

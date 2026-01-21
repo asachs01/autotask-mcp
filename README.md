@@ -142,30 +142,30 @@ Resources provide read-only access to Autotask data:
 Tools provide interactive operations:
 
 #### Company Operations
-- `search_companies` - Search companies with filters
-- `create_company` - Create new company
-- `update_company` - Update existing company
+- `autotask_search_companies` - Search companies with filters
+- `autotask_create_company` - Create new company
+- `autotask_update_company` - Update existing company
 
 #### Contact Operations  
-- `search_contacts` - Search contacts with filters
-- `create_contact` - Create new contact
+- `autotask_search_contacts` - Search contacts with filters
+- `autotask_create_contact` - Create new contact
 
 #### Ticket Operations
-- `search_tickets` - Search tickets with filters
-- `create_ticket` - Create new ticket
+- `autotask_search_tickets` - Search tickets with filters
+- `autotask_create_ticket` - Create new ticket
 
 #### Time Entry Operations
-- `create_time_entry` - Log time entry
+- `autotask_create_time_entry` - Log time entry
 
 #### Utility Operations
-- `test_connection` - Test API connectivity
+- `autotask_test_connection` - Test API connectivity
 
 ### Example Tool Usage
 
 ```javascript
 // Search for companies
 {
-  "name": "search_companies",
+  "name": "autotask_search_companies",
   "arguments": {
     "searchTerm": "Acme Corp",
     "isActive": true,
@@ -175,7 +175,7 @@ Tools provide interactive operations:
 
 // Create a new ticket
 {
-  "name": "create_ticket",
+  "name": "autotask_create_ticket",
   "arguments": {
     "companyID": 12345,
     "title": "Server maintenance request",
@@ -419,23 +419,23 @@ Once connected, Claude can access these Autotask resources:
 Claude can perform these actions via MCP tools:
 
 #### Company Operations
-- **search_companies**: Find companies with filters
+- **autotask_search_companies**: Find companies with filters
 - **create_company**: Create new companies
 - **update_company**: Modify existing companies
 
 #### Contact Operations
-- **search_contacts**: Find contacts with filters
+- **autotask_search_contacts**: Find contacts with filters
 - **create_contact**: Create new contacts
 
 #### Ticket Operations
-- **search_tickets**: Find tickets with filters
-- **create_ticket**: Create new tickets
+- **autotask_search_tickets**: Find tickets with filters
+- **autotask_create_ticket**: Create new tickets
 
 #### Time Entry Operations
 - **create_time_entry**: Log time entries
 
 #### Utility Operations
-- **test_connection**: Verify Autotask API connectivity
+- **autotask_test_connection**: Verify Autotask API connectivity
 
 ### Example Usage Scenarios
 

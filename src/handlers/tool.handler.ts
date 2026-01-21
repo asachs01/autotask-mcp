@@ -40,7 +40,7 @@ export class AutotaskToolHandler {
     const tools: McpTool[] = [
       // Connection testing
       {
-        name: 'test_connection',
+        name: 'autotask_test_connection',
         description: 'Test the connection to Autotask API',
         inputSchema: {
           type: 'object',
@@ -51,7 +51,7 @@ export class AutotaskToolHandler {
 
       // Company tools
       {
-        name: 'search_companies',
+        name: 'autotask_search_companies',
         description: 'Search for companies in Autotask with optional filters',
         inputSchema: {
           type: 'object',
@@ -75,7 +75,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_company',
+        name: 'autotask_create_company',
         description: 'Create a new company in Autotask',
         inputSchema: {
           type: 'object',
@@ -121,7 +121,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'update_company',
+        name: 'autotask_update_company',
         description: 'Update an existing company in Autotask',
         inputSchema: {
           type: 'object',
@@ -165,7 +165,7 @@ export class AutotaskToolHandler {
 
       // Contact tools
       {
-        name: 'search_contacts',
+        name: 'autotask_search_contacts',
         description: 'Search for contacts in Autotask with optional filters',
         inputSchema: {
           type: 'object',
@@ -193,7 +193,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_contact',
+        name: 'autotask_create_contact',
         description: 'Create a new contact in Autotask',
         inputSchema: {
           type: 'object',
@@ -229,7 +229,7 @@ export class AutotaskToolHandler {
 
       // Ticket tools
       {
-        name: 'search_tickets',
+        name: 'autotask_search_tickets',
         description: 'Search for tickets in Autotask with optional filters. BY DEFAULT retrieves ALL matching tickets via pagination for complete accuracy. Only specify pageSize to limit results. Perfect for reports and analytics.',
         inputSchema: {
           type: 'object',
@@ -265,7 +265,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'get_ticket_details',
+        name: 'autotask_get_ticket_details',
         description: 'Get detailed information for a specific ticket by ID. Use this for full ticket data when needed.',
         inputSchema: {
           type: 'object',
@@ -284,7 +284,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_ticket',
+        name: 'autotask_create_ticket',
         description: 'Create a new ticket in Autotask',
         inputSchema: {
           type: 'object',
@@ -324,7 +324,7 @@ export class AutotaskToolHandler {
 
       // Time entry tools
       {
-        name: 'create_time_entry',
+        name: 'autotask_create_time_entry',
         description: 'Create a time entry in Autotask',
         inputSchema: {
           type: 'object',
@@ -372,7 +372,7 @@ export class AutotaskToolHandler {
 
       // Project tools
       {
-        name: 'search_projects',
+        name: 'autotask_search_projects',
         description: 'Search for projects in Autotask with optional filters. Returns optimized project data to prevent large responses.',
         inputSchema: {
           type: 'object',
@@ -404,7 +404,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_project',
+        name: 'autotask_create_project',
         description: 'Create a new project in Autotask',
         inputSchema: {
           type: 'object',
@@ -448,7 +448,7 @@ export class AutotaskToolHandler {
 
       // Resource tools
       {
-        name: 'search_resources',
+        name: 'autotask_search_resources',
         description: 'Search for resources (users) in Autotask with optional filters',
         inputSchema: {
           type: 'object',
@@ -482,7 +482,7 @@ export class AutotaskToolHandler {
 
       // Ticket Notes tools
       {
-        name: 'get_ticket_note',
+        name: 'autotask_get_ticket_note',
         description: 'Get a specific ticket note by ticket ID and note ID',
         inputSchema: {
           type: 'object',
@@ -500,7 +500,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'search_ticket_notes',
+        name: 'autotask_search_ticket_notes',
         description: 'Search for notes on a specific ticket',
         inputSchema: {
           type: 'object',
@@ -520,7 +520,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_ticket_note',
+        name: 'autotask_create_ticket_note',
         description: 'Create a new note for a ticket',
         inputSchema: {
           type: 'object',
@@ -552,7 +552,7 @@ export class AutotaskToolHandler {
 
       // Project Notes tools  
       {
-        name: 'get_project_note',
+        name: 'autotask_get_project_note',
         description: 'Get a specific project note by project ID and note ID',
         inputSchema: {
           type: 'object',
@@ -570,7 +570,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'search_project_notes',
+        name: 'autotask_search_project_notes',
         description: 'Search for notes on a specific project',
         inputSchema: {
           type: 'object',
@@ -590,7 +590,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_project_note',
+        name: 'autotask_create_project_note',
         description: 'Create a new note for a project',
         inputSchema: {
           type: 'object',
@@ -618,7 +618,7 @@ export class AutotaskToolHandler {
 
       // Company Notes tools
       {
-        name: 'get_company_note',
+        name: 'autotask_get_company_note',
         description: 'Get a specific company note by company ID and note ID',
         inputSchema: {
           type: 'object',
@@ -636,7 +636,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'search_company_notes',
+        name: 'autotask_search_company_notes',
         description: 'Search for notes on a specific company',
         inputSchema: {
           type: 'object',
@@ -656,7 +656,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_company_note',
+        name: 'autotask_create_company_note',
         description: 'Create a new note for a company',
         inputSchema: {
           type: 'object',
@@ -684,7 +684,7 @@ export class AutotaskToolHandler {
 
       // Ticket Attachments tools
       {
-        name: 'get_ticket_attachment',
+        name: 'autotask_get_ticket_attachment',
         description: 'Get a specific ticket attachment by ticket ID and attachment ID',
         inputSchema: {
           type: 'object',
@@ -707,7 +707,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'search_ticket_attachments',
+        name: 'autotask_search_ticket_attachments',
         description: 'Search for attachments on a specific ticket',
         inputSchema: {
           type: 'object',
@@ -729,7 +729,7 @@ export class AutotaskToolHandler {
 
       // Expense Reports tools
       {
-        name: 'get_expense_report',
+        name: 'autotask_get_expense_report',
         description: 'Get a specific expense report by ID',
         inputSchema: {
           type: 'object',
@@ -743,7 +743,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'search_expense_reports',
+        name: 'autotask_search_expense_reports',
         description: 'Search for expense reports with optional filters',
         inputSchema: {
           type: 'object',
@@ -767,7 +767,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_expense_report',
+        name: 'autotask_create_expense_report',
         description: 'Create a new expense report',
         inputSchema: {
           type: 'object',
@@ -795,7 +795,7 @@ export class AutotaskToolHandler {
 
       // Quotes tools
       {
-        name: 'get_quote',
+        name: 'autotask_get_quote',
         description: 'Get a specific quote by ID',
         inputSchema: {
           type: 'object',
@@ -809,7 +809,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'search_quotes',
+        name: 'autotask_search_quotes',
         description: 'Search for quotes with optional filters',
         inputSchema: {
           type: 'object',
@@ -841,7 +841,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_quote',
+        name: 'autotask_create_quote',
         description: 'Create a new quote',
         inputSchema: {
           type: 'object',
@@ -881,7 +881,7 @@ export class AutotaskToolHandler {
 
       // Configuration Item tools
       {
-        name: 'search_configuration_items',
+        name: 'autotask_search_configuration_items',
         description: 'Search for configuration items in Autotask with optional filters',
         inputSchema: {
           type: 'object',
@@ -915,7 +915,7 @@ export class AutotaskToolHandler {
 
       // Contract tools
       {
-        name: 'search_contracts',
+        name: 'autotask_search_contracts',
         description: 'Search for contracts in Autotask with optional filters',
         inputSchema: {
           type: 'object',
@@ -945,7 +945,7 @@ export class AutotaskToolHandler {
 
       // Invoice tools
       {
-        name: 'search_invoices',
+        name: 'autotask_search_invoices',
         description: 'Search for invoices in Autotask with optional filters',
         inputSchema: {
           type: 'object',
@@ -975,7 +975,7 @@ export class AutotaskToolHandler {
 
       // Task tools
       {
-        name: 'search_tasks',
+        name: 'autotask_search_tasks',
         description: 'Search for tasks in Autotask with optional filters. Returns optimized task data to prevent large responses.',
         inputSchema: {
           type: 'object',
@@ -1007,7 +1007,7 @@ export class AutotaskToolHandler {
         }
       },
       {
-        name: 'create_task',
+        name: 'autotask_create_task',
         description: 'Create a new task in Autotask',
         inputSchema: {
           type: 'object',
@@ -1065,7 +1065,7 @@ export class AutotaskToolHandler {
       let message: string;
 
       switch (name) {
-        case 'test_connection':
+        case 'autotask_test_connection':
           const connectionResult = await this.autotaskService.testConnection();
           result = { success: connectionResult };
           message = connectionResult
@@ -1073,32 +1073,32 @@ export class AutotaskToolHandler {
             : 'Connection failed: Unable to connect to Autotask API';
           break;
 
-        case 'search_companies':
+        case 'autotask_search_companies':
           result = await this.autotaskService.searchCompanies(args);
           message = `Found ${result.length} companies`;
           break;
 
-        case 'create_company':
+        case 'autotask_create_company':
           result = await this.autotaskService.createCompany(args);
           message = `Successfully created company with ID: ${result}`;
           break;
 
-        case 'update_company':
+        case 'autotask_update_company':
           result = await this.autotaskService.updateCompany(args.id, args);
           message = `Successfully updated company ID: ${args.id}`;
           break;
 
-        case 'search_contacts':
+        case 'autotask_search_contacts':
           result = await this.autotaskService.searchContacts(args);
           message = `Found ${result.length} contacts`;
           break;
 
-        case 'create_contact':
+        case 'autotask_create_contact':
           result = await this.autotaskService.createContact(args);
           message = `Successfully created contact with ID: ${result}`;
           break;
 
-        case 'search_tickets':
+        case 'autotask_search_tickets':
           // Map parameter names from tool schema to service expectations
           const { companyID, ...otherArgs } = args;
           const ticketSearchOptions = {
@@ -1109,79 +1109,79 @@ export class AutotaskToolHandler {
           message = `Found ${result.length} tickets`;
           break;
 
-        case 'get_ticket_details':
+        case 'autotask_get_ticket_details':
           result = await this.autotaskService.getTicket(args.ticketID, args.fullDetails);
           message = `Ticket details retrieved successfully`;
           break;
 
-        case 'create_ticket':
+        case 'autotask_create_ticket':
           result = await this.autotaskService.createTicket(args);
           message = `Successfully created ticket with ID: ${result}`;
           break;
 
-        case 'create_time_entry':
+        case 'autotask_create_time_entry':
           result = await this.autotaskService.createTimeEntry(args);
           message = `Successfully created time entry with ID: ${result}`;
           break;
 
         // Project tools
-        case 'search_projects':
+        case 'autotask_search_projects':
           result = await this.autotaskService.searchProjects(args);
           message = `Found ${result.length} projects`;
           break;
 
-        case 'create_project':
+        case 'autotask_create_project':
           result = await this.autotaskService.createProject(args);
           message = `Successfully created project with ID: ${result}`;
           break;
 
         // Resource tools
-        case 'search_resources':
+        case 'autotask_search_resources':
           result = await this.autotaskService.searchResources(args);
           message = `Found ${result.length} resources`;
           break;
 
         // Configuration Item tools
-        case 'search_configuration_items':
+        case 'autotask_search_configuration_items':
           result = await this.autotaskService.searchConfigurationItems(args);
           message = `Found ${result.length} configuration items`;
           break;
 
         // Contract tools
-        case 'search_contracts':
+        case 'autotask_search_contracts':
           result = await this.autotaskService.searchContracts(args);
           message = `Found ${result.length} contracts`;
           break;
 
         // Invoice tools
-        case 'search_invoices':
+        case 'autotask_search_invoices':
           result = await this.autotaskService.searchInvoices(args);
           message = `Found ${result.length} invoices`;
           break;
 
         // Task tools
-        case 'search_tasks':
+        case 'autotask_search_tasks':
           result = await this.autotaskService.searchTasks(args);
           message = `Found ${result.length} tasks`;
           break;
 
-        case 'create_task':
+        case 'autotask_create_task':
           result = await this.autotaskService.createTask(args);
           message = `Successfully created task with ID: ${result}`;
           break;
 
         // Ticket Notes tools
-        case 'get_ticket_note':
+        case 'autotask_get_ticket_note':
           result = await this.autotaskService.getTicketNote(args.ticketId, args.noteId);
           message = `Ticket note retrieved successfully`;
           break;
 
-        case 'search_ticket_notes':
+        case 'autotask_search_ticket_notes':
           result = await this.autotaskService.searchTicketNotes(args.ticketId, { pageSize: args.pageSize });
           message = `Found ${result.length} ticket notes`;
           break;
 
-        case 'create_ticket_note':
+        case 'autotask_create_ticket_note':
           result = await this.autotaskService.createTicketNote(args.ticketId, {
             title: args.title,
             description: args.description,
@@ -1192,17 +1192,17 @@ export class AutotaskToolHandler {
           break;
 
         // Project Notes tools  
-        case 'get_project_note':
+        case 'autotask_get_project_note':
           result = await this.autotaskService.getProjectNote(args.projectId, args.noteId);
           message = `Project note retrieved successfully`;
           break;
 
-        case 'search_project_notes':
+        case 'autotask_search_project_notes':
           result = await this.autotaskService.searchProjectNotes(args.projectId, { pageSize: args.pageSize });
           message = `Found ${result.length} project notes`;
           break;
 
-        case 'create_project_note':
+        case 'autotask_create_project_note':
           result = await this.autotaskService.createProjectNote(args.projectId, {
             title: args.title,
             description: args.description,
@@ -1212,17 +1212,17 @@ export class AutotaskToolHandler {
           break;
 
         // Company Notes tools
-        case 'get_company_note':
+        case 'autotask_get_company_note':
           result = await this.autotaskService.getCompanyNote(args.companyId, args.noteId);
           message = `Company note retrieved successfully`;
           break;
 
-        case 'search_company_notes':
+        case 'autotask_search_company_notes':
           result = await this.autotaskService.searchCompanyNotes(args.companyId, { pageSize: args.pageSize });
           message = `Found ${result.length} company notes`;
           break;
 
-        case 'create_company_note':
+        case 'autotask_create_company_note':
           result = await this.autotaskService.createCompanyNote(args.companyId, {
             title: args.title,
             description: args.description,
@@ -1232,23 +1232,23 @@ export class AutotaskToolHandler {
           break;
 
         // Ticket Attachments tools
-        case 'get_ticket_attachment':
+        case 'autotask_get_ticket_attachment':
           result = await this.autotaskService.getTicketAttachment(args.ticketId, args.attachmentId, args.includeData);
           message = `Ticket attachment retrieved successfully`;
           break;
 
-        case 'search_ticket_attachments':
+        case 'autotask_search_ticket_attachments':
           result = await this.autotaskService.searchTicketAttachments(args.ticketId, { pageSize: args.pageSize });
           message = `Found ${result.length} ticket attachments`;
           break;
 
         // Expense Reports tools
-        case 'get_expense_report':
+        case 'autotask_get_expense_report':
           result = await this.autotaskService.getExpenseReport(args.reportId);
           message = `Expense report retrieved successfully`;
           break;
 
-        case 'search_expense_reports':
+        case 'autotask_search_expense_reports':
           result = await this.autotaskService.searchExpenseReports({
             submitterId: args.submitterId,
             status: args.status,
@@ -1257,7 +1257,7 @@ export class AutotaskToolHandler {
           message = `Found ${result.length} expense reports`;
           break;
 
-        case 'create_expense_report':
+        case 'autotask_create_expense_report':
           result = await this.autotaskService.createExpenseReport({
             name: args.name,
             description: args.description,
@@ -1268,12 +1268,12 @@ export class AutotaskToolHandler {
           break;
 
         // Quotes tools
-        case 'get_quote':
+        case 'autotask_get_quote':
           result = await this.autotaskService.getQuote(args.quoteId);
           message = `Quote retrieved successfully`;
           break;
 
-        case 'search_quotes':
+        case 'autotask_search_quotes':
           result = await this.autotaskService.searchQuotes({
             companyId: args.companyId,
             contactId: args.contactId,
@@ -1284,7 +1284,7 @@ export class AutotaskToolHandler {
           message = `Found ${result.length} quotes`;
           break;
 
-        case 'create_quote':
+        case 'autotask_create_quote':
           result = await this.autotaskService.createQuote({
             name: args.name,
             description: args.description,
@@ -1298,46 +1298,46 @@ export class AutotaskToolHandler {
           break;
 
         // Configuration Item tools
-        case 'search_configuration_items':
+        case 'autotask_search_configuration_items':
           result = await this.autotaskService.searchConfigurationItems(args);
           message = `Found ${result.length} configuration items`;
           break;
 
         // Contract tools
-        case 'search_contracts':
+        case 'autotask_search_contracts':
           result = await this.autotaskService.searchContracts(args);
           message = `Found ${result.length} contracts`;
           break;
 
         // Invoice tools
-        case 'search_invoices':
+        case 'autotask_search_invoices':
           result = await this.autotaskService.searchInvoices(args);
           message = `Found ${result.length} invoices`;
           break;
 
         // Task tools
-        case 'search_tasks':
+        case 'autotask_search_tasks':
           result = await this.autotaskService.searchTasks(args);
           message = `Found ${result.length} tasks`;
           break;
 
-        case 'create_task':
+        case 'autotask_create_task':
           result = await this.autotaskService.createTask(args);
           message = `Successfully created task with ID: ${result}`;
           break;
 
         // Ticket Notes tools
-        case 'get_ticket_note':
+        case 'autotask_get_ticket_note':
           result = await this.autotaskService.getTicketNote(args.ticketId, args.noteId);
           message = `Ticket note retrieved successfully`;
           break;
 
-        case 'search_ticket_notes':
+        case 'autotask_search_ticket_notes':
           result = await this.autotaskService.searchTicketNotes(args.ticketId, { pageSize: args.pageSize });
           message = `Found ${result.length} ticket notes`;
           break;
 
-        case 'create_ticket_note':
+        case 'autotask_create_ticket_note':
           result = await this.autotaskService.createTicketNote(args.ticketId, {
             title: args.title,
             description: args.description,
@@ -1348,17 +1348,17 @@ export class AutotaskToolHandler {
           break;
 
         // Project Notes tools  
-        case 'get_project_note':
+        case 'autotask_get_project_note':
           result = await this.autotaskService.getProjectNote(args.projectId, args.noteId);
           message = `Project note retrieved successfully`;
           break;
 
-        case 'search_project_notes':
+        case 'autotask_search_project_notes':
           result = await this.autotaskService.searchProjectNotes(args.projectId, { pageSize: args.pageSize });
           message = `Found ${result.length} project notes`;
           break;
 
-        case 'create_project_note':
+        case 'autotask_create_project_note':
           result = await this.autotaskService.createProjectNote(args.projectId, {
             title: args.title,
             description: args.description,
@@ -1368,17 +1368,17 @@ export class AutotaskToolHandler {
           break;
 
         // Company Notes tools
-        case 'get_company_note':
+        case 'autotask_get_company_note':
           result = await this.autotaskService.getCompanyNote(args.companyId, args.noteId);
           message = `Company note retrieved successfully`;
           break;
 
-        case 'search_company_notes':
+        case 'autotask_search_company_notes':
           result = await this.autotaskService.searchCompanyNotes(args.companyId, { pageSize: args.pageSize });
           message = `Found ${result.length} company notes`;
           break;
 
-        case 'create_company_note':
+        case 'autotask_create_company_note':
           result = await this.autotaskService.createCompanyNote(args.companyId, {
             title: args.title,
             description: args.description,
@@ -1388,23 +1388,23 @@ export class AutotaskToolHandler {
           break;
 
         // Ticket Attachments tools
-        case 'get_ticket_attachment':
+        case 'autotask_get_ticket_attachment':
           result = await this.autotaskService.getTicketAttachment(args.ticketId, args.attachmentId, args.includeData);
           message = `Ticket attachment retrieved successfully`;
           break;
 
-        case 'search_ticket_attachments':
+        case 'autotask_search_ticket_attachments':
           result = await this.autotaskService.searchTicketAttachments(args.ticketId, { pageSize: args.pageSize });
           message = `Found ${result.length} ticket attachments`;
           break;
 
         // Expense Reports tools
-        case 'get_expense_report':
+        case 'autotask_get_expense_report':
           result = await this.autotaskService.getExpenseReport(args.reportId);
           message = `Expense report retrieved successfully`;
           break;
 
-        case 'search_expense_reports':
+        case 'autotask_search_expense_reports':
           result = await this.autotaskService.searchExpenseReports({
             submitterId: args.submitterId,
             status: args.status,
@@ -1413,7 +1413,7 @@ export class AutotaskToolHandler {
           message = `Found ${result.length} expense reports`;
           break;
 
-        case 'create_expense_report':
+        case 'autotask_create_expense_report':
           result = await this.autotaskService.createExpenseReport({
             name: args.name,
             description: args.description,
@@ -1424,18 +1424,18 @@ export class AutotaskToolHandler {
           break;
 
         // Expense Items tools - Not directly supported
-        case 'get_expense_item':
-        case 'search_expense_items':
-        case 'create_expense_item':
+        case 'autotask_get_expense_item':
+        case 'autotask_search_expense_items':
+        case 'autotask_create_expense_item':
           throw new Error('Expense items API not yet implemented - requires child entity handling');
 
         // Quotes tools
-        case 'get_quote':
+        case 'autotask_get_quote':
           result = await this.autotaskService.getQuote(args.quoteId);
           message = `Quote retrieved successfully`;
           break;
 
-        case 'search_quotes':
+        case 'autotask_search_quotes':
           result = await this.autotaskService.searchQuotes({
             companyId: args.companyId,
             contactId: args.contactId,
@@ -1446,7 +1446,7 @@ export class AutotaskToolHandler {
           message = `Found ${result.length} quotes`;
           break;
 
-        case 'create_quote':
+        case 'autotask_create_quote':
           result = await this.autotaskService.createQuote({
             name: args.name,
             description: args.description,
@@ -1460,10 +1460,10 @@ export class AutotaskToolHandler {
           break;
 
         // Billing Codes and Departments tools - Not directly supported
-        case 'get_billing_code':
-        case 'search_billing_codes':
-        case 'get_department':
-        case 'search_departments':
+        case 'autotask_get_billing_code':
+        case 'autotask_search_billing_codes':
+        case 'autotask_get_department':
+        case 'autotask_search_departments':
           throw new Error('This entity type is not directly available in the autotask-node library');
 
         default:
