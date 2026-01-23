@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/asachs01/autotask-mcp/compare/v2.0.2...v2.0.3) (2026-01-23)
+
+
+### Bug Fixes
+
+* add CLI bin entry and enforce test failures in CI ([10ce1c7](https://github.com/asachs01/autotask-mcp/commit/10ce1c71324f5b301a6b41e151f187f377cd6793)), closes [#4](https://github.com/asachs01/autotask-mcp/issues/4) [#4](https://github.com/asachs01/autotask-mcp/issues/4)
+
 ## [2.0.2](https://github.com/asachs01/autotask-mcp/compare/v2.0.1...v2.0.2) (2026-01-23)
 
 
