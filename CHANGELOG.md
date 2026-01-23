@@ -1,3 +1,10 @@
+## [2.2.8](https://github.com/asachs01/autotask-mcp/compare/v2.2.7...v2.2.8) (2026-01-23)
+
+
+### Bug Fixes
+
+* load .env file at startup for credential configuration ([192c52c](https://github.com/asachs01/autotask-mcp/commit/192c52c5b324ee485c07c73367f7d80da236f73d))
+
 ## [2.2.7](https://github.com/asachs01/autotask-mcp/compare/v2.2.6...v2.2.7) (2026-01-23)
 
 
