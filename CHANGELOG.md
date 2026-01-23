@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/asachs01/autotask-mcp/compare/v2.0.3...v2.1.0) (2026-01-23)
+
+
+### Features
+
+* add HTTP Streamable transport for remote MCP access ([2d31853](https://github.com/asachs01/autotask-mcp/commit/2d3185348cb4387c5726892bb15d9c432279afa3)), closes [#7](https://github.com/asachs01/autotask-mcp/issues/7)
+
 ## [2.0.3](https://github.com/asachs01/autotask-mcp/compare/v2.0.2...v2.0.3) (2026-01-23)
 
 
