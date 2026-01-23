@@ -1,5 +1,5 @@
 # Multi-stage build for efficient container size
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 # Build arguments
 ARG VERSION="unknown"
@@ -12,8 +12,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies (including dev dependencies for build)
-RUN npm ci
+# Install dependencies (--ignore-scripts prevents 'prepare' from running before source is copied)
+RUN npm ci --ignore-scripts
 
 # Copy source code
 COPY . .
@@ -22,7 +22,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 # Create a non-root user for security
 RUN addgroup -g 1001 -S autotask && \
@@ -31,14 +31,13 @@ RUN addgroup -g 1001 -S autotask && \
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files and built application from builder stage
 COPY package*.json ./
-
-# Install only production dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-# Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+
+# Prune dev dependencies (avoids re-installing git deps which need build tools)
+RUN npm prune --omit=dev && npm cache clean --force
 
 # Create logs directory
 RUN mkdir -p /app/logs && chown -R autotask:autotask /app
