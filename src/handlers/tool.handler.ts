@@ -1,7 +1,9 @@
 // Autotask Tool Handler
 // Handles MCP tool calls for Autotask operations (search, create, update)
 
+import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { AutotaskService } from '../services/autotask.service.js';
+import { PicklistCache, PicklistValue } from '../services/picklist.cache.js';
 import { Logger } from '../utils/logger.js';
 
 export interface McpTool {
@@ -25,10 +27,63 @@ export interface McpToolResult {
 export class AutotaskToolHandler {
   protected autotaskService: AutotaskService;
   protected logger: Logger;
+  protected picklistCache: PicklistCache;
+  protected mcpServer: Server | null = null;
 
   constructor(autotaskService: AutotaskService, logger: Logger) {
     this.autotaskService = autotaskService;
     this.logger = logger;
+    this.picklistCache = new PicklistCache(
+      logger,
+      (entityType) => this.autotaskService.getFieldInfo(entityType)
+    );
+  }
+
+  /**
+   * Set the MCP server reference for elicitation support
+   */
+  setServer(server: Server): void {
+    this.mcpServer = server;
+  }
+
+  /**
+   * Elicit user input for a selection from picklist values.
+   * Falls back to returning null if elicitation is not supported by the client.
+   */
+  protected async elicitSelection(
+    message: string,
+    fieldName: string,
+    options: PicklistValue[]
+  ): Promise<string | null> {
+    if (!this.mcpServer) return null;
+
+    try {
+      const result = await this.mcpServer.elicitInput({
+        message,
+        requestedSchema: {
+          type: 'object' as const,
+          properties: {
+            [fieldName]: {
+              type: 'string' as const,
+              title: fieldName,
+              description: `Select a ${fieldName}`,
+              enum: options.map(o => o.value),
+              enumNames: options.map(o => o.label),
+            }
+          },
+          required: [fieldName],
+        }
+      });
+
+      if (result.action === 'accept' && result.content) {
+        return result.content[fieldName] as string;
+      }
+      return null;
+    } catch (error) {
+      // Client likely doesn't support elicitation — not an error
+      this.logger.debug(`Elicitation not available: ${error instanceof Error ? error.message : 'unknown'}`);
+      return null;
+    }
   }
 
   /**
@@ -1047,6 +1102,53 @@ export class AutotaskToolHandler {
           },
           required: ['projectID', 'title', 'status']
         }
+      },
+
+      // Picklist / Queue tools
+      {
+        name: 'autotask_list_queues',
+        description: 'List all available ticket queues in Autotask. Use this to find queue IDs for filtering tickets by queue.',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+          required: []
+        }
+      },
+      {
+        name: 'autotask_list_ticket_statuses',
+        description: 'List all available ticket statuses in Autotask. Use this to find status values for filtering or creating tickets.',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+          required: []
+        }
+      },
+      {
+        name: 'autotask_list_ticket_priorities',
+        description: 'List all available ticket priorities in Autotask. Use this to find priority values for filtering or creating tickets.',
+        inputSchema: {
+          type: 'object',
+          properties: {},
+          required: []
+        }
+      },
+      {
+        name: 'autotask_get_field_info',
+        description: 'Get field definitions for an Autotask entity type, including picklist values. Useful for discovering valid values for any picklist field.',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            entityType: {
+              type: 'string',
+              description: 'The Autotask entity type (e.g., "Tickets", "Companies", "Contacts", "Projects")'
+            },
+            fieldName: {
+              type: 'string',
+              description: 'Optional: filter to a specific field name'
+            }
+          },
+          required: ['entityType']
+        }
       }
     ];
 
@@ -1465,6 +1567,49 @@ export class AutotaskToolHandler {
         case 'autotask_get_department':
         case 'autotask_search_departments':
           throw new Error('This entity type is not directly available in the autotask-node library');
+
+        // Picklist / Queue tools
+        case 'autotask_list_queues': {
+          const queues = await this.picklistCache.getQueues();
+          result = queues.map(q => ({ id: q.value, name: q.label, isActive: q.isActive }));
+          message = `Found ${queues.length} queues`;
+          break;
+        }
+
+        case 'autotask_list_ticket_statuses': {
+          const statuses = await this.picklistCache.getTicketStatuses();
+          result = statuses.map(s => ({ id: s.value, name: s.label, isActive: s.isActive }));
+          message = `Found ${statuses.length} ticket statuses`;
+          break;
+        }
+
+        case 'autotask_list_ticket_priorities': {
+          const priorities = await this.picklistCache.getTicketPriorities();
+          result = priorities.map(p => ({ id: p.value, name: p.label, isActive: p.isActive }));
+          message = `Found ${priorities.length} ticket priorities`;
+          break;
+        }
+
+        case 'autotask_get_field_info': {
+          const fields = await this.picklistCache.getFields(args.entityType);
+          if (args.fieldName) {
+            const field = fields.find(f => f.name.toLowerCase() === args.fieldName.toLowerCase());
+            result = field || null;
+            message = field ? `Field info for ${args.entityType}.${args.fieldName}` : `Field '${args.fieldName}' not found on ${args.entityType}`;
+          } else {
+            // Return summary (full picklist values can be large)
+            result = fields.map(f => ({
+              name: f.name,
+              dataType: f.dataType,
+              isRequired: f.isRequired,
+              isPickList: f.isPickList,
+              isQueryable: f.isQueryable,
+              picklistValueCount: f.picklistValues?.length || 0
+            }));
+            message = `Found ${fields.length} fields for ${args.entityType}`;
+          }
+          break;
+        }
 
         default:
           throw new Error(`Unknown tool: ${name}`);

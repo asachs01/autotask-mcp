@@ -27,6 +27,7 @@ import {
 } from '../types/autotask';
 import { McpServerConfig } from '../types/mcp';
 import { Logger } from '../utils/logger';
+import { FieldInfo, PicklistValue } from './picklist.cache';
 
 export class AutotaskService {
   private client: AutotaskClient | null = null;
@@ -1732,5 +1733,54 @@ export class AutotaskService {
 
   async searchDepartments(_options: AutotaskQueryOptionsExtended = {}): Promise<AutotaskDepartment[]> {
     throw new Error('Departments API not directly available in autotask-node library');
+  }
+
+  /**
+   * Get field information for an entity type (including picklist values)
+   * Calls the Autotask REST API: GET /v1.0/{entityType}/entityInformation/fields
+   */
+  async getFieldInfo(entityType: string): Promise<FieldInfo[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug(`Getting field info for entity: ${entityType}`);
+
+      // Access the internal axios instance to call the field info endpoint
+      const axios = (client as any).axios;
+      if (!axios) {
+        throw new Error('Unable to access HTTP client from AutotaskClient');
+      }
+
+      const response = await axios.get(`/${entityType}/entityInformation/fields`);
+      const data = response.data;
+
+      // The Autotask API returns { fields: [...] }
+      const rawFields = data?.fields || data?.items || data || [];
+
+      return rawFields.map((field: any) => ({
+        name: field.name,
+        dataType: field.dataType,
+        length: field.length,
+        isRequired: field.isRequired || false,
+        isReadOnly: field.isReadOnly || false,
+        isQueryable: field.isQueryable || false,
+        isReference: field.isReference || false,
+        referenceEntityType: field.referenceEntityType,
+        isPickList: field.isPickList || false,
+        picklistValues: field.picklistValues?.map((pv: any) => ({
+          value: String(pv.value),
+          label: pv.label || pv.name || String(pv.value),
+          isDefaultValue: pv.isDefaultValue || false,
+          sortOrder: pv.sortOrder,
+          isActive: pv.isActive !== false,
+          isSystem: pv.isSystem || false,
+          parentValue: pv.parentValue ? String(pv.parentValue) : undefined,
+        })) as PicklistValue[] | undefined,
+        picklistParentValueField: field.picklistParentValueField,
+      }));
+    } catch (error) {
+      this.logger.error(`Failed to get field info for ${entityType}:`, error);
+      throw error;
+    }
   }
 } 

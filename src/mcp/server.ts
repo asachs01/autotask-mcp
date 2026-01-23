@@ -63,6 +63,9 @@ export class AutotaskMcpServer {
     this.resourceHandler = new AutotaskResourceHandler(this.autotaskService, logger);
     this.toolHandler = new EnhancedAutotaskToolHandler(this.autotaskService, logger);
 
+    // Pass server reference to tool handler for elicitation support
+    this.toolHandler.setServer(this.server);
+
     this.setupHandlers();
   }
 
@@ -249,7 +252,7 @@ This server provides access to Kaseya Autotask PSA data and operations through t
 - **autotask://tickets/{id}** - Get ticket details by ID
 - **autotask://tickets** - List all tickets
 
-## Available Tools (35 total):
+## Available Tools (39 total):
 - Companies: search, create, update
 - Contacts: search, create
 - Tickets: search, get details, create
@@ -261,7 +264,11 @@ This server provides access to Kaseya Autotask PSA data and operations through t
 - Financial: expense reports, quotes, invoices, contracts
 - Configuration items: search
 - Tasks: search, create
+- Picklists: list queues, list ticket statuses, list ticket priorities, get field info
 - Utility: test connection
+
+## Picklist Discovery:
+Use autotask_list_queues, autotask_list_ticket_statuses, or autotask_list_ticket_priorities to discover valid IDs before filtering. Use autotask_get_field_info for any entity's field definitions and picklist values.
 
 ## ID-to-Name Mapping:
 All search and detail tools automatically include human-readable names for company and resource IDs in an _enhanced field on each result.
