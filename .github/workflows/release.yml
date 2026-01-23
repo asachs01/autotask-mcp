@@ -97,6 +97,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          npm install -g @anthropic-ai/mcpb
           npm run pack:mcpb
           gh release upload "v${{ steps.version.outputs.version }}" autotask-mcp.mcpb \
             --repo ${{ github.repository }} --clobber

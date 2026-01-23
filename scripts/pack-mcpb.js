@@ -68,6 +68,14 @@ try {
   const bundlePath = join(ROOT, `${pkg.name}.mcpb`);
   run(`npx mcpb pack "${STAGING}" "${bundlePath}"`, { cwd: ROOT });
 
+  // 7.5. Clean the bundle to minimize size
+  console.log('\n=== Cleaning MCPB bundle ===');
+  run(`npx mcpb clean "${bundlePath}"`);
+
+  // 7.6. Sign the bundle (self-signed for development)
+  console.log('\n=== Signing MCPB bundle ===');
+  run(`npx mcpb sign --self-signed "${bundlePath}"`);
+
   // 8. Cleanup
   console.log('\n=== Cleanup ===');
   rmSync(STAGING, { recursive: true });

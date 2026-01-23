@@ -16,6 +16,33 @@ jest.config.js
 node_modules/.cache
 node_modules/.bin
 
+# node_modules test files
+node_modules/*/test/
+node_modules/*/tests/
+node_modules/*/__tests__/
+
+# node_modules documentation
+node_modules/*/docs/
+node_modules/*/.github/
+node_modules/*/example/
+node_modules/*/examples/
+
+# node_modules markdown files (except README)
+node_modules/*/CHANGELOG*
+node_modules/*/HISTORY*
+node_modules/*/CONTRIBUTING*
+node_modules/*/AUTHORS*
+
+# node_modules config/lint files
+node_modules/*/.eslint*
+node_modules/*/.prettier*
+node_modules/*/tsconfig.json
+
+# node_modules TypeScript source files (we only need compiled .js)
+node_modules/*/*.ts
+node_modules/*/src/*.ts
+node_modules/*/lib/*.ts
+
 # Config files
 .env
 .env.*
