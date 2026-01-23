@@ -15,10 +15,14 @@ if (!process.env.MCP_TRANSPORT || process.env.MCP_TRANSPORT === 'stdio') {
 }
 
 // Load .env file if present (minimal loader, no external deps)
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 try {
-  const envPath = resolve(process.cwd(), '.env');
+  // Look for .env in cwd first, then next to the script (project root)
+  const projectRoot = resolve(__dirname, '..');
+  const envPath = existsSync(resolve(process.cwd(), '.env'))
+    ? resolve(process.cwd(), '.env')
+    : resolve(projectRoot, '.env');
   const envContent = readFileSync(envPath, 'utf8');
   for (const line of envContent.split('\n')) {
     const trimmed = line.trim();
