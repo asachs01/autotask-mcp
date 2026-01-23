@@ -1,3 +1,11 @@
+## [2.2.11](https://github.com/asachs01/autotask-mcp/compare/v2.2.10...v2.2.11) (2026-01-23)
+
+
+### Bug Fixes
+
+* upgrade autotask-node to v2.0.4 (graceful logger) ([213db40](https://github.com/asachs01/autotask-mcp/commit/213db40377852ab3dfe6971daf57cbf9f71f5e02))
+* upgrade autotask-node to v2.0.5 (stderr-only logging) ([a01588b](https://github.com/asachs01/autotask-mcp/commit/a01588b1144bcb2adfae44c102dd7879225000c3))
+
 ## [2.2.10](https://github.com/asachs01/autotask-mcp/compare/v2.2.9...v2.2.10) (2026-01-23)
 
 
