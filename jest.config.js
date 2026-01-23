@@ -6,6 +6,9 @@ module.exports = {
     '**/__tests__/**/*.ts',
     '**/?(*.)+(spec|test).ts'
   ],
+  transformIgnorePatterns: [
+    'node_modules/(?!(autotask-node|@exodus/bytes)/)'
+  ],
   collectCoverageFrom: [
     'src/**/*.ts',
     '!src/**/*.d.ts',

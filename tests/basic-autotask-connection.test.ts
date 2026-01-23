@@ -1,6 +1,14 @@
 // Basic Autotask Connection Test
 // This test validates that we can connect to the Autotask API using autotask-node
 
+jest.mock('autotask-node', () => ({
+  AutotaskClient: {
+    create: jest.fn().mockResolvedValue({
+      accounts: { get: jest.fn(), list: jest.fn() },
+    })
+  }
+}));
+
 import { AutotaskClient } from 'autotask-node';
 
 describe('Autotask Connection Tests', () => {
