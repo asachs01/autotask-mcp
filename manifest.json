@@ -18,16 +18,15 @@
   "keywords": ["autotask", "psa", "kaseya", "tickets", "msp", "it-management"],
   "server": {
     "type": "node",
-    "entry_point": "dist/index.js",
+    "entry_point": "dist/entry.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/dist/index.js"],
+      "args": ["${__dirname}/dist/entry.js"],
       "env": {
         "AUTOTASK_USERNAME": "${user_config.autotask_username}",
         "AUTOTASK_SECRET": "${user_config.autotask_secret}",
         "AUTOTASK_INTEGRATION_CODE": "${user_config.autotask_integration_code}",
-        "MCP_TRANSPORT": "stdio",
-        "DOTENV_CONFIG_PATH": "/tmp/.env.none"
+        "MCP_TRANSPORT": "stdio"
       }
     }
   },

@@ -56,7 +56,11 @@ export class Logger {
             })
           ),
       transports: [
-        new winston.transports.Console()
+        new winston.transports.Console({
+          // MCP stdio transport uses stdout for JSON-RPC messages.
+          // All log output must go to stderr to avoid corrupting the channel.
+          stderrLevels: ['error', 'warn', 'info', 'debug']
+        })
       ]
     });
   }

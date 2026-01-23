@@ -135,7 +135,6 @@ Add to your MCP client configuration (e.g., Claude Desktop):
         "AUTOTASK_USERNAME": "your-api-user@example.com",
         "AUTOTASK_SECRET": "your-secret-key",
         "AUTOTASK_INTEGRATION_CODE": "your-integration-code",
-        "DOTENV_CONFIG_PATH": "/tmp/.env.none"
       }
     }
   }
@@ -387,7 +386,6 @@ Add the Autotask MCP server to your Claude Desktop configuration:
         "AUTOTASK_USERNAME": "your-api-username@company.com",
         "AUTOTASK_SECRET": "your-api-secret",
         "AUTOTASK_INTEGRATION_CODE": "your-integration-code",
-        "DOTENV_CONFIG_PATH": "/tmp/.env.none"
       }
     }
   }
@@ -537,8 +535,8 @@ Show me all companies created in the last 30 days and their primary contacts
 3. Ensure integration code is valid
 
 **Problem**: "Invalid JSON-RPC message: [dotenv@...] injecting env" / Server disconnected
-**Cause**: `dotenv` (a dev dependency) is being preloaded by the Node.js runtime, writing status messages to stdout which corrupts the MCP stdio protocol.
-**Solution**: Add `"DOTENV_CONFIG_PATH": "/tmp/.env.none"` to the `env` section of your MCP config. This prevents dotenv from finding a `.env` file and writing to stdout.
+**Cause**: The `autotask-node` library calls `dotenv.config()` at module load time. dotenv v17+ writes status messages via `console.log` to stdout, which corrupts the MCP stdio JSON-RPC channel.
+**Solution**: Ensure you're using `dist/entry.js` (not `dist/index.js`) as the entry point. The entry wrapper redirects `console.log` to stderr before any libraries load.
 
 #### Performance Issues
 
