@@ -35,15 +35,14 @@ jobs:
         run: npm ci
       
       - name: Run linter
-        run: npm run lint || echo "Linting failed but continuing..."
+        run: npm run lint
         continue-on-error: true
       
       - name: Build
         run: npm run build
       
       - name: Run tests
-        run: npm test || echo "Tests failed but continuing..."
-        continue-on-error: true
+        run: npm test
 
   release:
     name: Release
