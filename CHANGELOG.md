@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/asachs01/autotask-mcp/compare/v2.2.1...v2.2.2) (2026-01-23)
+
+
+### Bug Fixes
+
+* prevent dotenv stdout pollution in MCP stdio transport ([8818749](https://github.com/asachs01/autotask-mcp/commit/8818749b2ec6979eddca0d45f7dd13a3c7c60756))
+
 ## [2.2.1](https://github.com/asachs01/autotask-mcp/compare/v2.2.0...v2.2.1) (2026-01-23)
 
 
