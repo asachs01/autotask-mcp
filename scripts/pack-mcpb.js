@@ -28,17 +28,22 @@ try {
   if (existsSync(STAGING)) rmSync(STAGING, { recursive: true });
   mkdirSync(STAGING, { recursive: true });
 
-  // 3. Copy production files
+  // 3. Copy production files (sync manifest version from package.json)
   console.log('\n=== Copying production files ===');
+  const pkg = require(join(ROOT, 'package.json'));
   cpSync(join(ROOT, 'dist'), join(STAGING, 'dist'), { recursive: true });
-  copyFileSync(join(ROOT, 'manifest.json'), join(STAGING, 'manifest.json'));
+  const manifest = JSON.parse(require('fs').readFileSync(join(ROOT, 'manifest.json'), 'utf8'));
+  manifest.version = pkg.version;
+  require('fs').writeFileSync(
+    join(STAGING, 'manifest.json'),
+    JSON.stringify(manifest, null, 2) + '\n'
+  );
   copyFileSync(join(ROOT, 'README.md'), join(STAGING, 'README.md'));
   if (existsSync(join(ROOT, 'LICENSE'))) {
     copyFileSync(join(ROOT, 'LICENSE'), join(STAGING, 'LICENSE'));
   }
 
   // 4. Create a minimal package.json with only production deps
-  const pkg = require(join(ROOT, 'package.json'));
   const prodPkg = {
     name: pkg.name,
     version: pkg.version,

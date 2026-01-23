@@ -1,7 +1,7 @@
 {
   "manifest_version": "0.3",
   "name": "autotask-mcp",
-  "version": "2.1.0",
+  "version": "2.2.3",
   "display_name": "Autotask MCP Server",
   "description": "MCP server for Kaseya Autotask PSA - access companies, contacts, tickets, and time entries through AI assistants",
   "long_description": "Provides AI assistants with structured access to your Kaseya Autotask PSA data. Search and manage companies, contacts, tickets, time entries, and more through the Model Context Protocol. Features intelligent caching, ID-to-name resolution, and comprehensive error handling.",
