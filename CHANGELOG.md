@@ -1,3 +1,10 @@
+## [2.2.13](https://github.com/asachs01/autotask-mcp/compare/v2.2.12...v2.2.13) (2026-01-23)
+
+
+### Bug Fixes
+
+* **deps:** Update package-lock.json with correct autotask-node v2.0.6 hash ([7c0ff90](https://github.com/asachs01/autotask-mcp/commit/7c0ff90eb5623734c9f09643cccd46582d8c9568))
+
 ## [2.2.12](https://github.com/asachs01/autotask-mcp/compare/v2.2.11...v2.2.12) (2026-01-23)
 
 
