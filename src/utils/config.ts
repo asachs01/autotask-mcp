@@ -4,6 +4,8 @@
 import { McpServerConfig } from '../types/mcp.js';
 import { LogLevel } from './logger.js';
 
+export type TransportType = 'stdio' | 'http';
+
 export interface EnvironmentConfig {
   autotask: {
     username?: string;
@@ -14,6 +16,11 @@ export interface EnvironmentConfig {
   server: {
     name: string;
     version: string;
+  };
+  transport: {
+    type: TransportType;
+    port: number;
+    host: string;
   };
   logging: {
     level: LogLevel;
@@ -40,11 +47,21 @@ export function loadEnvironmentConfig(): EnvironmentConfig {
     autotaskConfig.apiUrl = process.env.AUTOTASK_API_URL;
   }
 
+  const transportType = (process.env.MCP_TRANSPORT as TransportType) || 'stdio';
+  if (transportType !== 'stdio' && transportType !== 'http') {
+    throw new Error(`Invalid MCP_TRANSPORT value: "${transportType}". Must be "stdio" or "http".`);
+  }
+
   return {
     autotask: autotaskConfig,
     server: {
       name: process.env.MCP_SERVER_NAME || 'autotask-mcp',
       version: process.env.MCP_SERVER_VERSION || '1.0.0'
+    },
+    transport: {
+      type: transportType,
+      port: parseInt(process.env.MCP_HTTP_PORT || '8080', 10),
+      host: process.env.MCP_HTTP_HOST || '0.0.0.0'
     },
     logging: {
       level: (process.env.LOG_LEVEL as LogLevel) || 'info',
@@ -117,6 +134,9 @@ Optional Environment Variables:
   AUTOTASK_API_URL         - Autotask API base URL (auto-detected if not provided)
   MCP_SERVER_NAME          - Server name (default: autotask-mcp)
   MCP_SERVER_VERSION       - Server version (default: 1.0.0)
+  MCP_TRANSPORT            - Transport type: stdio, http (default: stdio)
+  MCP_HTTP_PORT            - HTTP port when using http transport (default: 8080)
+  MCP_HTTP_HOST            - HTTP host when using http transport (default: 0.0.0.0)
   LOG_LEVEL                - Logging level: error, warn, info, debug (default: info)
   LOG_FORMAT               - Log format: simple, json (default: simple)
 

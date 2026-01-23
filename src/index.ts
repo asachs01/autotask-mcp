@@ -30,7 +30,7 @@ async function main() {
     }
 
     // Create the MCP server (don't initialize Autotask yet)
-    const server = new AutotaskMcpServer(mcpConfig, logger);
+    const server = new AutotaskMcpServer(mcpConfig, logger, envConfig);
 
     // Set up graceful shutdown
     process.on('SIGINT', async () => {

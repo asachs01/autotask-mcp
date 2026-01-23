@@ -49,20 +49,23 @@ USER autotask
 # Expose port (if needed for future HTTP interface)
 EXPOSE 8080
 
-# Health check
+# Health check against the actual HTTP endpoint
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "console.log('Health check passed')" || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
 # Set environment variables
 ENV NODE_ENV=production
 ENV LOG_LEVEL=info
 ENV LOG_FORMAT=json
+ENV MCP_TRANSPORT=http
+ENV MCP_HTTP_PORT=8080
+ENV MCP_HTTP_HOST=0.0.0.0
 
 # Define volume for logs
 VOLUME ["/app/logs"]
 
-# Start the application with stdout wrapper
-CMD ["node", "dist/wrapper.js"]
+# Start the application directly (HTTP transport doesn't need the stdio wrapper)
+CMD ["node", "dist/index.js"]
 
 # Build arguments for runtime
 ARG VERSION="unknown"

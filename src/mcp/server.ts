@@ -1,9 +1,12 @@
 // Main MCP Server Implementation
 // Handles the Model Context Protocol server setup and integration with Autotask
 
+import { createServer, IncomingMessage, ServerResponse, Server as HttpServer } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { 
+import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import {
   CallToolRequestSchema,
   ErrorCode,
   ListResourcesRequestSchema,
@@ -15,6 +18,7 @@ import {
 import { AutotaskService } from '../services/autotask.service.js';
 import { Logger } from '../utils/logger.js';
 import { McpServerConfig } from '../types/mcp.js';
+import { EnvironmentConfig } from '../utils/config.js';
 import { AutotaskResourceHandler } from '../handlers/resource.handler.js';
 import { EnhancedAutotaskToolHandler } from '../handlers/enhanced.tool.handler.js';
 
@@ -24,9 +28,13 @@ export class AutotaskMcpServer {
   private resourceHandler: AutotaskResourceHandler;
   private toolHandler: EnhancedAutotaskToolHandler;
   private logger: Logger;
+  private envConfig: EnvironmentConfig | undefined;
+  private httpServer?: HttpServer;
+  private httpTransport?: StreamableHTTPServerTransport;
 
-  constructor(config: McpServerConfig, logger: Logger) {
+  constructor(config: McpServerConfig, logger: Logger, envConfig?: EnvironmentConfig) {
     this.logger = logger;
+    this.envConfig = envConfig;
     
     // Initialize the MCP server
     this.server = new Server(
@@ -134,13 +142,12 @@ export class AutotaskMcpServer {
   }
 
   /**
-   * Start the MCP server with stdio transport
+   * Start the MCP server with the configured transport
    */
   async start(): Promise<void> {
-    this.logger.info('Starting Autotask MCP Server...');
-    
-    const transport = new StdioServerTransport();
-    
+    const transportType = this.envConfig?.transport?.type || 'stdio';
+    this.logger.info(`Starting Autotask MCP Server with ${transportType} transport...`);
+
     // Set up error handling
     this.server.onerror = (error) => {
       this.logger.error('MCP Server error:', error);
@@ -151,9 +158,64 @@ export class AutotaskMcpServer {
       this.logger.info('MCP Server initialized and ready to serve requests');
     };
 
-    // Connect to transport
+    if (transportType === 'http') {
+      await this.startHttpTransport();
+    } else {
+      await this.startStdioTransport();
+    }
+  }
+
+  /**
+   * Start with stdio transport (default)
+   */
+  private async startStdioTransport(): Promise<void> {
+    const transport = new StdioServerTransport();
     await this.server.connect(transport);
     this.logger.info('Autotask MCP Server started and connected to stdio transport');
+  }
+
+  /**
+   * Start with HTTP Streamable transport
+   */
+  private async startHttpTransport(): Promise<void> {
+    const port = this.envConfig?.transport?.port || 8080;
+    const host = this.envConfig?.transport?.host || '0.0.0.0';
+
+    this.httpTransport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: () => randomUUID(),
+      enableJsonResponse: true,
+    });
+
+    this.httpServer = createServer((req: IncomingMessage, res: ServerResponse) => {
+      const url = new URL(req.url || '/', `http://${req.headers.host || 'localhost'}`);
+
+      // Health endpoint
+      if (url.pathname === '/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ status: 'ok', transport: 'http', timestamp: new Date().toISOString() }));
+        return;
+      }
+
+      // MCP endpoint
+      if (url.pathname === '/mcp') {
+        this.httpTransport!.handleRequest(req, res);
+        return;
+      }
+
+      // 404 for everything else
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Not found', endpoints: ['/mcp', '/health'] }));
+    });
+
+    await this.server.connect(this.httpTransport);
+
+    await new Promise<void>((resolve) => {
+      this.httpServer!.listen(port, host, () => {
+        this.logger.info(`Autotask MCP Server listening on http://${host}:${port}/mcp`);
+        this.logger.info(`Health check available at http://${host}:${port}/health`);
+        resolve();
+      });
+    });
   }
 
   /**
@@ -161,6 +223,11 @@ export class AutotaskMcpServer {
    */
   async stop(): Promise<void> {
     this.logger.info('Stopping Autotask MCP Server...');
+    if (this.httpServer) {
+      await new Promise<void>((resolve, reject) => {
+        this.httpServer!.close((err) => err ? reject(err) : resolve());
+      });
+    }
     await this.server.close();
     this.logger.info('Autotask MCP Server stopped');
   }
