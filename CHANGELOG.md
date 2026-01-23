@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/asachs01/autotask-mcp/compare/v2.1.0...v2.2.0) (2026-01-23)
+
+
+### Features
+
+* add MCPB (MCP Bundle) packaging for desktop distribution ([e7601b1](https://github.com/asachs01/autotask-mcp/commit/e7601b1d158c261a6607530f59267dff99b06ba8))
+
 # [2.1.0](https://github.com/asachs01/autotask-mcp/compare/v2.0.3...v2.1.0) (2026-01-23)
 
 
