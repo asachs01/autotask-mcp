@@ -24,6 +24,16 @@ The fastest way to get started is using `npx` directly from GitHub (no npm publi
 
 Add the above to your `claude_desktop_config.json` (macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`), restart Claude Desktop, and you're connected.
 
+**For Claude Code (CLI):**
+
+```bash
+claude mcp add autotask-mcp \
+  -e AUTOTASK_USERNAME=your-user@company.com \
+  -e AUTOTASK_SECRET=your-secret \
+  -e AUTOTASK_INTEGRATION_CODE=your-code \
+  -- npx -y github:asachs01/autotask-mcp
+```
+
 See [Installation](#installation) for Docker and other methods.
 
 ## Features
@@ -468,6 +478,15 @@ Add the Autotask MCP server to your Claude Desktop configuration:
     }
   }
 }
+```
+
+**Claude Code (CLI):**
+```bash
+claude mcp add autotask-mcp \
+  -e AUTOTASK_USERNAME=your-api-username@company.com \
+  -e AUTOTASK_SECRET=your-api-secret \
+  -e AUTOTASK_INTEGRATION_CODE=your-integration-code \
+  -- npx -y github:asachs01/autotask-mcp
 ```
 
 **Docker (stdio mode for Claude Desktop):**
