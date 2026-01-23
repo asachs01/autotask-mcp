@@ -2,9 +2,29 @@
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that provides AI assistants with structured access to Kaseya Autotask PSA data and operations.
 
-## 🚀 Quick Start
+## Quick Start
 
-**Want to connect to Claude Desktop?** Download the latest `.mcpb` bundle from [Releases](https://github.com/asachs01/autotask-mcp/releases) and open it — credentials are prompted automatically. See [Installation](#installation) for other methods.
+The fastest way to get started is using `npx` directly from GitHub (no npm publish required):
+
+```json
+{
+  "mcpServers": {
+    "autotask": {
+      "command": "npx",
+      "args": ["-y", "github:asachs01/autotask-mcp"],
+      "env": {
+        "AUTOTASK_USERNAME": "your-user@company.com",
+        "AUTOTASK_SECRET": "your-secret",
+        "AUTOTASK_INTEGRATION_CODE": "your-code"
+      }
+    }
+  }
+}
+```
+
+Add the above to your `claude_desktop_config.json` (macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`), restart Claude Desktop, and you're connected.
+
+See [Installation](#installation) for Docker and other methods.
 
 ## Features
 
@@ -39,36 +59,88 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that p
 
 ## Installation
 
-### MCPB Bundle (Recommended)
+### Option 1: npx from GitHub (Recommended)
 
-The easiest way to install is via the `.mcpb` bundle, which provides one-click installation for Claude Desktop and other MCP clients:
+No registry or local clone needed — `npx` installs directly from the GitHub repo:
 
-1. Download the latest `autotask-mcp.mcpb` from [Releases](https://github.com/asachs01/autotask-mcp/releases)
-2. Open the bundle with your MCP client
-3. Enter your Autotask credentials when prompted
-
-The bundle includes all dependencies and configures the server automatically.
-
-### Prerequisites (Manual Installation)
-
-- Node.js 18+ (LTS recommended)
-- Valid Autotask API credentials
-- MCP-compatible client (Claude Desktop, Continue, etc.)
-
-### NPM Installation
-
-```bash
-npm install -g autotask-mcp
+```json
+{
+  "mcpServers": {
+    "autotask": {
+      "command": "npx",
+      "args": ["-y", "github:asachs01/autotask-mcp"],
+      "env": {
+        "AUTOTASK_USERNAME": "your-user@company.com",
+        "AUTOTASK_SECRET": "your-secret",
+        "AUTOTASK_INTEGRATION_CODE": "your-code"
+      }
+    }
+  }
+}
 ```
 
-### From Source
+### Option 2: Docker (GitHub Container Registry)
+
+```bash
+docker pull ghcr.io/asachs01/autotask-mcp:latest
+```
+
+For Claude Desktop (stdio via Docker):
+
+```json
+{
+  "mcpServers": {
+    "autotask": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "MCP_TRANSPORT=stdio",
+        "-e", "AUTOTASK_USERNAME=your-user@company.com",
+        "-e", "AUTOTASK_SECRET=your-secret",
+        "-e", "AUTOTASK_INTEGRATION_CODE=your-code",
+        "--entrypoint", "node",
+        "ghcr.io/asachs01/autotask-mcp:latest",
+        "dist/entry.js"
+      ]
+    }
+  }
+}
+```
+
+For HTTP transport (remote/server deployment), see [Docker Deployment](#docker-deployment).
+
+### Option 3: From Source
 
 ```bash
 git clone https://github.com/asachs01/autotask-mcp.git
 cd autotask-mcp
-npm install
+npm ci
 npm run build
 ```
+
+Then configure Claude Desktop:
+
+```json
+{
+  "mcpServers": {
+    "autotask": {
+      "command": "node",
+      "args": ["/path/to/autotask-mcp/dist/entry.js"],
+      "env": {
+        "AUTOTASK_USERNAME": "your-user@company.com",
+        "AUTOTASK_SECRET": "your-secret",
+        "AUTOTASK_INTEGRATION_CODE": "your-code"
+      }
+    }
+  }
+}
+```
+
+### Prerequisites
+
+- Node.js 18+ (LTS recommended)
+- Valid Autotask API credentials
+- MCP-compatible client (Claude Desktop, Continue, etc.)
 
 ## Configuration
 
@@ -115,31 +187,16 @@ For detailed setup instructions, see the [Autotask API documentation](https://ww
 ### Command Line
 
 ```bash
-# Start the MCP server
-autotask-mcp
+# Start the MCP server (stdio transport, for piping to an MCP client)
+node dist/entry.js
 
-# Start with custom configuration
-AUTOTASK_USERNAME=user@example.com autotask-mcp
+# Start with HTTP transport
+MCP_TRANSPORT=http node dist/index.js
 ```
 
 ### MCP Client Configuration
 
-Add to your MCP client configuration (e.g., Claude Desktop):
-
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "autotask-mcp",
-      "env": {
-        "AUTOTASK_USERNAME": "your-api-user@example.com",
-        "AUTOTASK_SECRET": "your-secret-key",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code",
-      }
-    }
-  }
-}
-```
+See [Claude Desktop Integration](#claude-desktop-integration) for full setup instructions, or use the Quick Start config above.
 
 ## API Reference
 
@@ -297,11 +354,13 @@ The Docker image uses HTTP transport by default (port 8080) with a built-in heal
 
 ### Using Pre-built Image from GitHub Container Registry
 
+The Docker image defaults to **HTTP transport** on port 8080 — suitable for remote/server deployments where clients connect over the network.
+
 ```bash
 # Pull the latest image
 docker pull ghcr.io/asachs01/autotask-mcp:latest
 
-# Run container with your credentials
+# Run container with HTTP transport (default)
 docker run -d \
   --name autotask-mcp \
   -p 8080:8080 \
@@ -314,6 +373,8 @@ docker run -d \
 # Verify it's running
 curl http://localhost:8080/health
 ```
+
+For **stdio** usage with Claude Desktop, see [Installation Option 2](#option-2-docker-github-container-registry).
 
 ### Quick Start (From Source)
 
@@ -375,24 +436,41 @@ The Claude Desktop configuration file location varies by operating system:
 
 Add the Autotask MCP server to your Claude Desktop configuration:
 
-**For Local Development:**
+**npx from GitHub (no local install):**
 ```json
 {
   "mcpServers": {
     "autotask": {
-      "command": "node",
-      "args": ["/path/to/autotask-mcp/dist/index.js"],
+      "command": "npx",
+      "args": ["-y", "github:asachs01/autotask-mcp"],
       "env": {
         "AUTOTASK_USERNAME": "your-api-username@company.com",
         "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code",
+        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
       }
     }
   }
 }
 ```
 
-**For Docker Deployment (GitHub Container Registry):**
+**Local clone:**
+```json
+{
+  "mcpServers": {
+    "autotask": {
+      "command": "node",
+      "args": ["/path/to/autotask-mcp/dist/entry.js"],
+      "env": {
+        "AUTOTASK_USERNAME": "your-api-username@company.com",
+        "AUTOTASK_SECRET": "your-api-secret",
+        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
+      }
+    }
+  }
+}
+```
+
+**Docker (stdio mode for Claude Desktop):**
 ```json
 {
   "mcpServers": {
@@ -400,28 +478,14 @@ Add the Autotask MCP server to your Claude Desktop configuration:
       "command": "docker",
       "args": [
         "run", "--rm", "-i",
+        "-e", "MCP_TRANSPORT=stdio",
         "-e", "AUTOTASK_USERNAME=your-api-username@company.com",
         "-e", "AUTOTASK_SECRET=your-api-secret",
         "-e", "AUTOTASK_INTEGRATION_CODE=your-integration-code",
-        "ghcr.io/asachs01/autotask-mcp:latest"
+        "--entrypoint", "node",
+        "ghcr.io/asachs01/autotask-mcp:latest",
+        "dist/entry.js"
       ]
-    }
-  }
-}
-```
-
-**For NPM Global Installation:**
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "npx",
-      "args": ["autotask-mcp"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-api-username@company.com",
-        "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
-      }
     }
   }
 }
@@ -555,7 +619,7 @@ Enable debug logging for troubleshooting:
   "mcpServers": {
     "autotask": {
       "command": "node",
-      "args": ["/path/to/autotask-mcp/dist/index.js"],
+      "args": ["/path/to/autotask-mcp/dist/entry.js"],
       "env": {
         "AUTOTASK_USERNAME": "your-username",
         "AUTOTASK_SECRET": "your-secret",
@@ -616,7 +680,8 @@ autotask-mcp/
 │   ├── services/          # Autotask service layer
 │   ├── types/             # TypeScript type definitions
 │   ├── utils/             # Utility functions (config, logger, cache)
-│   └── index.ts           # Main entry point
+│   ├── entry.ts           # Entry point (stdout guard + .env loader)
+│   └── index.ts           # Server bootstrap (config, logger, server init)
 ├── tests/                 # Test files
 ├── scripts/               # Build and packaging scripts
 │   └── pack-mcpb.js       # MCPB bundle creation
