@@ -24,9 +24,10 @@ async function main() {
       hasCredentials: !!(mcpConfig.autotask.username && mcpConfig.autotask.secret && mcpConfig.autotask.integrationCode)
     });
 
-    // Validate required configuration
+    // Warn about missing credentials but don't crash — let the server start
+    // so clients get a clear error when calling tools instead of a silent disconnect
     if (!mcpConfig.autotask.username || !mcpConfig.autotask.secret || !mcpConfig.autotask.integrationCode) {
-      throw new Error('Missing required Autotask credentials. Please set AUTOTASK_USERNAME, AUTOTASK_SECRET, and AUTOTASK_INTEGRATION_CODE environment variables.');
+      logger.warn('Missing Autotask credentials. Tools will return errors until AUTOTASK_USERNAME, AUTOTASK_SECRET, and AUTOTASK_INTEGRATION_CODE are configured.');
     }
 
     // Create the MCP server (don't initialize Autotask yet)
