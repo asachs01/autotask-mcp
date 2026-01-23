@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/asachs01/autotask-mcp/compare/v2.3.0...v2.3.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* **docker:** Fix build and runtime failures in Dockerfile ([c6e37e2](https://github.com/asachs01/autotask-mcp/commit/c6e37e266c1eccf531247bd6110bfc7e06f75819))
+
 # [2.3.0](https://github.com/asachs01/autotask-mcp/compare/v2.2.13...v2.3.0) (2026-01-23)
 
 
