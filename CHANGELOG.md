@@ -1,3 +1,10 @@
+## [2.2.5](https://github.com/asachs01/autotask-mcp/compare/v2.2.4...v2.2.5) (2026-01-23)
+
+
+### Bug Fixes
+
+* sync manifest.json version from package.json at pack time ([c7a9724](https://github.com/asachs01/autotask-mcp/commit/c7a97241777c47f28bfcaf3cb4a4f6392d68d3b3))
+
 ## [2.2.4](https://github.com/asachs01/autotask-mcp/compare/v2.2.3...v2.2.4) (2026-01-23)
 
 
