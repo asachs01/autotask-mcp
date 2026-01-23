@@ -38,8 +38,8 @@
       {
         "assets": [
           {
-            "path": "dist/**/*",
-            "label": "Distribution files"
+            "path": "autotask-mcp.mcpb",
+            "label": "MCP Bundle (one-click install)"
           }
         ]
       }
