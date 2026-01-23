@@ -398,7 +398,7 @@
         ]
       },
       {
-        "id": "29",
+        "id": 29,
         "title": "Implement Decision Tree Based Tool Routing",
         "description": "Add intelligent tool routing using decision trees to automatically select appropriate tools based on user intent, reducing cognitive load and improving accuracy.",
         "status": "pending",
@@ -444,6 +444,19 @@
           "breaking-change"
         ],
         "updatedAt": "2026-01-21T21:29:59.214Z"
+      },
+      {
+        "id": 32,
+        "title": "Add Contributors Section to README.md",
+        "description": "Create a Contributors section in README.md featuring a Markdown table with GitHub avatars and profile links for key contributors, starting with @Baphomet480 (CLI bin fix) and @asachs01 (maintainer).",
+        "details": "Locate the existing README.md file in the project root. Add a new top-level heading '## Contributors' in an appropriate location (after features/installation sections, before footer). Create a GitHub Flavored Markdown table with columns: Avatar | Name | Contributions. Use the format:\n\n| ![username](https://github.com/username.png?size=60) | [@username](https://github.com/username) | Contribution description |\n| --- | --- | --- |\n\nPopulate with:\n- Row 1: @Baphomet480, link to https://github.com/Baphomet480.png?size=60, 'CLI bin fix'\n- Row 2: @asachs01, link to https://github.com/asachs01.png?size=60, 'Maintainer'\n\nSet avatar size=60 for consistency. Ensure table aligns properly with | separators and --- headers. Use relative positioning if linking other docs. Commit with message 'docs: add contributors section to README.md'. Verify rendering on GitHub shows clickable avatars linking to profiles.",
+        "testStrategy": "Verify README.md contains '## Contributors' heading and table renders correctly on GitHub repository page. Confirm avatars display (60px), are clickable linking to correct profiles (@Baphomet480, @asachs01), and contribution descriptions match. Check table alignment in desktop/mobile views. Validate no broken images by inspecting avatar URLs. Ensure Markdown syntax is valid (no parsing errors) and section doesn't break existing README formatting.",
+        "status": "pending",
+        "dependencies": [
+          20
+        ],
+        "priority": "medium",
+        "subtasks": []
       }
     ],
     "metadata": {
@@ -455,7 +468,8 @@
         "master"
       ],
       "created": "2026-01-21T22:42:37.545Z",
-      "description": "Tasks for master context"
+      "description": "Tasks for master context",
+      "updated": "2026-01-23T17:09:54.318Z"
     }
   }
 }

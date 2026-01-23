@@ -31,6 +31,7 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that p
 - [Development](#development)
 - [Testing](#testing)
 - [Contributing](#contributing)
+- [Contributors](#contributors)
 - [License](#license)
 
 ## Installation
@@ -687,6 +688,13 @@ LOG_LEVEL=debug npm start
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contributors
+
+| Avatar | Name | Contributions |
+| --- | --- | --- |
+| <a href="https://github.com/asachs01"><img src="https://github.com/asachs01.png" width="60" /></a> | [@asachs01](https://github.com/asachs01) | Maintainer |
+| <a href="https://github.com/Baphomet480"><img src="https://github.com/Baphomet480.png" width="60" /></a> | [@Baphomet480](https://github.com/Baphomet480) | CLI bin fix |
 
 ## Support
 
