@@ -1,3 +1,10 @@
+## [2.2.7](https://github.com/asachs01/autotask-mcp/compare/v2.2.6...v2.2.7) (2026-01-23)
+
+
+### Bug Fixes
+
+* don't crash on missing credentials, return tool-level errors instead ([cd9294c](https://github.com/asachs01/autotask-mcp/commit/cd9294c900350eab5f91ce6152121e5571abb88c))
+
 ## [2.2.6](https://github.com/asachs01/autotask-mcp/compare/v2.2.5...v2.2.6) (2026-01-23)
 
 
