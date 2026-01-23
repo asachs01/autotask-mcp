@@ -134,7 +134,8 @@ Add to your MCP client configuration (e.g., Claude Desktop):
       "env": {
         "AUTOTASK_USERNAME": "your-api-user@example.com",
         "AUTOTASK_SECRET": "your-secret-key",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
+        "AUTOTASK_INTEGRATION_CODE": "your-integration-code",
+        "DOTENV_CONFIG_PATH": "/tmp/.env.none"
       }
     }
   }
@@ -385,7 +386,8 @@ Add the Autotask MCP server to your Claude Desktop configuration:
       "env": {
         "AUTOTASK_USERNAME": "your-api-username@company.com",
         "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
+        "AUTOTASK_INTEGRATION_CODE": "your-integration-code",
+        "DOTENV_CONFIG_PATH": "/tmp/.env.none"
       }
     }
   }
@@ -533,6 +535,10 @@ Show me all companies created in the last 30 days and their primary contacts
 1. Verify Autotask credentials are correct
 2. Check API user permissions in Autotask
 3. Ensure integration code is valid
+
+**Problem**: "Invalid JSON-RPC message: [dotenv@...] injecting env" / Server disconnected
+**Cause**: `dotenv` (a dev dependency) is being preloaded by the Node.js runtime, writing status messages to stdout which corrupts the MCP stdio protocol.
+**Solution**: Add `"DOTENV_CONFIG_PATH": "/tmp/.env.none"` to the `env` section of your MCP config. This prevents dotenv from finding a `.env` file and writing to stdout.
 
 #### Performance Issues
 

@@ -26,7 +26,8 @@
         "AUTOTASK_USERNAME": "${user_config.autotask_username}",
         "AUTOTASK_SECRET": "${user_config.autotask_secret}",
         "AUTOTASK_INTEGRATION_CODE": "${user_config.autotask_integration_code}",
-        "MCP_TRANSPORT": "stdio"
+        "MCP_TRANSPORT": "stdio",
+        "DOTENV_CONFIG_PATH": "/tmp/.env.none"
       }
     }
   },
