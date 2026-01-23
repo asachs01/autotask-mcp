@@ -1,3 +1,10 @@
+## [2.2.9](https://github.com/asachs01/autotask-mcp/compare/v2.2.8...v2.2.9) (2026-01-23)
+
+
+### Bug Fixes
+
+* resolve .env relative to script location as fallback ([367eb0d](https://github.com/asachs01/autotask-mcp/commit/367eb0d9a4bbcf0ec2b73e95ab96737145f586ac))
+
 ## [2.2.8](https://github.com/asachs01/autotask-mcp/compare/v2.2.7...v2.2.8) (2026-01-23)
 
 
