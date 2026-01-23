@@ -1,3 +1,10 @@
+## [2.2.4](https://github.com/asachs01/autotask-mcp/compare/v2.2.3...v2.2.4) (2026-01-23)
+
+
+### Bug Fixes
+
+* upgrade autotask-node to v2.0.3 (removes dotenv dependency) ([1a5727b](https://github.com/asachs01/autotask-mcp/commit/1a5727b709a84a3741adf15b51f26502d9a4c5c7))
+
 ## [2.2.3](https://github.com/asachs01/autotask-mcp/compare/v2.2.2...v2.2.3) (2026-01-23)
 
 
