@@ -249,28 +249,22 @@ This server provides access to Kaseya Autotask PSA data and operations through t
 - **autotask://tickets/{id}** - Get ticket details by ID
 - **autotask://tickets** - List all tickets
 
-## Available Tools:
-- **search_companies** - Search for companies with filters
-- **create_company** - Create a new company
-- **update_company** - Update company information
-- **search_contacts** - Search for contacts with filters
-- **create_contact** - Create a new contact
-- **update_contact** - Update contact information
-- **search_tickets** - Search for tickets with filters
-- **create_ticket** - Create a new ticket
-- **update_ticket** - Update ticket information
-- **create_time_entry** - Log time against a ticket or project
-- **test_connection** - Test Autotask API connectivity
+## Available Tools (35 total):
+- Companies: search, create, update
+- Contacts: search, create
+- Tickets: search, get details, create
+- Time entries: create
+- Projects: search, create
+- Resources: search
+- Notes: get/search/create for tickets, projects, companies
+- Attachments: get/search ticket attachments
+- Financial: expense reports, quotes, invoices, contracts
+- Configuration items: search
+- Tasks: search, create
+- Utility: test connection
 
-## ID-to-Name Mapping Tools:
-- **get_company_name** - Get company name by ID
-- **get_resource_name** - Get resource name by ID
-- **get_mapping_cache_stats** - Get mapping cache statistics
-- **clear_mapping_cache** - Clear mapping cache
-- **preload_mapping_cache** - Preload mapping cache for better performance
-
-## Enhanced Features:
-All search and detail tools automatically include human-readable names for company and resource IDs in the enhanced field of each result.
+## ID-to-Name Mapping:
+All search and detail tools automatically include human-readable names for company and resource IDs in an _enhanced field on each result.
 
 ## Authentication:
 This server requires valid Autotask API credentials. Ensure you have:
@@ -278,7 +272,7 @@ This server requires valid Autotask API credentials. Ensure you have:
 - AUTOTASK_SECRET (API secret key)
 - AUTOTASK_INTEGRATION_CODE (integration code)
 
-For more information, visit: https://github.com/your-org/autotask-mcp
+For more information, visit: https://github.com/asachs01/autotask-mcp
 `.trim();
   }
 }

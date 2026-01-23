@@ -4,18 +4,20 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that p
 
 ## 🚀 Quick Start
 
-**Want to connect to Claude Desktop in 5 minutes?** See our [Quick Start Guide for Claude Desktop](QUICK_START_CLAUDE.md)!
+**Want to connect to Claude Desktop?** Download the latest `.mcpb` bundle from [Releases](https://github.com/asachs01/autotask-mcp/releases) and open it — credentials are prompted automatically. See [Installation](#installation) for other methods.
 
 ## Features
 
 - **🔌 MCP Protocol Compliance**: Full support for MCP resources and tools
-- **🛠️ Comprehensive API Coverage**: Access to companies, contacts, tickets, time entries, and more
+- **🛠️ Comprehensive API Coverage**: 35 tools spanning companies, contacts, tickets, projects, notes, attachments, and more
 - **🔍 Advanced Search**: Powerful search capabilities with filters across all entities
 - **📝 CRUD Operations**: Create, read, update operations for core Autotask entities
 - **🔄 ID-to-Name Mapping**: Automatic resolution of company and resource IDs to human-readable names
 - **⚡ Intelligent Caching**: Smart caching system for improved performance and reduced API calls
 - **🔒 Secure Authentication**: Enterprise-grade API security with Autotask credentials
-- **🐳 Docker Ready**: Containerized deployment with Docker and docker-compose
+- **🌐 Dual Transport**: Supports both stdio (local) and HTTP Streamable (remote/Docker) transports
+- **📦 MCPB Packaging**: One-click installation via MCP Bundle for desktop clients
+- **🐳 Docker Ready**: Containerized deployment with HTTP transport and health checks
 - **📊 Structured Logging**: Comprehensive logging with configurable levels and formats
 - **🧪 Test Coverage**: Comprehensive test suite with 80%+ coverage
 
@@ -26,6 +28,7 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that p
 - [Usage](#usage)
 - [API Reference](#api-reference)
 - [ID-to-Name Mapping](#id-to-name-mapping)
+- [HTTP Transport](#http-transport)
 - [Docker Deployment](#docker-deployment)
 - [Claude Desktop Integration](#claude-desktop-integration)
 - [Development](#development)
@@ -36,7 +39,17 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that p
 
 ## Installation
 
-### Prerequisites
+### MCPB Bundle (Recommended)
+
+The easiest way to install is via the `.mcpb` bundle, which provides one-click installation for Claude Desktop and other MCP clients:
+
+1. Download the latest `autotask-mcp.mcpb` from [Releases](https://github.com/asachs01/autotask-mcp/releases)
+2. Open the bundle with your MCP client
+3. Enter your Autotask credentials when prompted
+
+The bundle includes all dependencies and configures the server automatically.
+
+### Prerequisites (Manual Installation)
 
 - Node.js 18+ (LTS recommended)
 - Valid Autotask API credentials
@@ -72,7 +85,11 @@ AUTOTASK_INTEGRATION_CODE=your-integration-code
 # Optional configuration
 AUTOTASK_API_URL=https://webservices.autotask.net/atservices/1.6/atws.asmx
 MCP_SERVER_NAME=autotask-mcp
-MCP_SERVER_VERSION=1.0.0
+
+# Transport (stdio for local/desktop, http for remote/Docker)
+MCP_TRANSPORT=stdio          # stdio, http
+MCP_HTTP_PORT=8080           # HTTP transport port (only used when MCP_TRANSPORT=http)
+MCP_HTTP_HOST=0.0.0.0        # HTTP transport bind address
 
 # Logging
 LOG_LEVEL=info          # error, warn, info, debug
@@ -140,23 +157,53 @@ Resources provide read-only access to Autotask data:
 
 ### Tools
 
-Tools provide interactive operations:
+The server provides 35 tools for interacting with Autotask:
 
 #### Company Operations
 - `autotask_search_companies` - Search companies with filters
 - `autotask_create_company` - Create new company
 - `autotask_update_company` - Update existing company
 
-#### Contact Operations  
+#### Contact Operations
 - `autotask_search_contacts` - Search contacts with filters
 - `autotask_create_contact` - Create new contact
 
 #### Ticket Operations
 - `autotask_search_tickets` - Search tickets with filters
+- `autotask_get_ticket_details` - Get full ticket details by ID
 - `autotask_create_ticket` - Create new ticket
 
 #### Time Entry Operations
 - `autotask_create_time_entry` - Log time entry
+
+#### Project Operations
+- `autotask_search_projects` - Search projects with filters
+- `autotask_create_project` - Create new project
+
+#### Resource Operations
+- `autotask_search_resources` - Search resources (technicians/users)
+
+#### Note Operations
+- `autotask_get_ticket_note` / `autotask_search_ticket_notes` / `autotask_create_ticket_note`
+- `autotask_get_project_note` / `autotask_search_project_notes` / `autotask_create_project_note`
+- `autotask_get_company_note` / `autotask_search_company_notes` / `autotask_create_company_note`
+
+#### Attachment Operations
+- `autotask_get_ticket_attachment` - Get ticket attachment
+- `autotask_search_ticket_attachments` - Search ticket attachments
+
+#### Financial Operations
+- `autotask_get_expense_report` / `autotask_search_expense_reports` / `autotask_create_expense_report`
+- `autotask_get_quote` / `autotask_search_quotes` / `autotask_create_quote`
+- `autotask_search_invoices` - Search invoices
+- `autotask_search_contracts` - Search contracts
+
+#### Configuration Items
+- `autotask_search_configuration_items` - Search configuration items (assets)
+
+#### Task Operations
+- `autotask_search_tasks` - Search project tasks
+- `autotask_create_task` - Create project task
 
 #### Utility Operations
 - `autotask_test_connection` - Test API connectivity
@@ -208,15 +255,9 @@ All search and detail tools automatically include an `_enhanced` field with reso
 }
 ```
 
-### Mapping Tools
+### How It Works
 
-Additional tools are available for direct ID-to-name resolution:
-
-- **`get_company_name`** - Get company name by ID
-- **`get_resource_name`** - Get resource (user) name by ID  
-- **`get_mapping_cache_stats`** - View cache statistics
-- **`clear_mapping_cache`** - Clear cached mappings
-- **`preload_mapping_cache`** - Preload cache for better performance
+ID-to-name mapping is applied automatically to all search and detail tool results. No additional tools are needed — the `_enhanced` field is added transparently to every response that contains company or resource IDs.
 
 ### Performance Features
 
@@ -235,7 +276,24 @@ npm run test:mapping
 
 For detailed mapping documentation, see [docs/mapping.md](docs/mapping.md).
 
+## HTTP Transport
+
+The server supports the MCP Streamable HTTP transport for remote deployments (e.g., Docker, cloud hosting). Set `MCP_TRANSPORT=http` to enable it.
+
+```bash
+# Start with HTTP transport
+MCP_TRANSPORT=http MCP_HTTP_PORT=8080 node dist/index.js
+```
+
+The HTTP transport exposes:
+- `POST /mcp` — MCP Streamable HTTP endpoint
+- `GET /health` — Health check (returns `{"status":"ok"}`)
+
+Clients must send requests to `/mcp` with `Accept: application/json, text/event-stream` headers per the MCP Streamable HTTP specification.
+
 ## Docker Deployment
+
+The Docker image uses HTTP transport by default (port 8080) with a built-in health check.
 
 ### Using Pre-built Image from GitHub Container Registry
 
@@ -246,11 +304,15 @@ docker pull ghcr.io/asachs01/autotask-mcp:latest
 # Run container with your credentials
 docker run -d \
   --name autotask-mcp \
+  -p 8080:8080 \
   -e AUTOTASK_USERNAME="your-api-user@example.com" \
   -e AUTOTASK_SECRET="your-secret-key" \
   -e AUTOTASK_INTEGRATION_CODE="your-integration-code" \
   --restart unless-stopped \
   ghcr.io/asachs01/autotask-mcp:latest
+
+# Verify it's running
+curl http://localhost:8080/health
 ```
 
 ### Quick Start (From Source)
@@ -417,26 +479,21 @@ Once connected, Claude can access these Autotask resources:
 
 ### Available MCP Tools
 
-Claude can perform these actions via MCP tools:
+Claude can perform these actions via 35 MCP tools. Key operations include:
 
-#### Company Operations
-- **autotask_search_companies**: Find companies with filters
-- **create_company**: Create new companies
-- **update_company**: Modify existing companies
-
-#### Contact Operations
-- **autotask_search_contacts**: Find contacts with filters
-- **create_contact**: Create new contacts
-
-#### Ticket Operations
-- **autotask_search_tickets**: Find tickets with filters
-- **autotask_create_ticket**: Create new tickets
-
-#### Time Entry Operations
-- **create_time_entry**: Log time entries
-
-#### Utility Operations
+- **autotask_search_companies** / **autotask_create_company** / **autotask_update_company**
+- **autotask_search_contacts** / **autotask_create_contact**
+- **autotask_search_tickets** / **autotask_get_ticket_details** / **autotask_create_ticket**
+- **autotask_create_time_entry**
+- **autotask_search_projects** / **autotask_create_project**
+- **autotask_search_resources**
+- Notes: ticket, project, and company notes (get/search/create)
+- Attachments: **autotask_get_ticket_attachment** / **autotask_search_ticket_attachments**
+- Financial: expense reports, quotes, invoices, contracts
+- **autotask_search_configuration_items** / **autotask_search_tasks** / **autotask_create_task**
 - **autotask_test_connection**: Verify Autotask API connectivity
+
+See [API Reference](#api-reference) for the full list.
 
 ### Example Usage Scenarios
 
@@ -528,7 +585,7 @@ Enable debug logging for troubleshooting:
 ### Setup
 
 ```bash
-git clone https://github.com/your-org/autotask-mcp.git
+git clone https://github.com/asachs01/autotask-mcp.git
 cd autotask-mcp
 npm install
 ```
@@ -554,12 +611,13 @@ autotask-mcp/
 │   ├── mcp/               # MCP server implementation
 │   ├── services/          # Autotask service layer
 │   ├── types/             # TypeScript type definitions
-│   ├── utils/             # Utility functions
+│   ├── utils/             # Utility functions (config, logger, cache)
 │   └── index.ts           # Main entry point
 ├── tests/                 # Test files
-├── plans/                 # Project documentation (gitignored)
-├── prompt_logs/           # Development logs (gitignored)
-├── Dockerfile             # Container definition
+├── scripts/               # Build and packaging scripts
+│   └── pack-mcpb.js       # MCPB bundle creation
+├── manifest.json          # MCPB manifest for desktop distribution
+├── Dockerfile             # Container definition (HTTP transport)
 ├── docker-compose.yml     # Multi-service orchestration
 └── package.json          # Project configuration
 ```
@@ -604,7 +662,9 @@ npm test -- tests/autotask-service.test.ts
 | `AUTOTASK_INTEGRATION_CODE` | ✅ | - | Autotask integration code |
 | `AUTOTASK_API_URL` | ❌ | Auto-detected | Autotask API endpoint URL |
 | `MCP_SERVER_NAME` | ❌ | `autotask-mcp` | MCP server name |
-| `MCP_SERVER_VERSION` | ❌ | `1.0.0` | MCP server version |
+| `MCP_TRANSPORT` | ❌ | `stdio` | Transport type (`stdio` or `http`) |
+| `MCP_HTTP_PORT` | ❌ | `8080` | HTTP transport port |
+| `MCP_HTTP_HOST` | ❌ | `0.0.0.0` | HTTP transport bind address |
 | `LOG_LEVEL` | ❌ | `info` | Logging level |
 | `LOG_FORMAT` | ❌ | `simple` | Log output format |
 | `NODE_ENV` | ❌ | `development` | Node.js environment |
@@ -662,10 +722,14 @@ LOG_LEVEL=debug npm start
 Test server connectivity:
 
 ```bash
-# Test basic functionality
+# Run test suite
 npm run test
 
-# Test API connection (requires credentials)
+# For HTTP transport, check the health endpoint
+curl http://localhost:8080/health
+# Returns: {"status":"ok"}
+
+# Test API connection with debug logging
 LOG_LEVEL=debug npm start
 ```
 
