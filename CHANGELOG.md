@@ -1,3 +1,10 @@
+## [2.2.12](https://github.com/asachs01/autotask-mcp/compare/v2.2.11...v2.2.12) (2026-01-23)
+
+
+### Bug Fixes
+
+* **deps:** Update autotask-node to v2.0.6 ([1a2e08e](https://github.com/asachs01/autotask-mcp/commit/1a2e08e3f9d808b0e424ea4c8bcc46a07727d784))
+
 ## [2.2.11](https://github.com/asachs01/autotask-mcp/compare/v2.2.10...v2.2.11) (2026-01-23)
 
 
