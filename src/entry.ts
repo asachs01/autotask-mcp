@@ -14,6 +14,32 @@ if (!process.env.MCP_TRANSPORT || process.env.MCP_TRANSPORT === 'stdio') {
   };
 }
 
+// Load .env file if present (minimal loader, no external deps)
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+try {
+  const envPath = resolve(process.cwd(), '.env');
+  const envContent = readFileSync(envPath, 'utf8');
+  for (const line of envContent.split('\n')) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const eqIdx = trimmed.indexOf('=');
+    if (eqIdx === -1) continue;
+    const key = trimmed.slice(0, eqIdx).trim();
+    let value = trimmed.slice(eqIdx + 1).trim();
+    // Strip surrounding quotes
+    if ((value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))) {
+      value = value.slice(1, -1);
+    }
+    if (!process.env[key]) {
+      process.env[key] = value;
+    }
+  }
+} catch {
+  // No .env file — that's fine, env vars should be set externally
+}
+
 // Dynamic import ensures the guard is active before module resolution
 import('./index.js').catch(err => {
   console.error('Failed to start server:', err);
