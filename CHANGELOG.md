@@ -1,3 +1,10 @@
+## [2.3.2](https://github.com/asachs01/autotask-mcp/compare/v2.3.1...v2.3.2) (2026-01-23)
+
+
+### Bug Fixes
+
+* **mcpb:** Add bundle signing, size reduction, and Claude Desktop compatibility ([89a4711](https://github.com/asachs01/autotask-mcp/commit/89a471172a7486f56aadffaa8881a7ff96c87930))
+
 ## [2.3.1](https://github.com/asachs01/autotask-mcp/compare/v2.3.0...v2.3.1) (2026-01-23)
 
 
