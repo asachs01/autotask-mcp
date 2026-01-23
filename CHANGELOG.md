@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/asachs01/autotask-mcp/compare/v2.2.0...v2.2.1) (2026-01-23)
+
+
+### Bug Fixes
+
+* **ci:** replace dist file uploads with MCPB bundle in releases ([280127f](https://github.com/asachs01/autotask-mcp/commit/280127f8f4541549b7f44fc68c0cd67807a91c5b))
+
 # [2.2.0](https://github.com/asachs01/autotask-mcp/compare/v2.1.0...v2.2.0) (2026-01-23)
 
 
