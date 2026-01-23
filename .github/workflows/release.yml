@@ -71,14 +71,33 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Pack MCPB bundle
-        run: npm run pack:mcpb
-
       - name: Release
+        id: release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
+
+      - name: Get released version
+        id: version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          # Check if a release was actually created for this version
+          if gh release view "v$VERSION" --repo ${{ github.repository }} &>/dev/null; then
+            echo "released=true" >> $GITHUB_OUTPUT
+          else
+            echo "released=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Pack and upload MCPB bundle
+        if: steps.version.outputs.released == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm run pack:mcpb
+          gh release upload "v${{ steps.version.outputs.version }}" autotask-mcp.mcpb \
+            --repo ${{ github.repository }} --clobber
 
   docker:
     name: Build and Push Docker Image

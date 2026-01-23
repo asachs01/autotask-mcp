@@ -33,17 +33,7 @@
         "npmPublish": false
       }
     ],
-    [
-      "@semantic-release/github",
-      {
-        "assets": [
-          {
-            "path": "autotask-mcp.mcpb",
-            "label": "MCP Bundle (one-click install)"
-          }
-        ]
-      }
-    ],
+    "@semantic-release/github",
     [
       "@semantic-release/git",
       {
