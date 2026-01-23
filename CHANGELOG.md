@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/asachs01/autotask-mcp/compare/v2.2.2...v2.2.3) (2026-01-23)
+
+
+### Bug Fixes
+
+* prevent stdout pollution from autotask-node's dotenv.config() ([abc61fd](https://github.com/asachs01/autotask-mcp/commit/abc61fdcd46f3891fe4501d226986163fe0dec95))
+
 ## [2.2.2](https://github.com/asachs01/autotask-mcp/compare/v2.2.1...v2.2.2) (2026-01-23)
 
 
