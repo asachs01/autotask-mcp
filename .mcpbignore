@@ -1,0 +1,50 @@
+# Development files
+src/
+tests/
+scripts/
+.github/
+.claude/
+.taskmaster/
+.rules
+
+# Source and config (dist/ is the runtime)
+*.ts
+tsconfig.json
+jest.config.js
+
+# Dev-only node_modules artifacts
+node_modules/.cache
+node_modules/.bin
+
+# Config files
+.env
+.env.*
+.mcp.json
+.eslintrc.json
+.dockerignore
+.releaserc.json
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose*.yml
+
+# Documentation (keep README and LICENSE)
+QUICK_START_CLAUDE.md
+CHANGELOG.md
+IMPLEMENTATION_SUMMARY.md
+
+# Internal docs (README and LICENSE stay)
+docs/
+DOCKER_USAGE.md
+QUICK_START_CLAUDE.md
+IMPLEMENTATION_SUMMARY.md
+AGENT.md
+AGENTS.md
+CLAUDE.md
+opencode.json
+
+# Misc
+*.map
+*.tgz
+*.mcpb

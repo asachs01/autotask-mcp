@@ -20,7 +20,9 @@
     "lint:fix": "eslint src --ext .ts --fix",
     "clean": "rm -rf dist",
     "prebuild": "npm run clean",
-    "pretest": "npm run build"
+    "pretest": "npm run build",
+    "pack:mcpb": "node scripts/pack-mcpb.js",
+    "validate:mcpb": "mcpb validate manifest.json"
   },
   "keywords": [
     "mcp",
@@ -41,6 +43,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@anthropic-ai/mcpb": "^2.1.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/jest": "^29.5.8",

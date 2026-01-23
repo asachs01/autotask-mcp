@@ -1,0 +1,62 @@
+{
+  "manifest_version": "0.3",
+  "name": "autotask-mcp",
+  "version": "2.0.3",
+  "display_name": "Autotask MCP Server",
+  "description": "MCP server for Kaseya Autotask PSA - access companies, contacts, tickets, and time entries through AI assistants",
+  "long_description": "Provides AI assistants with structured access to your Kaseya Autotask PSA data. Search and manage companies, contacts, tickets, time entries, and more through the Model Context Protocol. Features intelligent caching, ID-to-name resolution, and comprehensive error handling.",
+  "author": {
+    "name": "Aaron Sachs",
+    "url": "https://github.com/asachs01"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asachs01/autotask-mcp"
+  },
+  "homepage": "https://github.com/asachs01/autotask-mcp",
+  "license": "MIT",
+  "keywords": ["autotask", "psa", "kaseya", "tickets", "msp", "it-management"],
+  "server": {
+    "type": "node",
+    "entry_point": "dist/index.js",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/dist/index.js"],
+      "env": {
+        "AUTOTASK_USERNAME": "${user_config.autotask_username}",
+        "AUTOTASK_SECRET": "${user_config.autotask_secret}",
+        "AUTOTASK_INTEGRATION_CODE": "${user_config.autotask_integration_code}",
+        "MCP_TRANSPORT": "stdio"
+      }
+    }
+  },
+  "tools_generated": true,
+  "user_config": {
+    "autotask_username": {
+      "type": "string",
+      "title": "Autotask Username",
+      "description": "Your Autotask API username (email address)",
+      "required": true
+    },
+    "autotask_secret": {
+      "type": "string",
+      "title": "Autotask API Secret",
+      "description": "Your Autotask API secret key",
+      "required": true,
+      "sensitive": true
+    },
+    "autotask_integration_code": {
+      "type": "string",
+      "title": "Autotask Integration Code",
+      "description": "Your Autotask integration code",
+      "required": true,
+      "sensitive": true
+    }
+  },
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "node": ">=18.0.0"
+    }
+  }
+}

@@ -47,3 +47,5 @@ dev-debug.log
 # Task files
 # tasks.json
 # tasks/ 
+*.mcpb
+.mcpb-staging/
