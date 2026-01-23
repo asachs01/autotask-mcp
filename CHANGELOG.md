@@ -1,3 +1,10 @@
+## [2.2.10](https://github.com/asachs01/autotask-mcp/compare/v2.2.9...v2.2.10) (2026-01-23)
+
+
+### Bug Fixes
+
+* **ci:** add GITHUB_TOKEN to version detection step ([99e2b29](https://github.com/asachs01/autotask-mcp/commit/99e2b29c772e1fd80995888126b849629d8cb088))
+
 ## [2.2.9](https://github.com/asachs01/autotask-mcp/compare/v2.2.8...v2.2.9) (2026-01-23)
 
 
