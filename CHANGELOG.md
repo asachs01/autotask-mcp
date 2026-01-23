@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/asachs01/autotask-mcp/compare/v2.2.13...v2.3.0) (2026-01-23)
+
+
+### Features
+
+* Add picklist discovery tools and elicitation support ([93c68f2](https://github.com/asachs01/autotask-mcp/commit/93c68f20acf31c0a8cc661689f820bf7e3518393))
+
 ## [2.2.13](https://github.com/asachs01/autotask-mcp/compare/v2.2.12...v2.2.13) (2026-01-23)
 
 
