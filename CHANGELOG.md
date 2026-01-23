@@ -1,3 +1,10 @@
+## [2.2.6](https://github.com/asachs01/autotask-mcp/compare/v2.2.5...v2.2.6) (2026-01-23)
+
+
+### Bug Fixes
+
+* **ci:** pack MCPB bundle after semantic-release version bump ([53c952e](https://github.com/asachs01/autotask-mcp/commit/53c952ea61c6b3f16b5f4405d5b9143e214d4b53))
+
 ## [2.2.5](https://github.com/asachs01/autotask-mcp/compare/v2.2.4...v2.2.5) (2026-01-23)
 
 
