@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/asachs01/autotask-mcp/compare/v2.0.1...v2.0.2) (2026-01-23)
+
+
+### Bug Fixes
+
+* **tests:** Resolve ESM compatibility and rewrite mapping tests ([a294a7c](https://github.com/asachs01/autotask-mcp/commit/a294a7c390a5ae56b70c269f5f6aaf0c3ff224e5))
+
 ## [2.0.1](https://github.com/asachs01/autotask-mcp/compare/v2.0.0...v2.0.1) (2026-01-21)
 
 
