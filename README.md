@@ -15,17 +15,11 @@ No terminal, no JSON editing, no Node.js install required.
 **Claude Code (CLI):**
 
 ```bash
-# Extract the bundle
-mkdir -p ~/.mcp/autotask-mcp
-curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
-unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
-
-# Register with Claude Code
 claude mcp add autotask-mcp \
   -e AUTOTASK_USERNAME=your-user@company.com \
   -e AUTOTASK_SECRET=your-secret \
   -e AUTOTASK_INTEGRATION_CODE=your-code \
-  -- node ~/.mcp/autotask-mcp/dist/entry.js
+  -- npx -y github:asachs01/autotask-mcp
 ```
 
 See [Installation](#installation) for Docker and from-source methods.
@@ -71,18 +65,14 @@ The simplest method — no terminal, no JSON editing, no Node.js install require
 2. Open the file (double-click or drag into Claude Desktop)
 3. Enter your Autotask credentials when prompted (Username, Secret, Integration Code)
 
-For **Claude Code (CLI)**, extract the bundle and register it:
+For **Claude Code (CLI)**, one command:
 
 ```bash
-mkdir -p ~/.mcp/autotask-mcp
-curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
-unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
-
 claude mcp add autotask-mcp \
   -e AUTOTASK_USERNAME=your-user@company.com \
   -e AUTOTASK_SECRET=your-secret \
   -e AUTOTASK_INTEGRATION_CODE=your-code \
-  -- node ~/.mcp/autotask-mcp/dist/entry.js
+  -- npx -y github:asachs01/autotask-mcp
 ```
 
 ### Option 2: Docker

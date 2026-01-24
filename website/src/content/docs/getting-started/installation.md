@@ -21,22 +21,14 @@ The simplest method — no terminal, no JSON editing, no Node.js install require
 That's it. Claude Desktop handles the rest.
 
 :::tip[Claude Code (CLI)]
-If you use Claude Code instead of Claude Desktop, run:
+If you use Claude Code instead of Claude Desktop, one command does it:
 
 ```bash
 claude mcp add autotask-mcp \
   -e AUTOTASK_USERNAME=your-user@company.com \
   -e AUTOTASK_SECRET=your-secret \
   -e AUTOTASK_INTEGRATION_CODE=your-code \
-  -- node ~/.mcp/autotask-mcp/dist/entry.js
-```
-
-This requires the MCPB bundle extracted to `~/.mcp/autotask-mcp/` first:
-
-```bash
-mkdir -p ~/.mcp/autotask-mcp
-curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
-unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
+  -- npx -y github:asachs01/autotask-mcp
 ```
 :::
 
