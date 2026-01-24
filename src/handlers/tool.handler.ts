@@ -444,9 +444,9 @@ export class AutotaskToolHandler {
               type: 'number',
               description: 'Filter by project status'
             },
-            projectManagerResourceID: {
+            projectLeadResourceID: {
               type: 'number',
-              description: 'Filter by project manager resource ID'
+              description: 'Filter by project lead resource ID'
             },
             pageSize: {
               type: 'number',
@@ -488,7 +488,7 @@ export class AutotaskToolHandler {
               type: 'string',
               description: 'Project end date (YYYY-MM-DD)'
             },
-            projectManagerResourceID: {
+            projectLeadResourceID: {
               type: 'number',
               description: 'Project manager resource ID'
             },

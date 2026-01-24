@@ -56,25 +56,39 @@ try {
     JSON.stringify(prodPkg, null, 2)
   );
 
-  // 5. Install production dependencies
-  console.log('\n=== Installing production dependencies ===');
-  run('npm install --production --ignore-scripts', { cwd: STAGING });
+  // 5. Copy only production dependencies (no npm install needed)
+  //    Uses npm ls to identify exactly which packages are production deps,
+  //    then copies only those. Avoids SSH/git issues with git dependencies.
+  console.log('\n=== Copying production dependencies ===');
+  const prodPaths = execSync('npm ls --production --parseable --all 2>/dev/null', { cwd: ROOT, encoding: 'utf8' })
+    .split('\n')
+    .filter(p => p.includes('node_modules'))
+    .map(p => p.trim());
+  console.log(`  ${prodPaths.length} production packages`);
+  for (const absPath of prodPaths) {
+    const relPath = absPath.slice(ROOT.length + 1); // e.g. "node_modules/winston"
+    const destPath = join(STAGING, relPath);
+    if (existsSync(absPath)) {
+      mkdirSync(join(destPath, '..'), { recursive: true });
+      cpSync(absPath, destPath, { recursive: true });
+    }
+  }
 
-  // 6. Remove source maps from dist
+  // 6. Remove unnecessary files from staging
   run('find dist -name "*.map" -delete', { cwd: STAGING });
+  // Remove test files, docs, changelogs from node_modules
+  run('find node_modules -type d \\( -name test -o -name tests -o -name __tests__ -o -name examples -o -name example \\) -exec rm -rf {} + 2>/dev/null || true', { cwd: STAGING });
+  run('find node_modules -type f \\( -name "*.map" -o -name "CHANGELOG*" -o -name "HISTORY*" -o -name "CONTRIBUTING*" -o -name ".eslintrc*" -o -name ".prettierrc*" -o -name "tsconfig.json" \\) -delete 2>/dev/null || true', { cwd: STAGING });
+
+  // 6.5. Copy .mcpbignore for mcpb pack to use
+  if (existsSync(join(ROOT, '.mcpbignore'))) {
+    copyFileSync(join(ROOT, '.mcpbignore'), join(STAGING, '.mcpbignore'));
+  }
 
   // 7. Pack the bundle
   console.log('\n=== Packing MCPB bundle ===');
   const bundlePath = join(ROOT, `${pkg.name}.mcpb`);
   run(`npx mcpb pack "${STAGING}" "${bundlePath}"`, { cwd: ROOT });
-
-  // 7.5. Clean the bundle to minimize size
-  console.log('\n=== Cleaning MCPB bundle ===');
-  run(`npx mcpb clean "${bundlePath}"`);
-
-  // 7.6. Sign the bundle (self-signed for development)
-  console.log('\n=== Signing MCPB bundle ===');
-  run(`npx mcpb sign --self-signed "${bundlePath}"`);
 
   // 8. Cleanup
   console.log('\n=== Cleanup ===');

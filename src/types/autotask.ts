@@ -84,7 +84,7 @@ export interface AutotaskProject {
   endDate?: string;
   startDateTime?: string;
   endDateTime?: string;
-  projectManagerResourceID?: number;
+  projectLeadResourceID?: number;
   estimatedHours?: number;
   actualHours?: number;
   laborEstimatedRevenue?: number;

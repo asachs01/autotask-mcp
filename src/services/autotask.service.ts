@@ -745,28 +745,6 @@ export class AutotaskService {
       // It uses GET with query params instead of POST with body like the working companies endpoint
       // We'll bypass it and make the correct API call directly
       
-      // Essential fields for optimized response size
-      const essentialFields = [
-        'id',
-        'projectName',
-        'projectNumber',
-        'description', 
-        'status',
-        'projectType',
-        'department',
-        'companyID',
-        'projectManagerResourceID',
-        'startDateTime',
-        'endDateTime',
-        'actualHours',
-        'estimatedHours',
-        'laborEstimatedRevenue',
-        'createDate',
-        'completedDate',
-        'contractID',
-        'originalEstimatedRevenue'
-      ];
-
       // Prepare search body in the same format as working companies endpoint
       const searchBody: any = {};
       
@@ -802,11 +780,6 @@ export class AutotaskService {
       if (options.page) searchBody.page = options.page;
       if (options.pageSize) searchBody.pageSize = options.pageSize;
       
-      // Add field limiting for optimization
-      if (essentialFields.length > 0) {
-        searchBody.includeFields = essentialFields;
-      }
-
       // Set default pagination and field limits
       const pageSize = options.pageSize || 25;
       const finalPageSize = pageSize > 100 ? 100 : pageSize;
@@ -1228,32 +1201,9 @@ export class AutotaskService {
     try {
       this.logger.debug('Searching tasks with options:', options);
       
-      // Define essential task fields to minimize response size
-      const essentialFields = [
-        'id',
-        'title',
-        'description',
-        'status',
-        'projectID',
-        'assignedResourceID',
-        'creatorResourceID',
-        'createDateTime',
-        'startDateTime',
-        'endDateTime',
-        'estimatedHours',
-        'hoursToBeScheduled',
-        'remainingHours',
-        'percentComplete',
-        'priorityLabel',
-        'taskType',
-        'lastActivityDateTime',
-        'completedDateTime'
-      ];
-
-      // Set default pagination and field limits
+      // Set default pagination
       const optimizedOptions = {
         ...options,
-        includeFields: essentialFields,
         pageSize: options.pageSize || 25,
         ...(options.pageSize && options.pageSize > 100 && { pageSize: 100 })
       };
