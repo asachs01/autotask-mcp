@@ -4,14 +4,25 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that p
 
 ## Quick Start
 
-The fastest way to get started is using `npx` directly from GitHub (no npm publish required):
+The fastest way to get started is with the pre-built MCPB bundle — a single-file package with all dependencies included. No npm install needed, just Node.js 18+.
+
+**1. Download the bundle** from the [latest release](https://github.com/asachs01/autotask-mcp/releases/latest):
+
+```bash
+# Download and extract to ~/.mcp/autotask-mcp/
+mkdir -p ~/.mcp/autotask-mcp
+curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
+unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
+```
+
+**2. Add to your MCP client config** (`claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
     "autotask": {
-      "command": "npx",
-      "args": ["-y", "github:asachs01/autotask-mcp"],
+      "command": "node",
+      "args": ["~/.mcp/autotask-mcp/dist/entry.js"],
       "env": {
         "AUTOTASK_USERNAME": "your-user@company.com",
         "AUTOTASK_SECRET": "your-secret",
@@ -22,8 +33,6 @@ The fastest way to get started is using `npx` directly from GitHub (no npm publi
 }
 ```
 
-Add the above to your `claude_desktop_config.json` (macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`), restart Claude Desktop, and you're connected.
-
 **For Claude Code (CLI):**
 
 ```bash
@@ -31,10 +40,10 @@ claude mcp add autotask-mcp \
   -e AUTOTASK_USERNAME=your-user@company.com \
   -e AUTOTASK_SECRET=your-secret \
   -e AUTOTASK_INTEGRATION_CODE=your-code \
-  -- npx -y github:asachs01/autotask-mcp
+  -- node ~/.mcp/autotask-mcp/dist/entry.js
 ```
 
-See [Installation](#installation) for Docker and other methods.
+See [Installation](#installation) for npx, Docker, and other methods.
 
 ## Features
 
@@ -69,9 +78,37 @@ See [Installation](#installation) for Docker and other methods.
 
 ## Installation
 
-### Option 1: npx from GitHub (Recommended)
+### Option 1: MCPB Bundle (Recommended)
 
-No registry or local clone needed — `npx` installs directly from the GitHub repo:
+Download the pre-built bundle from the [latest release](https://github.com/asachs01/autotask-mcp/releases/latest). This includes all dependencies — no npm install or network fetch needed at runtime.
+
+```bash
+mkdir -p ~/.mcp/autotask-mcp
+curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
+unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
+```
+
+Then configure your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "autotask": {
+      "command": "node",
+      "args": ["~/.mcp/autotask-mcp/dist/entry.js"],
+      "env": {
+        "AUTOTASK_USERNAME": "your-user@company.com",
+        "AUTOTASK_SECRET": "your-secret",
+        "AUTOTASK_INTEGRATION_CODE": "your-code"
+      }
+    }
+  }
+}
+```
+
+### Option 2: npx from GitHub
+
+No local download needed — `npx` installs directly from the GitHub repo on each run:
 
 ```json
 {
@@ -89,7 +126,7 @@ No registry or local clone needed — `npx` installs directly from the GitHub re
 }
 ```
 
-### Option 2: Docker (GitHub Container Registry)
+### Option 3: Docker (GitHub Container Registry)
 
 ```bash
 docker pull ghcr.io/asachs01/autotask-mcp:latest
@@ -119,7 +156,7 @@ For Claude Desktop (stdio via Docker):
 
 For HTTP transport (remote/server deployment), see [Docker Deployment](#docker-deployment).
 
-### Option 3: From Source
+### Option 4: From Source
 
 ```bash
 git clone https://github.com/asachs01/autotask-mcp.git
@@ -446,7 +483,24 @@ The Claude Desktop configuration file location varies by operating system:
 
 Add the Autotask MCP server to your Claude Desktop configuration:
 
-**npx from GitHub (no local install):**
+**MCPB Bundle (recommended):**
+```json
+{
+  "mcpServers": {
+    "autotask": {
+      "command": "node",
+      "args": ["~/.mcp/autotask-mcp/dist/entry.js"],
+      "env": {
+        "AUTOTASK_USERNAME": "your-api-username@company.com",
+        "AUTOTASK_SECRET": "your-api-secret",
+        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
+      }
+    }
+  }
+}
+```
+
+**npx from GitHub (no local download):**
 ```json
 {
   "mcpServers": {
@@ -486,7 +540,7 @@ claude mcp add autotask-mcp \
   -e AUTOTASK_USERNAME=your-api-username@company.com \
   -e AUTOTASK_SECRET=your-api-secret \
   -e AUTOTASK_INTEGRATION_CODE=your-integration-code \
-  -- npx -y github:asachs01/autotask-mcp
+  -- node ~/.mcp/autotask-mcp/dist/entry.js
 ```
 
 **Docker (stdio mode for Claude Desktop):**
