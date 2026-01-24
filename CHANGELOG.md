@@ -1,3 +1,10 @@
+## [2.3.3](https://github.com/asachs01/autotask-mcp/compare/v2.3.2...v2.3.3) (2026-01-24)
+
+
+### Bug Fixes
+
+* **mcpb:** Fix bundle runtime errors and add automated test harness ([c3beb22](https://github.com/asachs01/autotask-mcp/commit/c3beb221bdacf949aa543d846188ab1fb85639d2))
+
 ## [2.3.2](https://github.com/asachs01/autotask-mcp/compare/v2.3.1...v2.3.2) (2026-01-23)
 
 
