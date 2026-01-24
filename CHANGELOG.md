@@ -1,3 +1,10 @@
+## [2.5.2](https://github.com/asachs01/autotask-mcp/compare/v2.5.1...v2.5.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* **docs:** Use npx for Claude Code instructions instead of bundle extraction ([e5c7a01](https://github.com/asachs01/autotask-mcp/commit/e5c7a01937ba323ce2463c2ce3c9e9c6eae65bd3))
+
 ## [2.5.1](https://github.com/asachs01/autotask-mcp/compare/v2.5.0...v2.5.1) (2026-01-24)
 
 
