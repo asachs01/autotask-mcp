@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/asachs01/autotask-mcp/compare/v2.3.4...v2.4.0) (2026-01-24)
+
+
+### Features
+
+* **search:** Add compact response format, smart defaults, and pagination ([00aa4b9](https://github.com/asachs01/autotask-mcp/commit/00aa4b91e7329e833c60545d9d5e081f5a8f374c))
+
 ## [2.3.4](https://github.com/asachs01/autotask-mcp/compare/v2.3.3...v2.3.4) (2026-01-24)
 
 
