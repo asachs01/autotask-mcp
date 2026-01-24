@@ -1,3 +1,10 @@
+## [2.5.1](https://github.com/asachs01/autotask-mcp/compare/v2.5.0...v2.5.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* **docs:** Add base path prefix to content links for GitHub Pages ([be4b661](https://github.com/asachs01/autotask-mcp/commit/be4b66172c2f000e09a8d887b051d4bd2bb8ad05))
+
 # [2.5.0](https://github.com/asachs01/autotask-mcp/compare/v2.4.0...v2.5.0) (2026-01-24)
 
 
