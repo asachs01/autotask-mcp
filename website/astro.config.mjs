@@ -4,6 +4,8 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://asachs01.github.io',
+	base: '/autotask-mcp',
 	integrations: [
 		starlight({
 			title: 'Autotask MCP',
