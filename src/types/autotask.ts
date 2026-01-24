@@ -312,7 +312,10 @@ export interface AutotaskQueryOptionsExtended extends AutotaskQueryOptions {
   status?: number;
   assignedResourceID?: number;
   unassigned?: boolean;
-  // Note: Pagination is now enabled by default. Only specify pageSize to limit results.
+  // Date filters for ticket searches
+  createdAfter?: string;
+  createdBefore?: string;
+  lastActivityAfter?: string;
 }
 
 // Status enums (commonly used values)

@@ -5,6 +5,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { AutotaskService } from '../services/autotask.service.js';
 import { PicklistCache, PicklistValue } from '../services/picklist.cache.js';
 import { Logger } from '../utils/logger.js';
+import { formatCompactResponse, detectEntityType, COMPACT_SEARCH_TOOLS } from '../utils/response.formatter.js';
 
 export interface McpTool {
   name: string;
@@ -87,6 +88,72 @@ export class AutotaskToolHandler {
   }
 
   /**
+   * Elicit a date range filter when no filters are provided for ticket search.
+   * Returns date filter params or null if elicitation is not available/dismissed.
+   * Times out after 5 seconds to avoid blocking in non-interactive environments.
+   */
+  protected async elicitDateRange(): Promise<Record<string, string> | null> {
+    if (!this.mcpServer) return null;
+
+    try {
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('elicitation timeout')), 5000)
+      );
+      const result = await Promise.race([this.mcpServer.elicitInput({
+        message: 'No filters specified. What date range would you like to search?',
+        requestedSchema: {
+          type: 'object' as const,
+          properties: {
+            dateRange: {
+              type: 'string' as const,
+              title: 'Date Range',
+              description: 'How far back to search',
+              enum: ['today', 'past_week', 'past_month', 'past_quarter', 'all'],
+              enumNames: ['Today', 'Past Week', 'Past Month', 'Past Quarter', 'All Time'],
+            }
+          },
+          required: ['dateRange'],
+        }
+      }), timeoutPromise]);
+
+      if (result.action === 'accept' && result.content) {
+        const range = result.content.dateRange as string;
+        const now = new Date();
+        let createdAfter: string | undefined;
+
+        switch (range) {
+          case 'today':
+            createdAfter = now.toISOString().split('T')[0];
+            break;
+          case 'past_week':
+            now.setDate(now.getDate() - 7);
+            createdAfter = now.toISOString().split('T')[0];
+            break;
+          case 'past_month':
+            now.setMonth(now.getMonth() - 1);
+            createdAfter = now.toISOString().split('T')[0];
+            break;
+          case 'past_quarter':
+            now.setMonth(now.getMonth() - 3);
+            createdAfter = now.toISOString().split('T')[0];
+            break;
+          case 'all':
+          default:
+            return null; // No date filter
+        }
+
+        if (createdAfter) {
+          return { createdAfter };
+        }
+      }
+      return null;
+    } catch (error) {
+      this.logger.debug(`Date range elicitation not available: ${error instanceof Error ? error.message : 'unknown'}`);
+      return null;
+    }
+  }
+
+  /**
    * List all available tools
    */
   async listTools(): Promise<McpTool[]> {
@@ -107,7 +174,7 @@ export class AutotaskToolHandler {
       // Company tools
       {
         name: 'autotask_search_companies',
-        description: 'Search for companies in Autotask with optional filters',
+        description: 'Search for companies in Autotask. Returns 25 results per page by default. Use page parameter for more results.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -119,9 +186,14 @@ export class AutotaskToolHandler {
               type: 'boolean',
               description: 'Filter by active status'
             },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination (default: 1)',
+              minimum: 1
+            },
             pageSize: {
               type: 'number',
-              description: 'Number of results to return (default: 50, max: 200)',
+              description: 'Results per page (default: 25, max: 200)',
               minimum: 1,
               maximum: 200
             }
@@ -221,7 +293,7 @@ export class AutotaskToolHandler {
       // Contact tools
       {
         name: 'autotask_search_contacts',
-        description: 'Search for contacts in Autotask with optional filters',
+        description: 'Search for contacts in Autotask. Returns 25 results per page by default. Use page parameter for more results.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -237,9 +309,14 @@ export class AutotaskToolHandler {
               type: 'number',
               description: 'Filter by active status (1=active, 0=inactive)'
             },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination (default: 1)',
+              minimum: 1
+            },
             pageSize: {
               type: 'number',
-              description: 'Number of results to return (default: 50, max: 200)',
+              description: 'Results per page (default: 25, max: 200)',
               minimum: 1,
               maximum: 200
             }
@@ -285,13 +362,13 @@ export class AutotaskToolHandler {
       // Ticket tools
       {
         name: 'autotask_search_tickets',
-        description: 'Search for tickets in Autotask with optional filters. BY DEFAULT retrieves ALL matching tickets via pagination for complete accuracy. Only specify pageSize to limit results. Perfect for reports and analytics.',
+        description: 'Search for tickets in Autotask. Returns 25 results per page by default. Use page parameter for more results. Use get_ticket_details for full data on a specific ticket.',
         inputSchema: {
           type: 'object',
           properties: {
             searchTerm: {
               type: 'string',
-              description: 'Search term for ticket title or description'
+              description: 'Search by ticket number prefix'
             },
             companyID: {
               type: 'number',
@@ -299,19 +376,36 @@ export class AutotaskToolHandler {
             },
             status: {
               type: 'number',
-              description: 'Filter by ticket status ID (omit for all open tickets: status < 5)'
+              description: 'Filter by ticket status ID (omit for all open tickets)'
             },
             assignedResourceID: {
               type: 'number',
-              description: 'Filter by assigned resource ID. Use null (or omit) to search for unassigned tickets.'
+              description: 'Filter by assigned resource ID'
             },
             unassigned: {
               type: 'boolean',
-              description: 'Set to true to find tickets that are not assigned to any resource (where assignedResourceID is null)'
+              description: 'Set to true to find unassigned tickets'
+            },
+            createdAfter: {
+              type: 'string',
+              description: 'Filter tickets created on or after this date (ISO format, e.g. 2026-01-01)'
+            },
+            createdBefore: {
+              type: 'string',
+              description: 'Filter tickets created on or before this date (ISO format)'
+            },
+            lastActivityAfter: {
+              type: 'string',
+              description: 'Filter tickets with activity on or after this date (ISO format)'
+            },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination (default: 1)',
+              minimum: 1
             },
             pageSize: {
               type: 'number',
-              description: 'OPTIONAL: Limit number of results. If omitted, retrieves ALL matching tickets for complete accuracy.',
+              description: 'Results per page (default: 25, max: 500)',
               minimum: 1,
               maximum: 500
             }
@@ -428,7 +522,7 @@ export class AutotaskToolHandler {
       // Project tools
       {
         name: 'autotask_search_projects',
-        description: 'Search for projects in Autotask with optional filters. Returns optimized project data to prevent large responses.',
+        description: 'Search for projects in Autotask. Returns 25 results per page by default. Use page parameter for more results.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -448,9 +542,14 @@ export class AutotaskToolHandler {
               type: 'number',
               description: 'Filter by project lead resource ID'
             },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination (default: 1)',
+              minimum: 1
+            },
             pageSize: {
               type: 'number',
-              description: 'Number of results to return (default: 25, max: 100)',
+              description: 'Results per page (default: 25, max: 100)',
               minimum: 1,
               maximum: 100
             }
@@ -504,7 +603,7 @@ export class AutotaskToolHandler {
       // Resource tools
       {
         name: 'autotask_search_resources',
-        description: 'Search for resources (users) in Autotask with optional filters',
+        description: 'Search for resources (users) in Autotask. Returns 25 results per page by default. Use page parameter for more results.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -520,9 +619,14 @@ export class AutotaskToolHandler {
               type: 'number',
               description: 'Filter by resource type (1=Employee, 2=Contractor, 3=Temporary)'
             },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination (default: 1)',
+              minimum: 1
+            },
             pageSize: {
               type: 'number',
-              description: 'Number of results to return (default: 25, max: 500)',
+              description: 'Results per page (default: 25, max: 500)',
               minimum: 1,
               maximum: 500
             }
@@ -1031,7 +1135,7 @@ export class AutotaskToolHandler {
       // Task tools
       {
         name: 'autotask_search_tasks',
-        description: 'Search for tasks in Autotask with optional filters. Returns optimized task data to prevent large responses.',
+        description: 'Search for tasks in Autotask. Returns 25 results per page by default. Use page parameter for more results.',
         inputSchema: {
           type: 'object',
           properties: {
@@ -1051,9 +1155,14 @@ export class AutotaskToolHandler {
               type: 'number',
               description: 'Filter by assigned resource ID'
             },
+            page: {
+              type: 'number',
+              description: 'Page number for pagination (default: 1)',
+              minimum: 1
+            },
             pageSize: {
               type: 'number',
-              description: 'Number of results to return (default: 25, max: 100)',
+              description: 'Results per page (default: 25, max: 100)',
               minimum: 1,
               maximum: 100
             }
@@ -1200,7 +1309,16 @@ export class AutotaskToolHandler {
           message = `Successfully created contact with ID: ${result}`;
           break;
 
-        case 'autotask_search_tickets':
+        case 'autotask_search_tickets': {
+          // Elicitation for zero-filter ticket searches
+          const hasTicketFilters = args.searchTerm || args.companyID || args.status !== undefined ||
+            args.assignedResourceID || args.unassigned || args.createdAfter || args.createdBefore || args.lastActivityAfter;
+          if (!hasTicketFilters && this.mcpServer) {
+            const dateChoice = await this.elicitDateRange();
+            if (dateChoice) {
+              args = { ...args, ...dateChoice };
+            }
+          }
           // Map parameter names from tool schema to service expectations
           const { companyID, ...otherArgs } = args;
           const ticketSearchOptions = {
@@ -1210,6 +1328,7 @@ export class AutotaskToolHandler {
           result = await this.autotaskService.searchTickets(ticketSearchOptions);
           message = `Found ${result.length} tickets`;
           break;
+        }
 
         case 'autotask_get_ticket_details':
           result = await this.autotaskService.getTicket(args.ticketID, args.fullDetails);
@@ -1399,168 +1518,6 @@ export class AutotaskToolHandler {
           message = `Successfully created quote with ID: ${result}`;
           break;
 
-        // Configuration Item tools
-        case 'autotask_search_configuration_items':
-          result = await this.autotaskService.searchConfigurationItems(args);
-          message = `Found ${result.length} configuration items`;
-          break;
-
-        // Contract tools
-        case 'autotask_search_contracts':
-          result = await this.autotaskService.searchContracts(args);
-          message = `Found ${result.length} contracts`;
-          break;
-
-        // Invoice tools
-        case 'autotask_search_invoices':
-          result = await this.autotaskService.searchInvoices(args);
-          message = `Found ${result.length} invoices`;
-          break;
-
-        // Task tools
-        case 'autotask_search_tasks':
-          result = await this.autotaskService.searchTasks(args);
-          message = `Found ${result.length} tasks`;
-          break;
-
-        case 'autotask_create_task':
-          result = await this.autotaskService.createTask(args);
-          message = `Successfully created task with ID: ${result}`;
-          break;
-
-        // Ticket Notes tools
-        case 'autotask_get_ticket_note':
-          result = await this.autotaskService.getTicketNote(args.ticketId, args.noteId);
-          message = `Ticket note retrieved successfully`;
-          break;
-
-        case 'autotask_search_ticket_notes':
-          result = await this.autotaskService.searchTicketNotes(args.ticketId, { pageSize: args.pageSize });
-          message = `Found ${result.length} ticket notes`;
-          break;
-
-        case 'autotask_create_ticket_note':
-          result = await this.autotaskService.createTicketNote(args.ticketId, {
-            title: args.title,
-            description: args.description,
-            noteType: args.noteType,
-            publish: args.publish
-          });
-          message = `Successfully created ticket note with ID: ${result}`;
-          break;
-
-        // Project Notes tools  
-        case 'autotask_get_project_note':
-          result = await this.autotaskService.getProjectNote(args.projectId, args.noteId);
-          message = `Project note retrieved successfully`;
-          break;
-
-        case 'autotask_search_project_notes':
-          result = await this.autotaskService.searchProjectNotes(args.projectId, { pageSize: args.pageSize });
-          message = `Found ${result.length} project notes`;
-          break;
-
-        case 'autotask_create_project_note':
-          result = await this.autotaskService.createProjectNote(args.projectId, {
-            title: args.title,
-            description: args.description,
-            noteType: args.noteType
-          });
-          message = `Successfully created project note with ID: ${result}`;
-          break;
-
-        // Company Notes tools
-        case 'autotask_get_company_note':
-          result = await this.autotaskService.getCompanyNote(args.companyId, args.noteId);
-          message = `Company note retrieved successfully`;
-          break;
-
-        case 'autotask_search_company_notes':
-          result = await this.autotaskService.searchCompanyNotes(args.companyId, { pageSize: args.pageSize });
-          message = `Found ${result.length} company notes`;
-          break;
-
-        case 'autotask_create_company_note':
-          result = await this.autotaskService.createCompanyNote(args.companyId, {
-            title: args.title,
-            description: args.description,
-            actionType: args.actionType
-          });
-          message = `Successfully created company note with ID: ${result}`;
-          break;
-
-        // Ticket Attachments tools
-        case 'autotask_get_ticket_attachment':
-          result = await this.autotaskService.getTicketAttachment(args.ticketId, args.attachmentId, args.includeData);
-          message = `Ticket attachment retrieved successfully`;
-          break;
-
-        case 'autotask_search_ticket_attachments':
-          result = await this.autotaskService.searchTicketAttachments(args.ticketId, { pageSize: args.pageSize });
-          message = `Found ${result.length} ticket attachments`;
-          break;
-
-        // Expense Reports tools
-        case 'autotask_get_expense_report':
-          result = await this.autotaskService.getExpenseReport(args.reportId);
-          message = `Expense report retrieved successfully`;
-          break;
-
-        case 'autotask_search_expense_reports':
-          result = await this.autotaskService.searchExpenseReports({
-            submitterId: args.submitterId,
-            status: args.status,
-            pageSize: args.pageSize
-          });
-          message = `Found ${result.length} expense reports`;
-          break;
-
-        case 'autotask_create_expense_report':
-          result = await this.autotaskService.createExpenseReport({
-            name: args.name,
-            description: args.description,
-            submitterID: args.submitterId,
-            weekEndingDate: args.weekEndingDate
-          });
-          message = `Successfully created expense report with ID: ${result}`;
-          break;
-
-        // Expense Items tools - Not directly supported
-        case 'autotask_get_expense_item':
-        case 'autotask_search_expense_items':
-        case 'autotask_create_expense_item':
-          throw new Error('Expense items API not yet implemented - requires child entity handling');
-
-        // Quotes tools
-        case 'autotask_get_quote':
-          result = await this.autotaskService.getQuote(args.quoteId);
-          message = `Quote retrieved successfully`;
-          break;
-
-        case 'autotask_search_quotes':
-          result = await this.autotaskService.searchQuotes({
-            companyId: args.companyId,
-            contactId: args.contactId,
-            opportunityId: args.opportunityId,
-            searchTerm: args.searchTerm,
-            pageSize: args.pageSize
-          });
-          message = `Found ${result.length} quotes`;
-          break;
-
-        case 'autotask_create_quote':
-          result = await this.autotaskService.createQuote({
-            name: args.name,
-            description: args.description,
-            companyID: args.companyId,
-            contactID: args.contactId,
-            opportunityID: args.opportunityId,
-            effectiveDate: args.effectiveDate,
-            expirationDate: args.expirationDate
-          });
-          message = `Successfully created quote with ID: ${result}`;
-          break;
-
         // Billing Codes and Departments tools - Not directly supported
         case 'autotask_get_billing_code':
         case 'autotask_search_billing_codes':
@@ -1615,17 +1572,25 @@ export class AutotaskToolHandler {
           throw new Error(`Unknown tool: ${name}`);
       }
 
+      // Use compact formatting for search tools
+      let responseText: string;
+      if (COMPACT_SEARCH_TOOLS.has(name) && Array.isArray(result)) {
+        const entityType = detectEntityType(name);
+        if (entityType) {
+          const compact = formatCompactResponse(result, entityType, {
+            page: args.page,
+            pageSize: args.pageSize,
+          });
+          responseText = JSON.stringify(compact);
+        } else {
+          responseText = JSON.stringify({ message, data: result });
+        }
+      } else {
+        responseText = JSON.stringify({ message, data: result });
+      }
+
       const toolResult: McpToolResult = {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              message,
-              data: result,
-              timestamp: new Date().toISOString()
-            }, null, 2)
-          }
-        ]
+        content: [{ type: 'text', text: responseText }]
       };
 
       this.logger.debug(`Successfully executed tool: ${name}`);
@@ -1635,17 +1600,13 @@ export class AutotaskToolHandler {
       this.logger.error(`Tool execution failed for ${name}:`, error);
       
       const errorResult: McpToolResult = {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              error: error instanceof Error ? error.message : 'Unknown error',
-              tool: name,
-              arguments: args,
-              timestamp: new Date().toISOString()
-            }, null, 2)
-          }
-        ],
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error: error instanceof Error ? error.message : 'Unknown error',
+            tool: name,
+          })
+        }],
         isError: true
       };
 
