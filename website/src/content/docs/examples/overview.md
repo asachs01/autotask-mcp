@@ -23,8 +23,8 @@ When you ask your AI assistant a question about Autotask data, the assistant:
 
 ## Example Categories
 
-- [Companies & Contacts](/examples/companies-contacts/) — Search, create, and manage company records
-- [Tickets & Support](/examples/tickets/) — Find, create, and triage support tickets
-- [Projects & Tasks](/examples/projects-tasks/) — Track project work and task assignments
-- [Time & Billing](/examples/time-billing/) — Log time entries and view billing data
-- [Notes & Attachments](/examples/notes-attachments/) — Add context to tickets and projects
+- [Companies & Contacts](/autotask-mcp/examples/companies-contacts/) — Search, create, and manage company records
+- [Tickets & Support](/autotask-mcp/examples/tickets/) — Find, create, and triage support tickets
+- [Projects & Tasks](/autotask-mcp/examples/projects-tasks/) — Track project work and task assignments
+- [Time & Billing](/autotask-mcp/examples/time-billing/) — Log time entries and view billing data
+- [Notes & Attachments](/autotask-mcp/examples/notes-attachments/) — Add context to tickets and projects

@@ -44,6 +44,6 @@ The MCP server acts as a bridge between your AI assistant and the Autotask REST 
 
 ## Next Steps
 
-- [Install the server](/getting-started/installation/)
-- [Configure your credentials](/getting-started/configuration/)
-- [See prompt examples](/examples/overview/)
+- [Install the server](/autotask-mcp/getting-started/installation/)
+- [Configure your credentials](/autotask-mcp/getting-started/configuration/)
+- [See prompt examples](/autotask-mcp/examples/overview/)

@@ -92,4 +92,4 @@ node scripts/pack-mcpb.js
 
 ## Next Steps
 
-- [Configure credentials and options](/getting-started/configuration/)
+- [Configure credentials and options](/autotask-mcp/getting-started/configuration/)
