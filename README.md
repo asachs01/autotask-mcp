@@ -4,38 +4,23 @@ A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that p
 
 ## Quick Start
 
-The fastest way to get started is with the pre-built MCPB bundle — a single-file package with all dependencies included. No npm install needed, just Node.js 18+.
+**Claude Desktop** — download, open, done:
 
-**1. Download the bundle** from the [latest release](https://github.com/asachs01/autotask-mcp/releases/latest):
+1. Download `autotask-mcp.mcpb` from the [latest release](https://github.com/asachs01/autotask-mcp/releases/latest)
+2. Open the file (double-click or drag into Claude Desktop)
+3. Enter your Autotask credentials when prompted (Username, Secret, Integration Code)
+
+No terminal, no JSON editing, no Node.js install required.
+
+**Claude Code (CLI):**
 
 ```bash
-# Download and extract to ~/.mcp/autotask-mcp/
+# Extract the bundle
 mkdir -p ~/.mcp/autotask-mcp
 curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
 unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
-```
 
-**2. Add to your MCP client config** (`claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "node",
-      "args": ["~/.mcp/autotask-mcp/dist/entry.js"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-user@company.com",
-        "AUTOTASK_SECRET": "your-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-code"
-      }
-    }
-  }
-}
-```
-
-**For Claude Code (CLI):**
-
-```bash
+# Register with Claude Code
 claude mcp add autotask-mcp \
   -e AUTOTASK_USERNAME=your-user@company.com \
   -e AUTOTASK_SECRET=your-secret \
@@ -43,7 +28,7 @@ claude mcp add autotask-mcp \
   -- node ~/.mcp/autotask-mcp/dist/entry.js
 ```
 
-See [Installation](#installation) for npx, Docker, and other methods.
+See [Installation](#installation) for Docker and from-source methods.
 
 ## Features
 
@@ -69,70 +54,40 @@ See [Installation](#installation) for npx, Docker, and other methods.
 - [ID-to-Name Mapping](#id-to-name-mapping)
 - [HTTP Transport](#http-transport)
 - [Docker Deployment](#docker-deployment)
-- [Claude Desktop Integration](#claude-desktop-integration)
 - [Development](#development)
 - [Testing](#testing)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [Contributors](#contributors)
 - [License](#license)
 
 ## Installation
 
-### Option 1: MCPB Bundle (Recommended)
+### Option 1: MCPB Bundle (Claude Desktop)
 
-Download the pre-built bundle from the [latest release](https://github.com/asachs01/autotask-mcp/releases/latest). This includes all dependencies — no npm install or network fetch needed at runtime.
+The simplest method — no terminal, no JSON editing, no Node.js install required.
+
+1. Download `autotask-mcp.mcpb` from the [latest release](https://github.com/asachs01/autotask-mcp/releases/latest)
+2. Open the file (double-click or drag into Claude Desktop)
+3. Enter your Autotask credentials when prompted (Username, Secret, Integration Code)
+
+For **Claude Code (CLI)**, extract the bundle and register it:
 
 ```bash
 mkdir -p ~/.mcp/autotask-mcp
 curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
 unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
+
+claude mcp add autotask-mcp \
+  -e AUTOTASK_USERNAME=your-user@company.com \
+  -e AUTOTASK_SECRET=your-secret \
+  -e AUTOTASK_INTEGRATION_CODE=your-code \
+  -- node ~/.mcp/autotask-mcp/dist/entry.js
 ```
 
-Then configure your MCP client:
+### Option 2: Docker
 
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "node",
-      "args": ["~/.mcp/autotask-mcp/dist/entry.js"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-user@company.com",
-        "AUTOTASK_SECRET": "your-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-code"
-      }
-    }
-  }
-}
-```
-
-### Option 2: npx from GitHub
-
-No local download needed — `npx` installs directly from the GitHub repo on each run:
-
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "npx",
-      "args": ["-y", "github:asachs01/autotask-mcp"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-user@company.com",
-        "AUTOTASK_SECRET": "your-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-code"
-      }
-    }
-  }
-}
-```
-
-### Option 3: Docker (GitHub Container Registry)
-
-```bash
-docker pull ghcr.io/asachs01/autotask-mcp:latest
-```
-
-For Claude Desktop (stdio via Docker):
+**Local (stdio — for Claude Desktop or Claude Code):**
 
 ```json
 {
@@ -154,18 +109,33 @@ For Claude Desktop (stdio via Docker):
 }
 ```
 
-For HTTP transport (remote/server deployment), see [Docker Deployment](#docker-deployment).
+**Remote (HTTP Streamable — for server deployments):**
 
-### Option 4: From Source
+```bash
+docker run -d \
+  --name autotask-mcp \
+  -p 8080:8080 \
+  -e AUTOTASK_USERNAME="your-user@company.com" \
+  -e AUTOTASK_SECRET="your-secret" \
+  -e AUTOTASK_INTEGRATION_CODE="your-code" \
+  --restart unless-stopped \
+  ghcr.io/asachs01/autotask-mcp:latest
+
+# Verify
+curl http://localhost:8080/health
+```
+
+Clients connect to `http://host:8080/mcp` using MCP Streamable HTTP transport.
+
+### Option 3: From Source (Development)
 
 ```bash
 git clone https://github.com/asachs01/autotask-mcp.git
 cd autotask-mcp
-npm ci
-npm run build
+npm ci && npm run build
 ```
 
-Then configure Claude Desktop:
+Then point your MCP client at `dist/entry.js`:
 
 ```json
 {
@@ -185,9 +155,9 @@ Then configure Claude Desktop:
 
 ### Prerequisites
 
-- Node.js 18+ (LTS recommended)
-- Valid Autotask API credentials
-- MCP-compatible client (Claude Desktop, Continue, etc.)
+- Valid Autotask API credentials (API user email, secret, integration code)
+- MCP-compatible client (Claude Desktop, Claude Code, etc.)
+- Docker (for Option 2) or Node.js 18+ (for Option 3)
 
 ## Configuration
 
@@ -243,7 +213,7 @@ MCP_TRANSPORT=http node dist/index.js
 
 ### MCP Client Configuration
 
-See [Claude Desktop Integration](#claude-desktop-integration) for full setup instructions, or use the Quick Start config above.
+See [Installation](#installation) for all setup methods.
 
 ## API Reference
 
@@ -421,7 +391,7 @@ docker run -d \
 curl http://localhost:8080/health
 ```
 
-For **stdio** usage with Claude Desktop, see [Installation Option 2](#option-2-docker-github-container-registry).
+For **stdio** usage with Claude Desktop, see [Installation Option 2](#option-2-docker).
 
 ### Quick Start (From Source)
 
@@ -458,268 +428,6 @@ docker run -d \
 # Start development environment with hot reload
 docker compose --profile dev up autotask-mcp-dev
 ```
-
-## Claude Desktop Integration
-
-This section explains how to connect the Autotask MCP Server to Claude Desktop for seamless AI-powered Autotask interactions.
-
-### Prerequisites
-
-1. **Claude Desktop**: Download and install [Claude Desktop](https://claude.ai/desktop)
-2. **MCP Server Running**: Have the Autotask MCP server running locally or in Docker
-3. **Autotask Credentials**: Valid Autotask API credentials configured
-
-### Configuration Steps
-
-#### 1. Locate Claude Desktop Configuration
-
-The Claude Desktop configuration file location varies by operating system:
-
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-- **Linux**: `~/.config/Claude/claude_desktop_config.json`
-
-#### 2. Configure MCP Server Connection
-
-Add the Autotask MCP server to your Claude Desktop configuration:
-
-**MCPB Bundle (recommended):**
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "node",
-      "args": ["~/.mcp/autotask-mcp/dist/entry.js"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-api-username@company.com",
-        "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
-      }
-    }
-  }
-}
-```
-
-**npx from GitHub (no local download):**
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "npx",
-      "args": ["-y", "github:asachs01/autotask-mcp"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-api-username@company.com",
-        "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
-      }
-    }
-  }
-}
-```
-
-**Local clone:**
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "node",
-      "args": ["/path/to/autotask-mcp/dist/entry.js"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-api-username@company.com",
-        "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
-      }
-    }
-  }
-}
-```
-
-**Claude Code (CLI):**
-```bash
-claude mcp add autotask-mcp \
-  -e AUTOTASK_USERNAME=your-api-username@company.com \
-  -e AUTOTASK_SECRET=your-api-secret \
-  -e AUTOTASK_INTEGRATION_CODE=your-integration-code \
-  -- node ~/.mcp/autotask-mcp/dist/entry.js
-```
-
-**Docker (stdio mode for Claude Desktop):**
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "docker",
-      "args": [
-        "run", "--rm", "-i",
-        "-e", "MCP_TRANSPORT=stdio",
-        "-e", "AUTOTASK_USERNAME=your-api-username@company.com",
-        "-e", "AUTOTASK_SECRET=your-api-secret",
-        "-e", "AUTOTASK_INTEGRATION_CODE=your-integration-code",
-        "--entrypoint", "node",
-        "ghcr.io/asachs01/autotask-mcp:latest",
-        "dist/entry.js"
-      ]
-    }
-  }
-}
-```
-
-#### 3. Restart Claude Desktop
-
-After updating the configuration:
-1. Completely quit Claude Desktop
-2. Restart the application
-3. Verify the connection in the Claude interface
-
-### Verification
-
-#### Check MCP Server Status
-
-Look for the MCP server indicator in Claude Desktop:
-- **Connected**: Green indicator with "autotask" label
-- **Disconnected**: Red indicator or missing server
-
-#### Test Basic Functionality
-
-Try these example prompts in Claude:
-
-```
-Show me all companies in Autotask
-```
-
-```
-Create a new ticket for Company ID 123 with title "Server maintenance"
-```
-
-```
-Search for contacts with email containing "@example.com"
-```
-
-### Available MCP Resources
-
-Once connected, Claude can access these Autotask resources:
-
-#### Companies
-- `autotask://companies` - List all companies
-- `autotask://companies/{id}` - Get specific company details
-
-#### Contacts
-- `autotask://contacts` - List all contacts
-- `autotask://contacts/{id}` - Get specific contact details
-
-#### Tickets
-- `autotask://tickets` - List all tickets
-- `autotask://tickets/{id}` - Get specific ticket details
-
-#### Time Entries
-- `autotask://time-entries` - List all time entries
-
-### Available MCP Tools
-
-Claude can perform these actions via 35 MCP tools. Key operations include:
-
-- **autotask_search_companies** / **autotask_create_company** / **autotask_update_company**
-- **autotask_search_contacts** / **autotask_create_contact**
-- **autotask_search_tickets** / **autotask_get_ticket_details** / **autotask_create_ticket**
-- **autotask_create_time_entry**
-- **autotask_search_projects** / **autotask_create_project**
-- **autotask_search_resources**
-- Notes: ticket, project, and company notes (get/search/create)
-- Attachments: **autotask_get_ticket_attachment** / **autotask_search_ticket_attachments**
-- Financial: expense reports, quotes, invoices, contracts
-- **autotask_search_configuration_items** / **autotask_search_tasks** / **autotask_create_task**
-- **autotask_test_connection**: Verify Autotask API connectivity
-
-See [API Reference](#api-reference) for the full list.
-
-### Example Usage Scenarios
-
-#### 1. Ticket Management
-```
-Claude, show me all open tickets assigned to John Doe and create a summary report
-```
-
-#### 2. Customer Information
-```
-Find the contact information for ACME Corporation and show me their recent tickets
-```
-
-#### 3. Time Tracking
-```
-Create a time entry for 2 hours of work on ticket #12345 with description "Database optimization"
-```
-
-#### 4. Company Analysis
-```
-Show me all companies created in the last 30 days and their primary contacts
-```
-
-### Troubleshooting Claude Integration
-
-#### Connection Issues
-
-**Problem**: MCP server not appearing in Claude
-**Solutions**:
-1. Check configuration file syntax (valid JSON)
-2. Verify file path in the configuration
-3. Ensure environment variables are set correctly
-4. Restart Claude Desktop completely
-
-**Problem**: Authentication errors
-**Solutions**:
-1. Verify Autotask credentials are correct
-2. Check API user permissions in Autotask
-3. Ensure integration code is valid
-
-**Problem**: "Invalid JSON-RPC message: [dotenv@...] injecting env" / Server disconnected
-**Cause**: The `autotask-node` library calls `dotenv.config()` at module load time. dotenv v17+ writes status messages via `console.log` to stdout, which corrupts the MCP stdio JSON-RPC channel.
-**Solution**: Ensure you're using `dist/entry.js` (not `dist/index.js`) as the entry point. The entry wrapper redirects `console.log` to stderr before any libraries load.
-
-#### Performance Issues
-
-**Problem**: Slow responses from Claude
-**Solutions**:
-1. Check network connectivity to Autotask API
-2. Monitor server logs for performance bottlenecks
-3. Consider implementing caching for frequently accessed data
-
-#### Debug Mode
-
-Enable debug logging for troubleshooting:
-
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "node",
-      "args": ["/path/to/autotask-mcp/dist/entry.js"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-username",
-        "AUTOTASK_SECRET": "your-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-code",
-        "LOG_LEVEL": "debug"
-      }
-    }
-  }
-}
-```
-
-### Security Considerations
-
-#### Credential Management
-- Store credentials in environment variables, not directly in config
-- Use `.env` files for local development
-- Consider using secrets management for production
-
-#### Network Security
-- Run MCP server in isolated network environments
-- Use HTTPS for all API communications
-- Monitor and log all API access
-
-#### Access Control
-- Limit Autotask API user permissions to minimum required
-- Regular rotation of API credentials
-- Monitor API usage patterns
 
 ## Development
 
@@ -874,6 +582,32 @@ curl http://localhost:8080/health
 # Test API connection with debug logging
 LOG_LEVEL=debug npm start
 ```
+
+### MCP Client Issues
+
+**Problem**: MCP server not appearing in Claude Desktop
+**Solutions**:
+1. Check configuration file syntax (valid JSON)
+2. Verify file path in the configuration
+3. Ensure environment variables are set correctly
+4. Restart Claude Desktop completely
+
+**Problem**: "Invalid JSON-RPC message: [dotenv@...] injecting env" / Server disconnected
+**Cause**: The `autotask-node` library calls `dotenv.config()` at module load time. dotenv v17+ writes status messages via `console.log` to stdout, which corrupts the MCP stdio JSON-RPC channel.
+**Solution**: Ensure you're using `dist/entry.js` (not `dist/index.js`) as the entry point. The entry wrapper redirects `console.log` to stderr before any libraries load.
+
+**Problem**: Slow responses
+**Solutions**:
+1. Check network connectivity to Autotask API
+2. Enable debug logging (`LOG_LEVEL=debug`) to identify bottlenecks
+3. The server caches company/resource names for 30 minutes automatically
+
+### Security Best Practices
+
+- Store credentials in environment variables, not directly in config files
+- Limit Autotask API user permissions to the minimum required
+- Rotate API credentials regularly
+- For Docker deployments, use secrets management rather than plain environment variables
 
 ## Contributing
 

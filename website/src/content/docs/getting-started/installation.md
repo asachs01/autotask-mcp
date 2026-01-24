@@ -3,84 +3,106 @@ title: Installation
 description: How to install and set up the Autotask MCP Server.
 ---
 
-## Prerequisites
+## 1. MCPB Bundle (Claude Desktop)
 
-- Node.js 18 or later
-- An Autotask PSA account with API access
-- An API user configured in Autotask (Admin → Resources → API Users)
+The simplest method — no terminal, no JSON editing, no Node.js install required.
 
-## MCPB Bundle (Recommended)
+**Prerequisites:** [Claude Desktop](https://claude.ai/desktop) (macOS or Windows)
 
-The fastest way to get started. Download the pre-built bundle from the [latest release](https://github.com/asachs01/autotask-mcp/releases/latest) — it includes all dependencies, so there's no npm install or network fetch needed at runtime.
+**Steps:**
+
+1. Download `autotask-mcp.mcpb` from the [latest release](https://github.com/asachs01/autotask-mcp/releases/latest)
+2. Open the file (double-click or drag into Claude Desktop)
+3. Enter your Autotask credentials when prompted:
+   - **Username** — your API user email
+   - **Secret** — your API secret key
+   - **Integration Code** — your Autotask integration code
+
+That's it. Claude Desktop handles the rest.
+
+:::tip[Claude Code (CLI)]
+If you use Claude Code instead of Claude Desktop, run:
+
+```bash
+claude mcp add autotask-mcp \
+  -e AUTOTASK_USERNAME=your-user@company.com \
+  -e AUTOTASK_SECRET=your-secret \
+  -e AUTOTASK_INTEGRATION_CODE=your-code \
+  -- node ~/.mcp/autotask-mcp/dist/entry.js
+```
+
+This requires the MCPB bundle extracted to `~/.mcp/autotask-mcp/` first:
 
 ```bash
 mkdir -p ~/.mcp/autotask-mcp
 curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
 unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
 ```
-
-Then configure your MCP client:
-
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "node",
-      "args": ["~/.mcp/autotask-mcp/dist/entry.js"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-api-user@example.com",
-        "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
-      }
-    }
-  }
-}
-```
-
-For Claude Code (CLI):
-
-```bash
-claude mcp add autotask-mcp \
-  -e AUTOTASK_USERNAME=your-api-user@example.com \
-  -e AUTOTASK_SECRET=your-api-secret \
-  -e AUTOTASK_INTEGRATION_CODE=your-integration-code \
-  -- node ~/.mcp/autotask-mcp/dist/entry.js
-```
-
-## Alternative: npx from GitHub
-
-If you prefer not to download a bundle, `npx` installs directly from the GitHub repo on each run:
-
-```json
-{
-  "mcpServers": {
-    "autotask": {
-      "command": "npx",
-      "args": ["-y", "github:asachs01/autotask-mcp"],
-      "env": {
-        "AUTOTASK_USERNAME": "your-api-user@example.com",
-        "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
-      }
-    }
-  }
-}
-```
-
-:::note
-The npx method fetches and installs dependencies on first run, so the initial startup is slower. The MCPB bundle starts instantly since everything is pre-packaged.
 :::
 
-## Alternative: From Source
+---
+
+## 2. Docker
+
+Pull the pre-built image from GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/asachs01/autotask-mcp:latest
+```
+
+### Local (stdio — for Claude Desktop or Claude Code)
+
+Add this to your MCP client config (e.g., `claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "autotask": {
+      "command": "docker",
+      "args": [
+        "run", "--rm", "-i",
+        "-e", "MCP_TRANSPORT=stdio",
+        "-e", "AUTOTASK_USERNAME=your-user@company.com",
+        "-e", "AUTOTASK_SECRET=your-secret",
+        "-e", "AUTOTASK_INTEGRATION_CODE=your-code",
+        "--entrypoint", "node",
+        "ghcr.io/asachs01/autotask-mcp:latest",
+        "dist/entry.js"
+      ]
+    }
+  }
+}
+```
+
+### Remote (HTTP Streamable — for server deployments)
+
+```bash
+docker run -d \
+  --name autotask-mcp \
+  -p 8080:8080 \
+  -e AUTOTASK_USERNAME="your-user@company.com" \
+  -e AUTOTASK_SECRET="your-secret" \
+  -e AUTOTASK_INTEGRATION_CODE="your-code" \
+  --restart unless-stopped \
+  ghcr.io/asachs01/autotask-mcp:latest
+
+# Verify
+curl http://localhost:8080/health
+```
+
+Clients connect to `http://host:8080/mcp` using MCP Streamable HTTP transport.
+
+---
+
+## 3. From Source (Development)
 
 ```bash
 git clone https://github.com/asachs01/autotask-mcp.git
 cd autotask-mcp
-npm install
-npm run build
+npm ci && npm run build
 ```
 
-Then configure your MCP client to point at the built output:
+Then point your MCP client at `dist/entry.js`:
 
 ```json
 {
@@ -89,14 +111,16 @@ Then configure your MCP client to point at the built output:
       "command": "node",
       "args": ["/path/to/autotask-mcp/dist/entry.js"],
       "env": {
-        "AUTOTASK_USERNAME": "your-api-user@example.com",
-        "AUTOTASK_SECRET": "your-api-secret",
-        "AUTOTASK_INTEGRATION_CODE": "your-integration-code"
+        "AUTOTASK_USERNAME": "your-user@company.com",
+        "AUTOTASK_SECRET": "your-secret",
+        "AUTOTASK_INTEGRATION_CODE": "your-code"
       }
     }
   }
 }
 ```
+
+---
 
 ## Verify the Installation
 
@@ -108,14 +132,19 @@ You should receive a confirmation that the connection is working.
 
 ## Upgrading
 
-To upgrade to a new version, re-download the latest MCPB bundle:
+**MCPB Bundle:** Download the latest `.mcpb` file and open it again — Claude Desktop will update in place.
+
+**Docker:** Pull the latest image:
 
 ```bash
-curl -L https://github.com/asachs01/autotask-mcp/releases/latest/download/autotask-mcp.mcpb -o /tmp/autotask-mcp.mcpb
-unzip -o /tmp/autotask-mcp.mcpb -d ~/.mcp/autotask-mcp
+docker pull ghcr.io/asachs01/autotask-mcp:latest
 ```
 
-No config changes needed — the entry point path stays the same.
+**From Source:** Pull and rebuild:
+
+```bash
+git pull && npm ci && npm run build
+```
 
 ## Next Steps
 
