@@ -4,6 +4,19 @@
 ### Features
 
 * **search:** Add compact response format, smart defaults, and pagination ([00aa4b9](https://github.com/asachs01/autotask-mcp/commit/00aa4b91e7329e833c60545d9d5e081f5a8f374c))
+* **docs:** Add Astro Starlight documentation site with prompt examples ([71a5a88](https://github.com/asachs01/autotask-mcp/commit/71a5a88))
+
+
+### Code Refactoring
+
+* Simplify codebase with dispatch table, schema extraction, and DRY patterns ([c1eff86](https://github.com/asachs01/autotask-mcp/commit/c1eff86))
+  - Extract 39 tool schemas to declarative tool.definitions.ts
+  - Replace 300-line switch with dispatch table Map
+  - Merge enhanced handler into base handler (single class)
+  - Generic note methods (9 methods → 3 generic + 9 thin wrappers)
+  - Simplify MappingService singleton to cached-promise pattern
+  - Delete unused wrapper.ts and dead code
+  - tool.handler.ts reduced from 1,616 → 445 lines (72%)
 
 ## [2.3.4](https://github.com/asachs01/autotask-mcp/compare/v2.3.3...v2.3.4) (2026-01-24)
 
