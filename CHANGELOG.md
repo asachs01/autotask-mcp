@@ -1,3 +1,10 @@
+## [2.3.4](https://github.com/asachs01/autotask-mcp/compare/v2.3.3...v2.3.4) (2026-01-24)
+
+
+### Bug Fixes
+
+* **test:** Run all MCPB tests in single server session to avoid rate limits ([7b425cf](https://github.com/asachs01/autotask-mcp/commit/7b425cfbbba7a0ceeb0d6681dc84fb4a22ea421a))
+
 ## [2.3.3](https://github.com/asachs01/autotask-mcp/compare/v2.3.2...v2.3.3) (2026-01-24)
 
 
