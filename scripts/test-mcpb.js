@@ -2,12 +2,13 @@
 
 /**
  * MCPB Test Harness - simulates Claude Desktop running an MCPB extension.
+ * Runs all tests in a SINGLE server session to avoid API rate limits.
  *
  * Usage:
- *   node scripts/test-mcpb.js [tool_name] [args_json]
- *   node scripts/test-mcpb.js autotask_search_companies '{"pageSize":5}'
- *   node scripts/test-mcpb.js autotask_search_projects '{"pageSize":5}'
- *   node scripts/test-mcpb.js --list-tools
+ *   node scripts/test-mcpb.js              # Run all smoke tests (1 API call)
+ *   node scripts/test-mcpb.js --all        # Run full suite (multiple API calls, single session)
+ *   node scripts/test-mcpb.js <tool> [json] # Run a single tool test
+ *   node scripts/test-mcpb.js --list-tools  # List available tools
  */
 
 const { spawn, execSync } = require('child_process');
@@ -17,6 +18,19 @@ const { resolve, join } = require('path');
 const ROOT = resolve(__dirname, '..');
 const BUNDLE = join(ROOT, 'autotask-mcp.mcpb');
 const EXTRACT_DIR = join(ROOT, '.mcpb-test-extract');
+
+// Full test suite: all tools tested in a single session
+const FULL_SUITE = [
+  { name: 'autotask_test_connection', args: {} },
+  { name: 'autotask_search_companies', args: { pageSize: 2 } },
+  { name: 'autotask_search_tickets', args: { pageSize: 2 } },
+  { name: 'autotask_search_projects', args: { pageSize: 2 } },
+  { name: 'autotask_search_tasks', args: { pageSize: 2 } },
+  { name: 'autotask_search_contacts', args: { pageSize: 2 } },
+  { name: 'autotask_list_queues', args: {} },
+  { name: 'autotask_list_ticket_statuses', args: {} },
+  { name: 'autotask_list_ticket_priorities', args: {} },
+];
 
 function loadEnv() {
   const content = readFileSync(join(ROOT, '.env'), 'utf8');
@@ -36,10 +50,30 @@ function loadEnv() {
   return env;
 }
 
+function parseToolResult(content) {
+  for (const block of (content || [])) {
+    if (block.type === 'text') {
+      try {
+        const parsed = JSON.parse(block.text);
+        if (parsed.error) return { ok: false, summary: parsed.error };
+        if (parsed.results) return { ok: true, summary: `${parsed.results.length} results` };
+        if (parsed.data && Array.isArray(parsed.data)) return { ok: true, summary: `${parsed.data.length} items` };
+        if (parsed.success !== undefined) return { ok: parsed.success, summary: parsed.message || 'ok' };
+        return { ok: true, summary: JSON.stringify(parsed).slice(0, 80) };
+      } catch {
+        return { ok: true, summary: block.text.slice(0, 80) };
+      }
+    }
+  }
+  return { ok: false, summary: 'no content' };
+}
+
 async function main() {
   const listOnly = process.argv.includes('--list-tools');
-  const testTool = listOnly ? null : (process.argv[2] || 'autotask_test_connection');
-  const testArgs = process.argv[3] ? JSON.parse(process.argv[3]) : {};
+  const runAll = process.argv.includes('--all');
+  const singleTool = (!listOnly && !runAll && process.argv[2] && !process.argv[2].startsWith('--'))
+    ? process.argv[2] : null;
+  const singleArgs = singleTool && process.argv[3] ? JSON.parse(process.argv[3]) : {};
 
   console.log('=== MCPB Test Harness ===\n');
 
@@ -80,7 +114,7 @@ async function main() {
     process.exit(1);
   }
 
-  // Spawn server
+  // Spawn server (single process for all tests)
   const proc = spawn('node', [entryPoint], { env, cwd: EXTRACT_DIR, stdio: ['pipe', 'pipe', 'pipe'] });
   let stderr = '';
   proc.stderr.on('data', d => { stderr += d.toString(); });
@@ -93,7 +127,7 @@ async function main() {
   proc.stdout.on('data', chunk => {
     buffer += chunk.toString();
     const lines = buffer.split('\n');
-    buffer = lines.pop(); // keep incomplete line
+    buffer = lines.pop();
     for (const line of lines) {
       if (!line.trim()) continue;
       try {
@@ -130,83 +164,88 @@ async function main() {
     await new Promise(r => setTimeout(r, 1500));
 
     // Initialize
-    console.log('\n[1] Initialize...');
     const init = await send('initialize', {
       protocolVersion: '2024-11-05',
       capabilities: {},
       clientInfo: { name: 'mcpb-test', version: '1.0.0' }
     });
     if (init.error) throw new Error('Init failed: ' + JSON.stringify(init.error));
-    console.log(`    Server: ${init.result.serverInfo.name} v${init.result.serverInfo.version}`);
+    console.log(`Server: ${init.result.serverInfo.name} v${init.result.serverInfo.version}`);
 
     notify('notifications/initialized');
     await new Promise(r => setTimeout(r, 300));
 
     // List tools
-    console.log('[2] List tools...');
     const tools = await send('tools/list', {});
     if (tools.error) throw new Error('tools/list failed: ' + JSON.stringify(tools.error));
     const toolList = tools.result.tools || [];
-    console.log(`    Found ${toolList.length} tools`);
+    console.log(`Tools: ${toolList.length} registered\n`);
 
     if (listOnly) {
-      toolList.forEach(t => console.log(`    - ${t.name}: ${(t.description || '').slice(0, 60)}`));
+      toolList.forEach(t => console.log(`  ${t.name}: ${(t.description || '').slice(0, 60)}`));
       console.log('\n=== PASS ===');
       return;
     }
 
-    // Verify requested tool exists
-    const toolExists = toolList.some(t => t.name === testTool);
-    if (!toolExists) {
-      console.error(`    Tool "${testTool}" not found in server`);
-      process.exit(1);
-    }
+    // Determine which tools to test
+    const testsToRun = singleTool
+      ? [{ name: singleTool, args: singleArgs }]
+      : runAll
+        ? FULL_SUITE
+        : [{ name: 'autotask_test_connection', args: {} }]; // default: smoke test only
 
-    // Call tool
-    console.log(`[3] Call ${testTool}(${JSON.stringify(testArgs)})...`);
-    const result = await send('tools/call', { name: testTool, arguments: testArgs });
+    // Run tests in sequence within the same session
+    let passed = 0;
+    let failed = 0;
+    const results = [];
 
-    if (result.error) {
-      console.error(`\n    FAIL: ${JSON.stringify(result.error)}`);
-      process.exit(1);
-    }
-
-    const content = result.result.content || [];
-    let success = true;
-    for (const block of content) {
-      if (block.type === 'text') {
-        try {
-          const parsed = JSON.parse(block.text);
-          if (parsed.error) {
-            console.error(`\n    API ERROR: ${parsed.error}`);
-            success = false;
-          } else if (parsed.results) {
-            console.log(`    Got ${parsed.results.length} results`);
-            if (parsed.results[0]) {
-              const first = parsed.results[0];
-              const preview = Object.entries(first).slice(0, 4).map(([k, v]) => `${k}=${v}`).join(', ');
-              console.log(`    First: ${preview}`);
-            }
-          } else if (parsed.success !== undefined) {
-            console.log(`    Success: ${parsed.success}`);
-            if (parsed.message) console.log(`    Message: ${parsed.message}`);
-          } else {
-            console.log('    Response:', JSON.stringify(parsed).slice(0, 200));
-          }
-        } catch {
-          console.log('    Response:', block.text.slice(0, 200));
-        }
+    for (const test of testsToRun) {
+      const toolExists = toolList.some(t => t.name === test.name);
+      if (!toolExists) {
+        console.log(`  SKIP  ${test.name} (not found)`);
+        results.push({ name: test.name, status: 'SKIP' });
+        continue;
       }
+
+      try {
+        const result = await send('tools/call', { name: test.name, arguments: test.args });
+
+        if (result.error) {
+          console.log(`  FAIL  ${test.name}: ${JSON.stringify(result.error).slice(0, 100)}`);
+          failed++;
+          results.push({ name: test.name, status: 'FAIL', error: result.error });
+        } else {
+          const { ok, summary } = parseToolResult(result.result.content);
+          if (ok) {
+            console.log(`  PASS  ${test.name}: ${summary}`);
+            passed++;
+            results.push({ name: test.name, status: 'PASS', summary });
+          } else {
+            console.log(`  FAIL  ${test.name}: ${summary}`);
+            failed++;
+            results.push({ name: test.name, status: 'FAIL', error: summary });
+          }
+        }
+      } catch (err) {
+        console.log(`  FAIL  ${test.name}: ${err.message}`);
+        failed++;
+        results.push({ name: test.name, status: 'FAIL', error: err.message });
+      }
+
+      // Small delay between calls to be kind to the API
+      if (testsToRun.length > 1) await new Promise(r => setTimeout(r, 500));
     }
 
-    console.log(success ? '\n=== PASS ===' : '\n=== FAIL ===');
-    process.exitCode = success ? 0 : 1;
+    // Summary
+    console.log(`\n${passed + failed} tests: ${passed} passed, ${failed} failed`);
+    console.log(failed === 0 ? '\n=== PASS ===' : '\n=== FAIL ===');
+    process.exitCode = failed === 0 ? 0 : 1;
 
   } catch (err) {
-    console.error(`\n    ERROR: ${err.message}`);
+    console.error(`\nERROR: ${err.message}`);
     if (stderr.includes('[ERROR]')) {
       const errors = stderr.split('\n').filter(l => l.includes('[ERROR]'));
-      errors.slice(-3).forEach(e => console.error('    ' + e.slice(0, 200)));
+      errors.slice(-3).forEach(e => console.error('  ' + e.slice(0, 200)));
     }
     process.exitCode = 1;
   } finally {
