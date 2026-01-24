@@ -20,13 +20,13 @@ import { Logger } from '../utils/logger.js';
 import { McpServerConfig } from '../types/mcp.js';
 import { EnvironmentConfig } from '../utils/config.js';
 import { AutotaskResourceHandler } from '../handlers/resource.handler.js';
-import { EnhancedAutotaskToolHandler } from '../handlers/enhanced.tool.handler.js';
+import { AutotaskToolHandler } from '../handlers/tool.handler.js';
 
 export class AutotaskMcpServer {
   private server: Server;
   private autotaskService: AutotaskService;
   private resourceHandler: AutotaskResourceHandler;
-  private toolHandler: EnhancedAutotaskToolHandler;
+  private toolHandler: AutotaskToolHandler;
   private logger: Logger;
   private envConfig: EnvironmentConfig | undefined;
   private httpServer?: HttpServer;
@@ -61,7 +61,7 @@ export class AutotaskMcpServer {
     
     // Initialize handlers
     this.resourceHandler = new AutotaskResourceHandler(this.autotaskService, logger);
-    this.toolHandler = new EnhancedAutotaskToolHandler(this.autotaskService, logger);
+    this.toolHandler = new AutotaskToolHandler(this.autotaskService, logger);
 
     // Pass server reference to tool handler for elicitation support
     this.toolHandler.setServer(this.server);

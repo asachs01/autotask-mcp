@@ -33,8 +33,7 @@ describe('MappingService', () => {
 
   beforeEach(() => {
     // Reset the singleton between tests
-    (MappingService as any).instance = null;
-    (MappingService as any).isInitializing = false;
+    (MappingService as any).initPromise = null;
     mockService = createMockAutotaskService();
   });
 

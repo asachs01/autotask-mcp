@@ -726,61 +726,6 @@ export class AutotaskService {
     }
   }
 
-  // Opportunity operations (Note: opportunities endpoint may not be available in autotask-node)
-  // async getOpportunity(id: number): Promise<AutotaskOpportunity | null> {
-  //   const client = await this.ensureClient();
-  //   
-  //   try {
-  //     this.logger.debug(`Getting opportunity with ID: ${id}`);
-  //     const result = await client.opportunities.get(id);
-  //     return result.data as AutotaskOpportunity || null;
-  //   } catch (error) {
-  //     this.logger.error(`Failed to get opportunity ${id}:`, error);
-  //     throw error;
-  //   }
-  // }
-
-  // async searchOpportunities(options: AutotaskQueryOptions = {}): Promise<AutotaskOpportunity[]> {
-  //   const client = await this.ensureClient();
-  //   
-  //   try {
-  //     this.logger.debug('Searching opportunities with options:', options);
-  //     const result = await client.opportunities.list(options as any);
-  //     return (result.data as AutotaskOpportunity[]) || [];
-  //   } catch (error) {
-  //     this.logger.error('Failed to search opportunities:', error);
-  //     throw error;
-  //   }
-  // }
-
-  // async createOpportunity(opportunity: Partial<AutotaskOpportunity>): Promise<number> {
-  //   const client = await this.ensureClient();
-  //   
-  //   try {
-  //     this.logger.debug('Creating opportunity:', opportunity);
-  //     const result = await client.opportunities.create(opportunity as any);
-  //     const opportunityId = (result.data as any)?.id;
-  //     this.logger.info(`Opportunity created with ID: ${opportunityId}`);
-  //     return opportunityId;
-  //   } catch (error) {
-  //     this.logger.error('Failed to create opportunity:', error);
-  //     throw error;
-  //   }
-  // }
-
-  // async updateOpportunity(id: number, updates: Partial<AutotaskOpportunity>): Promise<void> {
-  //   const client = await this.ensureClient();
-  //   
-  //   try {
-  //     this.logger.debug(`Updating opportunity ${id}:`, updates);
-  //     await client.opportunities.update(id, updates as any);
-  //     this.logger.info(`Opportunity ${id} updated successfully`);
-  //   } catch (error) {
-  //     this.logger.error(`Failed to update opportunity ${id}:`, error);
-  //     throw error;
-  //   }
-  // }
-
   // Configuration Item operations
   async getConfigurationItem(id: number): Promise<AutotaskConfigurationItem | null> {
     const client = await this.ensureClient();
@@ -835,33 +780,6 @@ export class AutotaskService {
       throw error;
     }
   }
-
-  // Product operations (Note: products endpoint may not be available in autotask-node)
-  // async getProduct(id: number): Promise<AutotaskProduct | null> {
-  //   const client = await this.ensureClient();
-  //   
-  //   try {
-  //     this.logger.debug(`Getting product with ID: ${id}`);
-  //     const result = await client.products.get(id);
-  //     return result.data as AutotaskProduct || null;
-  //   } catch (error) {
-  //     this.logger.error(`Failed to get product ${id}:`, error);
-  //     throw error;
-  //   }
-  // }
-
-  // async searchProducts(options: AutotaskQueryOptions = {}): Promise<AutotaskProduct[]> {
-  //   const client = await this.ensureClient();
-  //   
-  //   try {
-  //     this.logger.debug('Searching products with options:', options);
-  //     const result = await client.products.list(options as any);
-  //     return (result.data as AutotaskProduct[]) || [];
-  //   } catch (error) {
-  //     this.logger.error('Failed to search products:', error);
-  //     throw error;
-  //   }
-  // }
 
   // Contract operations (read-only for now as they're complex)
   async getContract(id: number): Promise<AutotaskContract | null> {
@@ -1024,193 +942,85 @@ export class AutotaskService {
   // NEW ENTITY METHODS - Phase 1: High-Priority Entities
   // =====================================================
 
-  // Note entities - Using the generic notes endpoint
-  async getTicketNote(ticketId: number, noteId: number): Promise<AutotaskTicketNote | null> {
+  // Generic note operations
+  private async getNote(parentField: string, parentId: number, noteId: number): Promise<any> {
     const client = await this.ensureClient();
-    
     try {
-      this.logger.debug(`Getting ticket note - TicketID: ${ticketId}, NoteID: ${noteId}`);
-      // Use generic notes endpoint with filtering
+      this.logger.debug(`Getting note - ${parentField}: ${parentId}, noteID: ${noteId}`);
       const result = await client.notes.list({
         filter: [
-          { field: 'ticketId', op: 'eq', value: ticketId },
+          { field: parentField, op: 'eq', value: parentId },
           { field: 'id', op: 'eq', value: noteId }
         ]
       });
       const notes = (result.data as any[]) || [];
-      return notes.length > 0 ? notes[0] as AutotaskTicketNote : null;
+      return notes[0] || null;
     } catch (error) {
-      this.logger.error(`Failed to get ticket note ${noteId} for ticket ${ticketId}:`, error);
+      this.logger.error(`Failed to get note ${noteId} for ${parentField}=${parentId}:`, error);
       throw error;
     }
   }
 
-  async searchTicketNotes(ticketId: number, options: AutotaskQueryOptionsExtended = {}): Promise<AutotaskTicketNote[]> {
+  private async searchNotes(parentField: string, parentId: number, options: AutotaskQueryOptionsExtended = {}): Promise<any[]> {
     const client = await this.ensureClient();
-    
     try {
-      this.logger.debug(`Searching ticket notes for ticket ${ticketId}:`, options);
-      
-      // Set reasonable limits for notes
-      const optimizedOptions = {
-        filter: [
-          { field: 'ticketId', op: 'eq', value: ticketId }
-        ],
+      this.logger.debug(`Searching notes for ${parentField}=${parentId}:`, options);
+      const result = await client.notes.list({
+        filter: [{ field: parentField, op: 'eq', value: parentId }],
         pageSize: options.pageSize || 25
-      };
-
-      const result = await client.notes.list(optimizedOptions);
+      });
       const notes = (result.data as any[]) || [];
-      
-      this.logger.info(`Retrieved ${notes.length} ticket notes`);
-      return notes as AutotaskTicketNote[];
+      this.logger.info(`Retrieved ${notes.length} notes for ${parentField}=${parentId}`);
+      return notes;
     } catch (error) {
-      this.logger.error(`Failed to search ticket notes for ticket ${ticketId}:`, error);
+      this.logger.error(`Failed to search notes for ${parentField}=${parentId}:`, error);
       throw error;
     }
   }
 
-  async createTicketNote(ticketId: number, note: Partial<AutotaskTicketNote>): Promise<number> {
+  private async createNote(parentField: string, parentId: number, note: Record<string, any>): Promise<number> {
     const client = await this.ensureClient();
-    
     try {
-      this.logger.debug(`Creating ticket note for ticket ${ticketId}:`, note);
-      const noteData = {
-        ...note,
-        ticketId: ticketId
-      };
-      const result = await client.notes.create(noteData as any);
+      this.logger.debug(`Creating note for ${parentField}=${parentId}:`, note);
+      const result = await client.notes.create({ ...note, [parentField]: parentId } as any);
       const noteId = (result.data as any)?.id;
-      this.logger.info(`Ticket note created with ID: ${noteId}`);
+      this.logger.info(`Note created with ID: ${noteId} for ${parentField}=${parentId}`);
       return noteId;
     } catch (error) {
-      this.logger.error(`Failed to create ticket note for ticket ${ticketId}:`, error);
+      this.logger.error(`Failed to create note for ${parentField}=${parentId}:`, error);
       throw error;
     }
+  }
+
+  // Public note API (thin wrappers preserving existing signatures)
+  async getTicketNote(ticketId: number, noteId: number): Promise<AutotaskTicketNote | null> {
+    return this.getNote('ticketId', ticketId, noteId);
+  }
+  async searchTicketNotes(ticketId: number, opts?: AutotaskQueryOptionsExtended): Promise<AutotaskTicketNote[]> {
+    return this.searchNotes('ticketId', ticketId, opts);
+  }
+  async createTicketNote(ticketId: number, note: Partial<AutotaskTicketNote>): Promise<number> {
+    return this.createNote('ticketId', ticketId, note);
   }
 
   async getProjectNote(projectId: number, noteId: number): Promise<AutotaskProjectNote | null> {
-    const client = await this.ensureClient();
-    
-    try {
-      this.logger.debug(`Getting project note - ProjectID: ${projectId}, NoteID: ${noteId}`);
-      const result = await client.notes.list({
-        filter: [
-          { field: 'projectId', op: 'eq', value: projectId },
-          { field: 'id', op: 'eq', value: noteId }
-        ]
-      });
-      const notes = (result.data as any[]) || [];
-      return notes.length > 0 ? notes[0] as AutotaskProjectNote : null;
-    } catch (error) {
-      this.logger.error(`Failed to get project note ${noteId} for project ${projectId}:`, error);
-      throw error;
-    }
+    return this.getNote('projectId', projectId, noteId);
   }
-
-  async searchProjectNotes(projectId: number, options: AutotaskQueryOptionsExtended = {}): Promise<AutotaskProjectNote[]> {
-    const client = await this.ensureClient();
-    
-    try {
-      this.logger.debug(`Searching project notes for project ${projectId}:`, options);
-      
-      const optimizedOptions = {
-        filter: [
-          { field: 'projectId', op: 'eq', value: projectId }
-        ],
-        pageSize: options.pageSize || 25
-      };
-
-      const result = await client.notes.list(optimizedOptions);
-      const notes = (result.data as any[]) || [];
-      
-      this.logger.info(`Retrieved ${notes.length} project notes`);
-      return notes as AutotaskProjectNote[];
-    } catch (error) {
-      this.logger.error(`Failed to search project notes for project ${projectId}:`, error);
-      throw error;
-    }
+  async searchProjectNotes(projectId: number, opts?: AutotaskQueryOptionsExtended): Promise<AutotaskProjectNote[]> {
+    return this.searchNotes('projectId', projectId, opts);
   }
-
   async createProjectNote(projectId: number, note: Partial<AutotaskProjectNote>): Promise<number> {
-    const client = await this.ensureClient();
-    
-    try {
-      this.logger.debug(`Creating project note for project ${projectId}:`, note);
-      const noteData = {
-        ...note,
-        projectId: projectId
-      };
-      const result = await client.notes.create(noteData as any);
-      const noteId = (result.data as any)?.id;
-      this.logger.info(`Project note created with ID: ${noteId}`);
-      return noteId;
-    } catch (error) {
-      this.logger.error(`Failed to create project note for project ${projectId}:`, error);
-      throw error;
-    }
+    return this.createNote('projectId', projectId, note);
   }
 
   async getCompanyNote(companyId: number, noteId: number): Promise<AutotaskCompanyNote | null> {
-    const client = await this.ensureClient();
-    
-    try {
-      this.logger.debug(`Getting company note - CompanyID: ${companyId}, NoteID: ${noteId}`);
-      const result = await client.notes.list({
-        filter: [
-          { field: 'accountId', op: 'eq', value: companyId },
-          { field: 'id', op: 'eq', value: noteId }
-        ]
-      });
-      const notes = (result.data as any[]) || [];
-      return notes.length > 0 ? notes[0] as AutotaskCompanyNote : null;
-    } catch (error) {
-      this.logger.error(`Failed to get company note ${noteId} for company ${companyId}:`, error);
-      throw error;
-    }
+    return this.getNote('accountId', companyId, noteId);
   }
-
-  async searchCompanyNotes(companyId: number, options: AutotaskQueryOptionsExtended = {}): Promise<AutotaskCompanyNote[]> {
-    const client = await this.ensureClient();
-    
-    try {
-      this.logger.debug(`Searching company notes for company ${companyId}:`, options);
-      
-      const optimizedOptions = {
-        filter: [
-          { field: 'accountId', op: 'eq', value: companyId }
-        ],
-        pageSize: options.pageSize || 25
-      };
-
-      const result = await client.notes.list(optimizedOptions);
-      const notes = (result.data as any[]) || [];
-      
-      this.logger.info(`Retrieved ${notes.length} company notes`);
-      return notes as AutotaskCompanyNote[];
-    } catch (error) {
-      this.logger.error(`Failed to search company notes for company ${companyId}:`, error);
-      throw error;
-    }
+  async searchCompanyNotes(companyId: number, opts?: AutotaskQueryOptionsExtended): Promise<AutotaskCompanyNote[]> {
+    return this.searchNotes('accountId', companyId, opts);
   }
-
   async createCompanyNote(companyId: number, note: Partial<AutotaskCompanyNote>): Promise<number> {
-    const client = await this.ensureClient();
-    
-    try {
-      this.logger.debug(`Creating company note for company ${companyId}:`, note);
-      const noteData = {
-        ...note,
-        accountId: companyId
-      };
-      const result = await client.notes.create(noteData as any);
-      const noteId = (result.data as any)?.id;
-      this.logger.info(`Company note created with ID: ${noteId}`);
-      return noteId;
-    } catch (error) {
-      this.logger.error(`Failed to create company note for company ${companyId}:`, error);
-      throw error;
-    }
+    return this.createNote('accountId', companyId, note);
   }
 
   // Attachment entities - Using the generic attachments endpoint

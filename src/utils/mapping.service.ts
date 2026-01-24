@@ -22,9 +22,8 @@ export interface MappingResult {
 }
 
 export class MappingService {
-  private static instance: MappingService | null = null;
-  private static isInitializing: boolean = false;
-  
+  private static initPromise: Promise<MappingService> | null = null;
+
   private cache: MappingCache;
   private autotaskService: AutotaskService;
   private logger: Logger;
@@ -45,40 +44,17 @@ export class MappingService {
   }
 
   /**
-   * Get singleton instance
+   * Get singleton instance (concurrent calls share the same initialization promise)
    */
   public static async getInstance(autotaskService: AutotaskService, logger: Logger): Promise<MappingService> {
-    if (MappingService.instance) {
-      return MappingService.instance;
+    if (!MappingService.initPromise) {
+      MappingService.initPromise = (async () => {
+        const instance = new MappingService(autotaskService, logger);
+        await instance.initializeCache();
+        return instance;
+      })();
     }
-
-    if (MappingService.isInitializing) {
-      // Wait for initialization to complete
-      return new Promise((resolve) => {
-        const checkInit = () => {
-          if (MappingService.instance) {
-            resolve(MappingService.instance);
-          } else {
-            setTimeout(checkInit, 100);
-          }
-        };
-        checkInit();
-      });
-    }
-
-    MappingService.isInitializing = true;
-    MappingService.instance = new MappingService(autotaskService, logger);
-    
-    try {
-      await MappingService.instance.initializeCache();
-    } catch (error) {
-      MappingService.instance = null;
-      MappingService.isInitializing = false;
-      throw error;
-    }
-    
-    MappingService.isInitializing = false;
-    return MappingService.instance;
+    return MappingService.initPromise;
   }
 
   /**
