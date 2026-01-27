@@ -1,5 +1,5 @@
 # Multi-stage build for efficient container size
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 # Build arguments
 ARG VERSION="unknown"
@@ -22,7 +22,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:20-alpine AS production
+FROM node:22-alpine AS production
 
 # Create a non-root user for security
 RUN addgroup -g 1001 -S autotask && \

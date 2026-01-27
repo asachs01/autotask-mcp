@@ -6,6 +6,7 @@ import { randomUUID } from 'node:crypto';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
+import { Transport } from '@modelcontextprotocol/sdk/shared/transport.js';
 import {
   CallToolRequestSchema,
   ErrorCode,
@@ -210,7 +211,7 @@ export class AutotaskMcpServer {
       res.end(JSON.stringify({ error: 'Not found', endpoints: ['/mcp', '/health'] }));
     });
 
-    await this.server.connect(this.httpTransport);
+    await this.server.connect(this.httpTransport as unknown as Transport);
 
     await new Promise<void>((resolve) => {
       this.httpServer!.listen(port, host, () => {
