@@ -617,9 +617,11 @@ LOG_LEVEL=debug npm start
 
 ## License
 
-This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License** (CC BY-NC 4.0).
+This project is licensed under the **Apache License 2.0**. See the [LICENSE](LICENSE) file for details.
 
-You are free to share and adapt this work for non-commercial purposes with appropriate attribution. See the [LICENSE](LICENSE) file for full details, or visit [creativecommons.org/licenses/by-nc/4.0](https://creativecommons.org/licenses/by-nc/4.0/).
+### Contributor License Agreement
+
+By submitting a pull request, you agree to the terms of our [Contributor License Agreement](CLA.md). This ensures that contributions can be properly licensed and that you have the right to submit the code.
 
 ## Contributors
 

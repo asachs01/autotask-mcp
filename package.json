@@ -36,7 +36,7 @@
     "nodejs"
   ],
   "author": "Aaron Sachs",
-  "license": "CC-BY-NC-4.0",
+  "license": "Apache-2.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.18.2",
     "autotask-node": "github:asachs01/autotask-node#v2.0.6",
