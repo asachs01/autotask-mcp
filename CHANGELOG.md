@@ -1,3 +1,15 @@
+## [2.5.3](https://github.com/asachs01/autotask-mcp/compare/v2.5.2...v2.5.3) (2026-01-27)
+
+
+### Security
+
+* **deps:** Update @modelcontextprotocol/sdk to 1.25.3 for CVE-2026-0621 (ReDoS) and CVE-2025-66414 (DNS rebinding)
+* **deps:** Add npm override for tar@^7.0.0 to fix CVE-2026-23950 and CVE-2026-23745 (arbitrary file overwrite)
+* **deps:** Add npm override for lodash@^4.17.23 to fix CVE-2025-13465 (prototype pollution)
+* **deps:** Add npm override for brace-expansion@^2.0.1 to fix CVE-2025-5889 (ReDoS)
+* **deps:** Add npm override for diff@^7.0.0 to fix CVE-2026-24001 (jsdiff vulnerability)
+* **docker:** Update base image from node:20-alpine to node:22-alpine for CVE-2025-64756 (glob) and CVE-2024-21538 (cross-spawn)
+
 ## [2.5.2](https://github.com/asachs01/autotask-mcp/compare/v2.5.1...v2.5.2) (2026-01-24)
 
 
