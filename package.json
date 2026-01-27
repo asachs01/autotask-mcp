@@ -65,6 +65,7 @@
   "overrides": {
     "brace-expansion": "^2.0.1",
     "diff": "^7.0.0",
-    "lodash": "^4.17.23"
+    "lodash": "^4.17.23",
+    "tar": "^7.0.0"
   }
 }
