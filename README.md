@@ -2,6 +2,10 @@
 
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that provides AI assistants with structured access to Kaseya Autotask PSA data and operations.
 
+<a href="https://glama.ai/mcp/servers/@asachs01/autotask-mcp">
+  <img width="380" height="200" src="https://glama.ai/mcp/servers/@asachs01/autotask-mcp/badge" alt="Autotask MCP server" />
+</a>
+
 ## Quick Start
 
 **Claude Desktop** — download, open, done:
