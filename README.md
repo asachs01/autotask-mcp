@@ -1,5 +1,10 @@
 # Autotask MCP Server
 
+[![Build Status](https://github.com/asachs01/autotask-mcp/actions/workflows/release.yml/badge.svg)](https://github.com/asachs01/autotask-mcp/actions/workflows/release.yml)
+[![codecov](https://codecov.io/gh/asachs01/autotask-mcp/graph/badge.svg)](https://codecov.io/gh/asachs01/autotask-mcp)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen.svg)](https://nodejs.org/)
+
 A [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) server that provides AI assistants with structured access to Kaseya Autotask PSA data and operations.
 
 <a href="https://glama.ai/mcp/servers/@asachs01/autotask-mcp">
