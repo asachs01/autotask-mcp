@@ -617,7 +617,9 @@ LOG_LEVEL=debug npm start
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License** (CC BY-NC 4.0).
+
+You are free to share and adapt this work for non-commercial purposes with appropriate attribution. See the [LICENSE](LICENSE) file for full details, or visit [creativecommons.org/licenses/by-nc/4.0](https://creativecommons.org/licenses/by-nc/4.0/).
 
 ## Contributors
 

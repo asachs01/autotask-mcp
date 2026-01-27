@@ -211,6 +211,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **License**: Changed from MIT to CC BY-NC 4.0 (Creative Commons Attribution-NonCommercial 4.0 International)
+
 ## [2.0.0] - 2026-01-21
 
 ### Breaking Changes
