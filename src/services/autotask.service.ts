@@ -2,10 +2,10 @@
 // Wraps the autotask-node client with our specific types and error handling
 
 import { AutotaskClient } from 'autotask-node';
-import { 
-  AutotaskCompany, 
-  AutotaskContact, 
-  AutotaskTicket, 
+import {
+  AutotaskCompany,
+  AutotaskContact,
+  AutotaskTicket,
   AutotaskTimeEntry,
   AutotaskProject,
   AutotaskResource,
@@ -23,7 +23,9 @@ import {
   AutotaskQuote,
   AutotaskBillingCode,
   AutotaskDepartment,
-  AutotaskQueryOptionsExtended
+  AutotaskQueryOptionsExtended,
+  AutotaskBillingItem,
+  AutotaskBillingItemApprovalLevel
 } from '../types/autotask';
 import { McpServerConfig } from '../types/mcp';
 import { Logger } from '../utils/logger';
@@ -1209,6 +1211,303 @@ export class AutotaskService {
       return quoteId;
     } catch (error) {
       this.logger.error('Failed to create quote:', error);
+      throw error;
+    }
+  }
+
+  // =====================================================
+  // BILLING ITEMS - Approved and Posted billable items
+  // =====================================================
+
+  /**
+   * Get a specific billing item by ID
+   */
+  async getBillingItem(id: number): Promise<AutotaskBillingItem | null> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug(`Getting billing item with ID: ${id}`);
+      const result = await client.billingItems.get(id);
+      return result.data as AutotaskBillingItem || null;
+    } catch (error) {
+      this.logger.error(`Failed to get billing item ${id}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Search for billing items with optional filters
+   * Billing items represent approved and posted billable items
+   */
+  async searchBillingItems(options: AutotaskQueryOptionsExtended = {}): Promise<AutotaskBillingItem[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug('Searching billing items with options:', options);
+
+      const filters: any[] = [];
+
+      // Filter by company
+      if (options.companyId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'companyID',
+          value: options.companyId
+        });
+      }
+
+      // Filter by ticket
+      if ((options as any).ticketId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'ticketID',
+          value: (options as any).ticketId
+        });
+      }
+
+      // Filter by project
+      if ((options as any).projectId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'projectID',
+          value: (options as any).projectId
+        });
+      }
+
+      // Filter by contract
+      if ((options as any).contractId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'contractID',
+          value: (options as any).contractId
+        });
+      }
+
+      // Filter by invoice
+      if ((options as any).invoiceId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'invoiceID',
+          value: (options as any).invoiceId
+        });
+      }
+
+      // Date range filters for postedDate
+      if ((options as any).postedAfter) {
+        filters.push({
+          op: 'gte',
+          field: 'postedDate',
+          value: (options as any).postedAfter
+        });
+      }
+      if ((options as any).postedBefore) {
+        filters.push({
+          op: 'lte',
+          field: 'postedDate',
+          value: (options as any).postedBefore
+        });
+      }
+
+      // If no filters provided, use a default to satisfy API requirement
+      if (filters.length === 0) {
+        filters.push({
+          op: 'gte',
+          field: 'id',
+          value: 0
+        });
+      }
+
+      const pageSize = Math.min(options.pageSize || 25, 500);
+      const queryOptions = {
+        filter: filters,
+        pageSize,
+        ...(options.page && { page: options.page }),
+      };
+
+      const result = await client.billingItems.list(queryOptions);
+      const billingItems = (result.data as AutotaskBillingItem[]) || [];
+
+      this.logger.info(`Retrieved ${billingItems.length} billing items (page ${options.page || 1}, pageSize ${pageSize})`);
+      return billingItems;
+    } catch (error) {
+      this.logger.error('Failed to search billing items:', error);
+      throw error;
+    }
+  }
+
+  // =====================================================
+  // BILLING ITEM APPROVAL LEVELS - Multi-level approval records
+  // =====================================================
+
+  /**
+   * Search for billing item approval levels
+   * These describe multi-level approval records for Autotask time entries
+   */
+  async searchBillingItemApprovalLevels(options: AutotaskQueryOptionsExtended = {}): Promise<AutotaskBillingItemApprovalLevel[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug('Searching billing item approval levels with options:', options);
+
+      const filters: any[] = [];
+
+      // Filter by time entry
+      if ((options as any).timeEntryId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'timeEntryID',
+          value: (options as any).timeEntryId
+        });
+      }
+
+      // Filter by approval resource (approver)
+      if ((options as any).approvalResourceId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'approvalResourceID',
+          value: (options as any).approvalResourceId
+        });
+      }
+
+      // Filter by approval level
+      if ((options as any).approvalLevel !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'approvalLevel',
+          value: (options as any).approvalLevel
+        });
+      }
+
+      // Date range filters
+      if ((options as any).approvedAfter) {
+        filters.push({
+          op: 'gte',
+          field: 'approvalDateTime',
+          value: (options as any).approvedAfter
+        });
+      }
+      if ((options as any).approvedBefore) {
+        filters.push({
+          op: 'lte',
+          field: 'approvalDateTime',
+          value: (options as any).approvedBefore
+        });
+      }
+
+      // If no filters provided, use a default
+      if (filters.length === 0) {
+        filters.push({
+          op: 'gte',
+          field: 'id',
+          value: 0
+        });
+      }
+
+      const pageSize = Math.min(options.pageSize || 25, 500);
+      const queryOptions = {
+        filter: filters,
+        pageSize,
+        ...(options.page && { page: options.page }),
+      };
+
+      const result = await client.billingItemApprovalLevels.list(queryOptions);
+      const approvalLevels = (result.data as AutotaskBillingItemApprovalLevel[]) || [];
+
+      this.logger.info(`Retrieved ${approvalLevels.length} billing item approval levels (page ${options.page || 1}, pageSize ${pageSize})`);
+      return approvalLevels;
+    } catch (error) {
+      this.logger.error('Failed to search billing item approval levels:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Search for time entries with optional filters
+   * Exposes the existing getTimeEntries method with more filter options
+   */
+  async searchTimeEntries(options: AutotaskQueryOptionsExtended = {}): Promise<AutotaskTimeEntry[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug('Searching time entries with options:', options);
+
+      const filters: any[] = [];
+
+      // Filter by resource
+      if ((options as any).resourceId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'resourceID',
+          value: (options as any).resourceId
+        });
+      }
+
+      // Filter by ticket
+      if ((options as any).ticketId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'ticketID',
+          value: (options as any).ticketId
+        });
+      }
+
+      // Filter by project
+      if ((options as any).projectId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'projectID',
+          value: (options as any).projectId
+        });
+      }
+
+      // Filter by task
+      if ((options as any).taskId !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'taskID',
+          value: (options as any).taskId
+        });
+      }
+
+      // Date range filters
+      if ((options as any).dateWorkedAfter) {
+        filters.push({
+          op: 'gte',
+          field: 'dateWorked',
+          value: (options as any).dateWorkedAfter
+        });
+      }
+      if ((options as any).dateWorkedBefore) {
+        filters.push({
+          op: 'lte',
+          field: 'dateWorked',
+          value: (options as any).dateWorkedBefore
+        });
+      }
+
+      // If no filters provided, use a default
+      if (filters.length === 0) {
+        filters.push({
+          op: 'gte',
+          field: 'id',
+          value: 0
+        });
+      }
+
+      const pageSize = Math.min(options.pageSize || 25, 500);
+      const queryOptions = {
+        filter: filters,
+        pageSize,
+        ...(options.page && { page: options.page }),
+      };
+
+      const result = await client.timeEntries.list(queryOptions);
+      const timeEntries = (result.data as AutotaskTimeEntry[]) || [];
+
+      this.logger.info(`Retrieved ${timeEntries.length} time entries (page ${options.page || 1}, pageSize ${pageSize})`);
+      return timeEntries;
+    } catch (error) {
+      this.logger.error('Failed to search time entries:', error);
       throw error;
     }
   }

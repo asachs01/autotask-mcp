@@ -4,7 +4,7 @@
  * per entity type and providing pagination metadata.
  */
 
-export type EntityType = 'tickets' | 'companies' | 'contacts' | 'projects' | 'tasks' | 'resources';
+export type EntityType = 'tickets' | 'companies' | 'contacts' | 'projects' | 'tasks' | 'resources' | 'billingItems' | 'billingItemApprovalLevels' | 'timeEntries';
 
 export interface CompactResponse {
   summary: {
@@ -28,6 +28,9 @@ const SUMMARY_FIELDS: Record<EntityType, string[]> = {
   projects: ['id', 'projectName', 'status', 'companyID', 'projectLeadResourceID', 'startDate', 'endDate'],
   tasks: ['id', 'title', 'status', 'projectID', 'assignedResourceID', 'percentComplete'],
   resources: ['id', 'firstName', 'lastName', 'email', 'isActive'],
+  billingItems: ['id', 'itemName', 'companyID', 'ticketID', 'projectID', 'postedDate', 'totalAmount', 'invoiceID', 'billingItemType'],
+  billingItemApprovalLevels: ['id', 'timeEntryID', 'approvalLevel', 'approvalResourceID', 'approvalDateTime'],
+  timeEntries: ['id', 'resourceID', 'ticketID', 'projectID', 'taskID', 'dateWorked', 'hoursWorked', 'summaryNotes'],
 };
 
 /**
@@ -93,6 +96,10 @@ export function formatCompactResponse(
  * Detect entity type from tool name.
  */
 export function detectEntityType(toolName: string): EntityType | null {
+  // Order matters - check more specific patterns first
+  if (toolName.includes('billing_item_approval')) return 'billingItemApprovalLevels';
+  if (toolName.includes('billing_item')) return 'billingItems';
+  if (toolName.includes('time_entr')) return 'timeEntries';
   if (toolName.includes('ticket')) return 'tickets';
   if (toolName.includes('compan')) return 'companies';
   if (toolName.includes('contact')) return 'contacts';
@@ -112,4 +119,7 @@ export const COMPACT_SEARCH_TOOLS = new Set([
   'autotask_search_projects',
   'autotask_search_tasks',
   'autotask_search_resources',
+  'autotask_search_billing_items',
+  'autotask_search_billing_item_approval_levels',
+  'autotask_search_time_entries',
 ]);

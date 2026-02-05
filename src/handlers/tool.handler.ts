@@ -392,6 +392,55 @@ export class AutotaskToolHandler {
         const summary = fields.map(f => ({ name: f.name, dataType: f.dataType, isRequired: f.isRequired, isPickList: f.isPickList, isQueryable: f.isQueryable, picklistValueCount: f.picklistValues?.length || 0 }));
         return { result: summary, message: `Found ${fields.length} fields for ${a.entityType}` };
       }],
+
+      // Billing Items (Approve and Post workflow)
+      ['autotask_search_billing_items', async (a) => {
+        const r = await s.searchBillingItems({
+          companyId: a.companyId,
+          ticketId: a.ticketId,
+          projectId: a.projectId,
+          contractId: a.contractId,
+          invoiceId: a.invoiceId,
+          postedAfter: a.postedAfter,
+          postedBefore: a.postedBefore,
+          page: a.page,
+          pageSize: a.pageSize
+        } as any);
+        return { result: r, message: `Found ${r.length} billing items` };
+      }],
+      ['autotask_get_billing_item', async (a) => {
+        const r = await s.getBillingItem(a.billingItemId);
+        return { result: r, message: 'Billing item retrieved successfully' };
+      }],
+
+      // Billing Item Approval Levels
+      ['autotask_search_billing_item_approval_levels', async (a) => {
+        const r = await s.searchBillingItemApprovalLevels({
+          timeEntryId: a.timeEntryId,
+          approvalResourceId: a.approvalResourceId,
+          approvalLevel: a.approvalLevel,
+          approvedAfter: a.approvedAfter,
+          approvedBefore: a.approvedBefore,
+          page: a.page,
+          pageSize: a.pageSize
+        } as any);
+        return { result: r, message: `Found ${r.length} billing item approval levels` };
+      }],
+
+      // Time Entries
+      ['autotask_search_time_entries', async (a) => {
+        const r = await s.searchTimeEntries({
+          resourceId: a.resourceId,
+          ticketId: a.ticketId,
+          projectId: a.projectId,
+          taskId: a.taskId,
+          dateWorkedAfter: a.dateWorkedAfter,
+          dateWorkedBefore: a.dateWorkedBefore,
+          page: a.page,
+          pageSize: a.pageSize
+        } as any);
+        return { result: r, message: `Found ${r.length} time entries` };
+      }],
     ]);
   }
 

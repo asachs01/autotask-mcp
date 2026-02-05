@@ -1098,5 +1098,160 @@ export const TOOL_DEFINITIONS: McpTool[] = [
       },
       required: ['entityType']
     }
+  },
+
+  // Billing Items tools (Approve and Post workflow)
+  {
+    name: 'autotask_search_billing_items',
+    description: 'Search for billing items in Autotask. Billing items represent approved and posted billable items from the "Approve and Post" workflow. Returns 25 results per page by default.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        companyId: {
+          type: 'number',
+          description: 'Filter by company ID'
+        },
+        ticketId: {
+          type: 'number',
+          description: 'Filter by ticket ID'
+        },
+        projectId: {
+          type: 'number',
+          description: 'Filter by project ID'
+        },
+        contractId: {
+          type: 'number',
+          description: 'Filter by contract ID'
+        },
+        invoiceId: {
+          type: 'number',
+          description: 'Filter by invoice ID'
+        },
+        postedAfter: {
+          type: 'string',
+          description: 'Filter items posted on or after this date (ISO format, e.g. 2026-01-01)'
+        },
+        postedBefore: {
+          type: 'string',
+          description: 'Filter items posted on or before this date (ISO format)'
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+          minimum: 1
+        },
+        pageSize: {
+          type: 'number',
+          description: 'Results per page (default: 25, max: 500)',
+          minimum: 1,
+          maximum: 500
+        }
+      },
+      required: []
+    }
+  },
+  {
+    name: 'autotask_get_billing_item',
+    description: 'Get detailed information for a specific billing item by ID',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        billingItemId: {
+          type: 'number',
+          description: 'The billing item ID to retrieve'
+        }
+      },
+      required: ['billingItemId']
+    }
+  },
+
+  // Billing Item Approval Levels tools
+  {
+    name: 'autotask_search_billing_item_approval_levels',
+    description: 'Search for billing item approval levels. These describe multi-level approval records for Autotask time entries, enabling visibility into tiered approval workflows.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        timeEntryId: {
+          type: 'number',
+          description: 'Filter by time entry ID'
+        },
+        approvalResourceId: {
+          type: 'number',
+          description: 'Filter by approver resource ID'
+        },
+        approvalLevel: {
+          type: 'number',
+          description: 'Filter by approval level (1, 2, 3, etc.)'
+        },
+        approvedAfter: {
+          type: 'string',
+          description: 'Filter approvals on or after this date (ISO format)'
+        },
+        approvedBefore: {
+          type: 'string',
+          description: 'Filter approvals on or before this date (ISO format)'
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+          minimum: 1
+        },
+        pageSize: {
+          type: 'number',
+          description: 'Results per page (default: 25, max: 500)',
+          minimum: 1,
+          maximum: 500
+        }
+      },
+      required: []
+    }
+  },
+
+  // Time Entries search tool
+  {
+    name: 'autotask_search_time_entries',
+    description: 'Search for time entries in Autotask. Returns 25 results per page by default. Time entries can be filtered by resource, ticket, project, task, or date range.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        resourceId: {
+          type: 'number',
+          description: 'Filter by resource (user) ID'
+        },
+        ticketId: {
+          type: 'number',
+          description: 'Filter by ticket ID'
+        },
+        projectId: {
+          type: 'number',
+          description: 'Filter by project ID'
+        },
+        taskId: {
+          type: 'number',
+          description: 'Filter by task ID'
+        },
+        dateWorkedAfter: {
+          type: 'string',
+          description: 'Filter entries worked on or after this date (ISO format, e.g. 2026-01-01)'
+        },
+        dateWorkedBefore: {
+          type: 'string',
+          description: 'Filter entries worked on or before this date (ISO format)'
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+          minimum: 1
+        },
+        pageSize: {
+          type: 'number',
+          description: 'Results per page (default: 25, max: 500)',
+          minimum: 1,
+          maximum: 500
+        }
+      },
+      required: []
+    }
   }
 ];

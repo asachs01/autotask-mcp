@@ -36,7 +36,7 @@ See [Installation](#installation) for Docker and from-source methods.
 ## Features
 
 - **🔌 MCP Protocol Compliance**: Full support for MCP resources and tools
-- **🛠️ Comprehensive API Coverage**: 35 tools spanning companies, contacts, tickets, projects, notes, attachments, and more
+- **🛠️ Comprehensive API Coverage**: 39 tools spanning companies, contacts, tickets, projects, billing items, time entries, notes, attachments, and more
 - **🔍 Advanced Search**: Powerful search capabilities with filters across all entities
 - **📝 CRUD Operations**: Create, read, update operations for core Autotask entities
 - **🔄 ID-to-Name Mapping**: Automatic resolution of company and resource IDs to human-readable names
@@ -230,7 +230,7 @@ Resources provide read-only access to Autotask data:
 
 ### Tools
 
-The server provides 35 tools for interacting with Autotask:
+The server provides 39 tools for interacting with Autotask:
 
 #### Company Operations
 - `autotask_search_companies` - Search companies with filters
@@ -248,6 +248,12 @@ The server provides 35 tools for interacting with Autotask:
 
 #### Time Entry Operations
 - `autotask_create_time_entry` - Log time entry
+- `autotask_search_time_entries` - Search time entries with filters (resource, ticket, project, date range)
+
+#### Billing Items (Approve and Post Workflow)
+- `autotask_search_billing_items` - Search approved and posted billing items
+- `autotask_get_billing_item` - Get specific billing item by ID
+- `autotask_search_billing_item_approval_levels` - Search multi-level approval records for time entries
 
 #### Project Operations
 - `autotask_search_projects` - Search projects with filters

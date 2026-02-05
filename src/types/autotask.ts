@@ -267,6 +267,55 @@ export interface AutotaskDepartment {
   [key: string]: any;
 }
 
+/**
+ * BillingItem - represents an approved and posted billable item in Autotask.
+ * These are items that have gone through the "Approve and Post" workflow.
+ */
+export interface AutotaskBillingItem {
+  readonly id?: number;
+  itemName?: string;
+  description?: string;
+  billingItemType?: number;
+  companyID?: number;
+  contractID?: number;
+  ticketID?: number;
+  taskID?: number;
+  projectID?: number;
+  timeEntryID?: number;
+  expenseItemID?: number;
+  milestoneID?: number;
+  itemApproverID?: number;
+  postedDate?: string;
+  itemDate?: string;
+  quantity?: number;
+  rate?: number;
+  extendedPrice?: number;
+  totalAmount?: number;
+  internalCurrencyExtendedPrice?: number;
+  internalCurrencyRate?: number;
+  internalCurrencyTotalAmount?: number;
+  invoiceID?: number;
+  accountManagerWhenApprovedID?: number;
+  businessDivisionSubdivisionID?: number;
+  nonBillable?: number;
+  taxDollars?: number;
+  webServiceDate?: string;
+  [key: string]: any;
+}
+
+/**
+ * BillingItemApprovalLevel - describes a multi-level approval record for an Autotask time entry.
+ * This entity enables developers to implement tiered approval workflows through the REST API.
+ */
+export interface AutotaskBillingItemApprovalLevel {
+  readonly id?: number;
+  timeEntryID?: number;
+  approvalLevel?: number;
+  approvalResourceID?: number;
+  approvalDateTime?: string;
+  [key: string]: any;
+}
+
 export interface AutotaskUserDefinedField {
   name: string;
   value: string;
