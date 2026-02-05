@@ -1,3 +1,10 @@
+## [2.6.1](https://github.com/asachs01/autotask-mcp/compare/v2.6.0...v2.6.1) (2026-02-05)
+
+
+### Bug Fixes
+
+* **security:** address code scanning vulnerabilities ([9fba187](https://github.com/asachs01/autotask-mcp/commit/9fba1879186a4c4c31482776a9a26152e163d7fe))
+
 # [2.6.0](https://github.com/asachs01/autotask-mcp/compare/v2.5.3...v2.6.0) (2026-02-05)
 
 
