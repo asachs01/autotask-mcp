@@ -7,15 +7,10 @@
 
 ## [Unreleased]
 
-### Features
+### Security
 
-* **billing:** Add BillingItems and BillingItemApprovalLevels support for Approve and Post workflow visibility ([#21](https://github.com/asachs01/autotask-mcp/issues/21))
-  - New tool: `autotask_search_billing_items` - Search approved/posted billing items with filters (company, ticket, project, contract, invoice, date range)
-  - New tool: `autotask_get_billing_item` - Get specific billing item details by ID
-  - New tool: `autotask_search_billing_item_approval_levels` - Search multi-level approval records for time entries
-  - New tool: `autotask_search_time_entries` - Search time entries with filters (resource, ticket, project, task, date range)
-  - Added TypeScript interfaces: `AutotaskBillingItem`, `AutotaskBillingItemApprovalLevel`
-  - Updated response formatter for compact billing item responses
+* **deps:** Add npm override for @isaacs/brace-expansion@^5.0.1 to fix CVE-2026-25547
+* **docker:** Add explicit npm update in Dockerfile to fix base image CVEs (CVE-2026-24842, CVE-2026-0775, CVE-2026-23950, CVE-2026-23745, CVE-2025-64756)
 
 ## [2.5.3](https://github.com/asachs01/autotask-mcp/compare/v2.5.2...v2.5.3) (2026-01-27)
 
