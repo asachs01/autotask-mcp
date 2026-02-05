@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/asachs01/autotask-mcp/compare/v2.5.3...v2.6.0) (2026-02-05)
+
+
+### Features
+
+* **billing:** Add BillingItems and BillingItemApprovalLevels support ([4c88034](https://github.com/asachs01/autotask-mcp/commit/4c880348d7a930b5277a810b89a3c54cddedb509)), closes [#21](https://github.com/asachs01/autotask-mcp/issues/21)
+
 ## [Unreleased]
 
 ### Features
