@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/asachs01/autotask-mcp/compare/v2.6.1...v2.7.0) (2026-02-06)
+
+
+### Features
+
+* **time-entries:** add approvalStatus filter for un-posted entries ([d27f0ab](https://github.com/asachs01/autotask-mcp/commit/d27f0ab1fe8ba169069e3fb7de7010ead4b26636)), closes [#21](https://github.com/asachs01/autotask-mcp/issues/21)
+
 ## [2.6.1](https://github.com/asachs01/autotask-mcp/compare/v2.6.0...v2.6.1) (2026-02-05)
 
 
