@@ -1211,7 +1211,7 @@ export const TOOL_DEFINITIONS: McpTool[] = [
   // Time Entries search tool
   {
     name: 'autotask_search_time_entries',
-    description: 'Search for time entries in Autotask. Returns 25 results per page by default. Time entries can be filtered by resource, ticket, project, task, or date range.',
+    description: 'Search for time entries in Autotask. Returns 25 results per page by default. Time entries can be filtered by resource, ticket, project, task, date range, or approval status. Use approvalStatus="unapproved" to find entries not yet posted.',
     inputSchema: {
       type: 'object',
       properties: {
@@ -1230,6 +1230,15 @@ export const TOOL_DEFINITIONS: McpTool[] = [
         taskId: {
           type: 'number',
           description: 'Filter by task ID'
+        },
+        approvalStatus: {
+          type: 'string',
+          enum: ['unapproved', 'approved', 'all'],
+          description: 'Filter by approval status: "unapproved" = not yet posted (billingApprovalDateTime is null), "approved" = already posted, "all" = no filter (default)'
+        },
+        billable: {
+          type: 'boolean',
+          description: 'Filter by billable status (true = billable only, false = non-billable only)'
         },
         dateWorkedAfter: {
           type: 'string',

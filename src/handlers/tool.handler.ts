@@ -434,6 +434,8 @@ export class AutotaskToolHandler {
           ticketId: a.ticketId,
           projectId: a.projectId,
           taskId: a.taskId,
+          approvalStatus: a.approvalStatus,
+          billable: a.billable,
           dateWorkedAfter: a.dateWorkedAfter,
           dateWorkedBefore: a.dateWorkedBefore,
           page: a.page,

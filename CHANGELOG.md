@@ -14,6 +14,14 @@
 
 ## [Unreleased]
 
+### Features
+
+* **time-entries:** Add `approvalStatus` filter to find un-posted time entries ([#21](https://github.com/asachs01/autotask-mcp/issues/21))
+  - Use `approvalStatus: "unapproved"` to find labor items not yet posted
+  - Use `approvalStatus: "approved"` to find already-posted entries
+  - Also added `billable` filter for billable/non-billable filtering
+  - Added `billingApprovalDateTime`, `billingApprovalLevelMostRecent`, `billingApprovalResourceID` to TimeEntry interface
+
 ### Security
 
 * **deps:** Add npm override for @isaacs/brace-expansion@^5.0.1 to fix CVE-2026-25547

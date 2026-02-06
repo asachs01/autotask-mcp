@@ -115,6 +115,10 @@ export interface AutotaskTimeEntry {
   createdByResourceID?: number;
   lastModifiedDate?: string;
   lastModifiedByResourceID?: number;
+  // Approval/posting status fields
+  billingApprovalDateTime?: string;  // null = not yet approved
+  billingApprovalLevelMostRecent?: number;  // references BillingItemApprovalLevels
+  billingApprovalResourceID?: number;  // who approved it
   [key: string]: any;
 }
 

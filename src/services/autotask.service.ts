@@ -1485,6 +1485,33 @@ export class AutotaskService {
         });
       }
 
+      // Approval status filter - key for finding un-posted entries
+      const approvalStatus = (options as any).approvalStatus;
+      if (approvalStatus === 'unapproved') {
+        // billingApprovalDateTime is null means not yet approved/posted
+        filters.push({
+          op: 'eq',
+          field: 'billingApprovalDateTime',
+          value: null
+        });
+      } else if (approvalStatus === 'approved') {
+        // billingApprovalDateTime is not null means already approved/posted
+        filters.push({
+          op: 'isnotnull',
+          field: 'billingApprovalDateTime'
+        });
+      }
+      // 'all' or undefined = no filter
+
+      // Billable status filter
+      if ((options as any).billable !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'isNonBillable',
+          value: !(options as any).billable  // isNonBillable is inverse of billable
+        });
+      }
+
       // If no filters provided, use a default
       if (filters.length === 0) {
         filters.push({
