@@ -510,8 +510,19 @@ export class AutotaskService {
     
     try {
       this.logger.debug('Creating time entry:', timeEntry);
-      const result = await client.timeEntries.create(timeEntry as any);
-      const timeEntryId = (result.data as any)?.id;
+      // Fix #24: Use direct axios call with correct parent-child URL pattern
+      let endpoint: string;
+      if (timeEntry.ticketID) {
+        endpoint = `/Tickets/${timeEntry.ticketID}/TimeEntries`;
+      } else if (timeEntry.taskID) {
+        endpoint = `/Tasks/${timeEntry.taskID}/TimeEntries`;
+      } else if (timeEntry.projectID) {
+        endpoint = `/Projects/${timeEntry.projectID}/TimeEntries`;
+      } else {
+        throw new Error('Time entry must have a ticketID, taskID, or projectID');
+      }
+      const response = await (client as any).axios.post(endpoint, timeEntry);
+      const timeEntryId = response.data?.item?.id || response.data?.id;
       this.logger.info(`Time entry created with ID: ${timeEntryId}`);
       return timeEntryId;
     } catch (error) {
@@ -984,8 +995,21 @@ export class AutotaskService {
     const client = await this.ensureClient();
     try {
       this.logger.debug(`Creating note for ${parentField}=${parentId}:`, note);
-      const result = await client.notes.create({ ...note, [parentField]: parentId } as any);
-      const noteId = (result.data as any)?.id;
+      const noteData = { ...note, [parentField]: parentId };
+      // Fix #24: Use direct axios call with correct parent-child URL pattern.
+      // The autotask-node library's notes.create() posts to /Notes which is wrong.
+      // Autotask REST API requires parent-child URLs for child entities.
+      const parentEntityMap: Record<string, string> = {
+        ticketId: 'Tickets',
+        projectId: 'Projects',
+        accountId: 'Companies',
+      };
+      const parentEntity = parentEntityMap[parentField];
+      if (!parentEntity) {
+        throw new Error(`Unknown parent field for note creation: ${parentField}`);
+      }
+      const response = await (client as any).axios.post(`/${parentEntity}/${parentId}/Notes`, noteData);
+      const noteId = response.data?.item?.id || response.data?.id;
       this.logger.info(`Note created with ID: ${noteId} for ${parentField}=${parentId}`);
       return noteId;
     } catch (error) {
