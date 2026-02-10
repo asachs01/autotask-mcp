@@ -1,5 +1,16 @@
 # Autotask MCP Server
 
+> **This repository has moved to [wyre-technology/autotask-mcp](https://github.com/wyre-technology/autotask-mcp).**
+>
+> All new development, issues, and releases will happen there. This repository will be **archived on March 10, 2026**.
+>
+> **Please update your configurations:**
+> - **npx:** `npx -y github:wyre-technology/autotask-mcp`
+> - **Docker:** `ghcr.io/wyre-technology/autotask-mcp:latest`
+> - **Source:** `git clone https://github.com/wyre-technology/autotask-mcp.git`
+
+---
+
 [![Build Status](https://github.com/asachs01/autotask-mcp/actions/workflows/release.yml/badge.svg)](https://github.com/asachs01/autotask-mcp/actions/workflows/release.yml)
 [![codecov](https://codecov.io/gh/asachs01/autotask-mcp/graph/badge.svg)](https://codecov.io/gh/asachs01/autotask-mcp)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
