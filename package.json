@@ -1,6 +1,6 @@
 {
   "name": "autotask-mcp",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "description": "MCP (Model Context Protocol) server for Kaseya Autotask PSA integration",
   "main": "dist/entry.js",
   "bin": {

@@ -1,3 +1,10 @@
+## [2.7.2](https://github.com/asachs01/autotask-mcp/compare/v2.7.1...v2.7.2) (2026-02-10)
+
+
+### Bug Fixes
+
+* use autotask-node v2.1.0 parent-child URL pattern for note/time entry creates ([6397094](https://github.com/asachs01/autotask-mcp/commit/6397094fad52f2afef72f0f92d4e523af65b1f1a))
+
 ## [2.7.1](https://github.com/asachs01/autotask-mcp/compare/v2.7.0...v2.7.1) (2026-02-10)
 
 
