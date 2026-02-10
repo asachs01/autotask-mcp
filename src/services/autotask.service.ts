@@ -510,11 +510,16 @@ export class AutotaskService {
     
     try {
       this.logger.debug('Creating time entry:', timeEntry);
-      // Fix #24: Use direct axios call with correct parent-child URL pattern
-      let endpoint: string;
+      // autotask-node v2.1.0+ supports parent-child URL for ticket-scoped time entries
       if (timeEntry.ticketID) {
-        endpoint = `/Tickets/${timeEntry.ticketID}/TimeEntries`;
-      } else if (timeEntry.taskID) {
+        const response = await (client as any).timeEntries.create(timeEntry.ticketID, timeEntry);
+        const timeEntryId = response.data?.id;
+        this.logger.info(`Time entry created with ID: ${timeEntryId}`);
+        return timeEntryId;
+      }
+      // For task/project-scoped time entries, use direct axios call
+      let endpoint: string;
+      if (timeEntry.taskID) {
         endpoint = `/Tasks/${timeEntry.taskID}/TimeEntries`;
       } else if (timeEntry.projectID) {
         endpoint = `/Projects/${timeEntry.projectID}/TimeEntries`;
@@ -996,20 +1001,19 @@ export class AutotaskService {
     try {
       this.logger.debug(`Creating note for ${parentField}=${parentId}:`, note);
       const noteData = { ...note, [parentField]: parentId };
-      // Fix #24: Use direct axios call with correct parent-child URL pattern.
-      // The autotask-node library's notes.create() posts to /Notes which is wrong.
-      // Autotask REST API requires parent-child URLs for child entities.
-      const parentEntityMap: Record<string, string> = {
-        ticketId: 'Tickets',
-        projectId: 'Projects',
-        accountId: 'Companies',
+      // autotask-node v2.1.0+ supports parent-child URL patterns natively
+      const entityMap: Record<string, string> = {
+        ticketId: 'ticketNotes',
+        projectId: 'projectNotes',
+        accountId: 'companyNotes',
       };
-      const parentEntity = parentEntityMap[parentField];
-      if (!parentEntity) {
+      const entityName = entityMap[parentField];
+      if (!entityName) {
         throw new Error(`Unknown parent field for note creation: ${parentField}`);
       }
-      const response = await (client as any).axios.post(`/${parentEntity}/${parentId}/Notes`, noteData);
-      const noteId = response.data?.item?.id || response.data?.id;
+      const entity = (client as any)[entityName];
+      const response = await entity.create(parentId, noteData);
+      const noteId = response.data?.id;
       this.logger.info(`Note created with ID: ${noteId} for ${parentField}=${parentId}`);
       return noteId;
     } catch (error) {
