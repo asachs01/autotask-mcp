@@ -1,3 +1,10 @@
+## [2.7.1](https://github.com/asachs01/autotask-mcp/compare/v2.7.0...v2.7.1) (2026-02-10)
+
+
+### Bug Fixes
+
+* use correct parent-child URL patterns for child entity creation ([#24](https://github.com/asachs01/autotask-mcp/issues/24)) ([47f2a75](https://github.com/asachs01/autotask-mcp/commit/47f2a75b16de3af6b0f7581079f22fde575fe9d9))
+
 # [2.7.0](https://github.com/asachs01/autotask-mcp/compare/v2.6.1...v2.7.0) (2026-02-06)
 
 
