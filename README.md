@@ -1,5 +1,7 @@
 # Autotask MCP Server
 
+[![AgentAudit Security](https://img.shields.io/badge/AgentAudit-Safe-brightgreen?logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xMiAxTDMgNXY2YzAgNS41NSAzLjg0IDEwLjc0IDkgMTIgNS4xNi0xLjI2IDktNi40NSA5LTEyVjVsLTktNHoiLz48L3N2Zz4=)](https://www.agentaudit.dev/skills/autotask-mcp)
+
 [![Build Status](https://github.com/asachs01/autotask-mcp/actions/workflows/release.yml/badge.svg)](https://github.com/asachs01/autotask-mcp/actions/workflows/release.yml)
 [![codecov](https://codecov.io/gh/asachs01/autotask-mcp/graph/badge.svg)](https://codecov.io/gh/asachs01/autotask-mcp)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
