@@ -1,3 +1,10 @@
+# [2.8.0](https://github.com/asachs01/autotask-mcp/compare/v2.7.2...v2.8.0) (2026-02-13)
+
+
+### Features
+
+* add product catalog and price list MCP tools ([#15](https://github.com/asachs01/autotask-mcp/issues/15)) ([04e3aac](https://github.com/asachs01/autotask-mcp/commit/04e3aaca5973974861c10e4cf1790ad7fccd15c4))
+
 ## [2.7.2](https://github.com/asachs01/autotask-mcp/compare/v2.7.1...v2.7.2) (2026-02-10)
 
 
