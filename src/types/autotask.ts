@@ -320,6 +320,92 @@ export interface AutotaskBillingItemApprovalLevel {
   [key: string]: any;
 }
 
+/**
+ * Product - represents a product in the Autotask product catalog.
+ * Products are items that can be sold, quoted, or associated with configuration items.
+ */
+export interface AutotaskProduct {
+  readonly id?: number;
+  name?: string;
+  description?: string;
+  sku?: string;
+  isActive?: boolean;
+  isSerialTracked?: boolean;
+  unitCost?: number;
+  unitPrice?: number;
+  msrp?: number;
+  vendorProductNumber?: string;
+  manufacturerName?: string;
+  manufacturerProductName?: string;
+  productCategory?: number;
+  externalProductID?: string;
+  periodType?: string;
+  priceCostMethod?: number;
+  defaultVendorID?: number;
+  internalProductID?: number;
+  [key: string]: any;
+}
+
+/**
+ * Service - represents a recurring service offering in Autotask.
+ * Services are used in contracts for recurring billing.
+ */
+export interface AutotaskServiceEntity {
+  readonly id?: number;
+  name?: string;
+  description?: string;
+  unitPrice?: number;
+  unitCost?: number;
+  isActive?: boolean;
+  periodType?: string;
+  serviceLevelAgreementID?: number;
+  vendorAccountID?: number;
+  createDate?: string;
+  lastModifiedDateTime?: string;
+  [key: string]: any;
+}
+
+/**
+ * InventoryItem - represents a physical inventory item tracked in Autotask.
+ */
+export interface AutotaskInventoryItem {
+  readonly id?: number;
+  productID?: number;
+  inventoryLocationID?: number;
+  quantityOnHand?: number;
+  quantityMinimum?: number;
+  quantityMaximum?: number;
+  referenceNumber?: string;
+  serialNumber?: string;
+  bin?: string;
+  impersonatorCreatorResourceID?: number;
+  [key: string]: any;
+}
+
+/**
+ * PriceListProduct - represents product pricing in an Autotask price list.
+ */
+export interface AutotaskPriceListProduct {
+  readonly id?: number;
+  productID?: number;
+  currencyCode?: string;
+  unitPrice?: number;
+  usesInternalCurrencyPrice?: boolean;
+  [key: string]: any;
+}
+
+/**
+ * PriceListService - represents service pricing in an Autotask price list.
+ */
+export interface AutotaskPriceListService {
+  readonly id?: number;
+  serviceID?: number;
+  currencyCode?: string;
+  unitPrice?: number;
+  usesInternalCurrencyPrice?: boolean;
+  [key: string]: any;
+}
+
 export interface AutotaskUserDefinedField {
   name: string;
   value: string;

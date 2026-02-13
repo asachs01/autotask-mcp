@@ -25,7 +25,12 @@ import {
   AutotaskDepartment,
   AutotaskQueryOptionsExtended,
   AutotaskBillingItem,
-  AutotaskBillingItemApprovalLevel
+  AutotaskBillingItemApprovalLevel,
+  AutotaskProduct,
+  AutotaskServiceEntity,
+  AutotaskInventoryItem,
+  AutotaskPriceListProduct,
+  AutotaskPriceListService
 } from '../types/autotask';
 import { McpServerConfig } from '../types/mcp';
 import { Logger } from '../utils/logger';
@@ -1630,6 +1635,265 @@ export class AutotaskService {
       }));
     } catch (error) {
       this.logger.error(`Failed to get field info for ${entityType}:`, error);
+      throw error;
+    }
+  }
+
+  // =====================================================
+  // PRODUCT CATALOG - Products, Services, Inventory, Price Lists
+  // =====================================================
+
+  /**
+   * Search for products in the product catalog
+   */
+  async searchProducts(options: AutotaskQueryOptions = {}): Promise<AutotaskProduct[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug('Searching products with options:', options);
+
+      const filters: any[] = [];
+
+      if (options.searchTerm) {
+        filters.push({
+          op: 'or',
+          items: [
+            { op: 'contains', field: 'name', value: options.searchTerm },
+            { op: 'contains', field: 'sku', value: options.searchTerm }
+          ]
+        });
+      }
+
+      if (options.isActive !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'isActive',
+          value: options.isActive
+        });
+      }
+
+      if ((options as any).productCategory !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'productCategory',
+          value: (options as any).productCategory
+        });
+      }
+
+      if (filters.length === 0) {
+        filters.push({ op: 'gte', field: 'id', value: 0 });
+      }
+
+      const pageSize = Math.min(options.pageSize || 25, 500);
+      const queryOptions = {
+        filter: filters,
+        pageSize,
+        ...(options.page && { page: options.page }),
+      };
+
+      const result = await client.products.list(queryOptions);
+      const products = (result.data as AutotaskProduct[]) || [];
+
+      this.logger.info(`Retrieved ${products.length} products (page ${options.page || 1}, pageSize ${pageSize})`);
+      return products;
+    } catch (error) {
+      this.logger.error('Failed to search products:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get a specific product by ID
+   */
+  async getProduct(id: number): Promise<AutotaskProduct | null> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug(`Getting product with ID: ${id}`);
+      const result = await client.products.get(id);
+      return result.data as AutotaskProduct || null;
+    } catch (error) {
+      this.logger.error(`Failed to get product ${id}:`, error);
+      throw error;
+    }
+  }
+
+  /**
+   * Search for services (recurring service offerings)
+   */
+  async searchServices(options: AutotaskQueryOptions = {}): Promise<AutotaskServiceEntity[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug('Searching services with options:', options);
+
+      const filters: any[] = [];
+
+      if (options.searchTerm) {
+        filters.push({
+          op: 'contains',
+          field: 'name',
+          value: options.searchTerm
+        });
+      }
+
+      if (options.isActive !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'isActive',
+          value: options.isActive
+        });
+      }
+
+      if (filters.length === 0) {
+        filters.push({ op: 'gte', field: 'id', value: 0 });
+      }
+
+      const pageSize = Math.min(options.pageSize || 25, 500);
+      const queryOptions = {
+        filter: filters,
+        pageSize,
+        ...(options.page && { page: options.page }),
+      };
+
+      const result = await client.services.list(queryOptions);
+      const services = (result.data as AutotaskServiceEntity[]) || [];
+
+      this.logger.info(`Retrieved ${services.length} services (page ${options.page || 1}, pageSize ${pageSize})`);
+      return services;
+    } catch (error) {
+      this.logger.error('Failed to search services:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Search for inventory items
+   */
+  async searchInventoryItems(options: AutotaskQueryOptions = {}): Promise<AutotaskInventoryItem[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug('Searching inventory items with options:', options);
+
+      const filters: any[] = [];
+
+      if ((options as any).productID !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'productID',
+          value: (options as any).productID
+        });
+      }
+
+      if ((options as any).inventoryLocationID !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'inventoryLocationID',
+          value: (options as any).inventoryLocationID
+        });
+      }
+
+      if (filters.length === 0) {
+        filters.push({ op: 'gte', field: 'id', value: 0 });
+      }
+
+      const pageSize = Math.min(options.pageSize || 25, 500);
+      const queryOptions = {
+        filter: filters,
+        pageSize,
+        ...(options.page && { page: options.page }),
+      };
+
+      const result = await client.inventoryItems.list(queryOptions);
+      const items = (result.data as AutotaskInventoryItem[]) || [];
+
+      this.logger.info(`Retrieved ${items.length} inventory items (page ${options.page || 1}, pageSize ${pageSize})`);
+      return items;
+    } catch (error) {
+      this.logger.error('Failed to search inventory items:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Search for product pricing in price lists
+   */
+  async searchPriceListProducts(options: AutotaskQueryOptions = {}): Promise<AutotaskPriceListProduct[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug('Searching price list products with options:', options);
+
+      const filters: any[] = [];
+
+      if ((options as any).productID !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'productID',
+          value: (options as any).productID
+        });
+      }
+
+      if (filters.length === 0) {
+        filters.push({ op: 'gte', field: 'id', value: 0 });
+      }
+
+      const pageSize = Math.min(options.pageSize || 25, 500);
+      const queryOptions = {
+        filter: filters,
+        pageSize,
+        ...(options.page && { page: options.page }),
+      };
+
+      const result = await client.priceListProducts.list(queryOptions);
+      const priceListProducts = (result.data as AutotaskPriceListProduct[]) || [];
+
+      this.logger.info(`Retrieved ${priceListProducts.length} price list products (page ${options.page || 1}, pageSize ${pageSize})`);
+      return priceListProducts;
+    } catch (error) {
+      this.logger.error('Failed to search price list products:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Search for service pricing in price lists
+   */
+  async searchPriceListServices(options: AutotaskQueryOptions = {}): Promise<AutotaskPriceListService[]> {
+    const client = await this.ensureClient();
+
+    try {
+      this.logger.debug('Searching price list services with options:', options);
+
+      const filters: any[] = [];
+
+      if ((options as any).serviceID !== undefined) {
+        filters.push({
+          op: 'eq',
+          field: 'serviceID',
+          value: (options as any).serviceID
+        });
+      }
+
+      if (filters.length === 0) {
+        filters.push({ op: 'gte', field: 'id', value: 0 });
+      }
+
+      const pageSize = Math.min(options.pageSize || 25, 500);
+      const queryOptions = {
+        filter: filters,
+        pageSize,
+        ...(options.page && { page: options.page }),
+      };
+
+      const result = await client.priceListServices.list(queryOptions);
+      const priceListServices = (result.data as AutotaskPriceListService[]) || [];
+
+      this.logger.info(`Retrieved ${priceListServices.length} price list services (page ${options.page || 1}, pageSize ${pageSize})`);
+      return priceListServices;
+    } catch (error) {
+      this.logger.error('Failed to search price list services:', error);
       throw error;
     }
   }

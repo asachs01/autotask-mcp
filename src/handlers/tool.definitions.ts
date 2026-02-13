@@ -1262,5 +1262,162 @@ export const TOOL_DEFINITIONS: McpTool[] = [
       },
       required: []
     }
+  },
+
+  // Product Catalog tools
+  {
+    name: 'autotask_search_products',
+    description: 'Search for products in the Autotask product catalog. Returns 25 results per page by default. Use page parameter for more results.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        searchTerm: {
+          type: 'string',
+          description: 'Search term for product name or SKU'
+        },
+        isActive: {
+          type: 'boolean',
+          description: 'Filter by active status'
+        },
+        productCategory: {
+          type: 'number',
+          description: 'Filter by product category ID'
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+          minimum: 1
+        },
+        pageSize: {
+          type: 'number',
+          description: 'Results per page (default: 25, max: 500)',
+          minimum: 1,
+          maximum: 500
+        }
+      },
+      required: []
+    }
+  },
+  {
+    name: 'autotask_get_product',
+    description: 'Get detailed information for a specific product by ID',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        productId: {
+          type: 'number',
+          description: 'The product ID to retrieve'
+        }
+      },
+      required: ['productId']
+    }
+  },
+  {
+    name: 'autotask_search_services',
+    description: 'Search for services and service bundles in Autotask. Services are recurring offerings used in contracts.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        searchTerm: {
+          type: 'string',
+          description: 'Search term for service name'
+        },
+        isActive: {
+          type: 'boolean',
+          description: 'Filter by active status'
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+          minimum: 1
+        },
+        pageSize: {
+          type: 'number',
+          description: 'Results per page (default: 25, max: 500)',
+          minimum: 1,
+          maximum: 500
+        }
+      },
+      required: []
+    }
+  },
+  {
+    name: 'autotask_search_inventory_items',
+    description: 'Search for inventory items in Autotask. Inventory items track physical stock of products at specific locations.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        productID: {
+          type: 'number',
+          description: 'Filter by product ID'
+        },
+        inventoryLocationID: {
+          type: 'number',
+          description: 'Filter by inventory location ID'
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+          minimum: 1
+        },
+        pageSize: {
+          type: 'number',
+          description: 'Results per page (default: 25, max: 500)',
+          minimum: 1,
+          maximum: 500
+        }
+      },
+      required: []
+    }
+  },
+  {
+    name: 'autotask_search_price_list_products',
+    description: 'Search for product pricing in Autotask price lists. Shows unit prices and currency for products.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        productID: {
+          type: 'number',
+          description: 'Filter by product ID to get pricing for a specific product'
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+          minimum: 1
+        },
+        pageSize: {
+          type: 'number',
+          description: 'Results per page (default: 25, max: 500)',
+          minimum: 1,
+          maximum: 500
+        }
+      },
+      required: []
+    }
+  },
+  {
+    name: 'autotask_search_price_list_services',
+    description: 'Search for service pricing in Autotask price lists. Shows unit prices and currency for services.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        serviceID: {
+          type: 'number',
+          description: 'Filter by service ID to get pricing for a specific service'
+        },
+        page: {
+          type: 'number',
+          description: 'Page number for pagination (default: 1)',
+          minimum: 1
+        },
+        pageSize: {
+          type: 'number',
+          description: 'Results per page (default: 25, max: 500)',
+          minimum: 1,
+          maximum: 500
+        }
+      },
+      required: []
+    }
   }
 ];

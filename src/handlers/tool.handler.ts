@@ -443,6 +443,32 @@ export class AutotaskToolHandler {
         } as any);
         return { result: r, message: `Found ${r.length} time entries` };
       }],
+
+      // Product Catalog
+      ['autotask_search_products', async (a) => {
+        const r = await s.searchProducts(a);
+        return { result: r, message: `Found ${r.length} products` };
+      }],
+      ['autotask_get_product', async (a) => {
+        const r = await s.getProduct(a.productId);
+        return { result: r, message: 'Product retrieved successfully' };
+      }],
+      ['autotask_search_services', async (a) => {
+        const r = await s.searchServices(a);
+        return { result: r, message: `Found ${r.length} services` };
+      }],
+      ['autotask_search_inventory_items', async (a) => {
+        const r = await s.searchInventoryItems(a);
+        return { result: r, message: `Found ${r.length} inventory items` };
+      }],
+      ['autotask_search_price_list_products', async (a) => {
+        const r = await s.searchPriceListProducts(a);
+        return { result: r, message: `Found ${r.length} price list products` };
+      }],
+      ['autotask_search_price_list_services', async (a) => {
+        const r = await s.searchPriceListServices(a);
+        return { result: r, message: `Found ${r.length} price list services` };
+      }],
     ]);
   }
 
